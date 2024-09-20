@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import os
 import pandas as pd
-
+import shutil
 
 # Function to capture and resize frames
 def get_frame(cap, scaling_factor=None, res=None):
@@ -149,9 +149,113 @@ def display_pose_landmarks(image_path, pose, mp_drawing):
     if results.pose_landmarks:
         # Ensure results.pose_landmarks is a list of NormalizedLandmarkList
         mp_drawing.draw_landmarks(image=img_copy, landmark_list=results.pose_landmarks,
-                                      connections=mp_pose.POSE_CONNECTIONS)
+                                      connections=pose.POSE_CONNECTIONS)
 
         cv2.imshow("Pose Landmarks", img_copy)
         # Wait for a key press and close the window
         cv2.waitKey(0)
         cv2.destroyAllWindows()
+
+
+def merge_rectangles(rectangles, max_distance=50, pre_padding_percent=1, post_padding_percent=1):
+    """
+    Merge rectangles that overlap, are within a bigger rectangle, or are in close proximity.
+
+    :param rectangles: List of rectangles in the format (x, y, w, h)
+    :param max_distance: Maximum distance between rectangles to be considered for merging
+    :param pre_padding_percent: Percentage padding distance to add to rectangles
+    :param post_padding_percent: Percentage padding distance to add to rectangles
+    :return: List of merged rectangles
+    """
+    if not rectangles:
+        return []
+
+    rectangles = [add_padding(rect, pre_padding_percent) for rect in rectangles]
+
+    rectangles = sort_rectangles(rectangles)
+
+    merged = []
+
+    while len(rectangles) > 0:
+        current = rectangles[0]
+        rectangles = rectangles[1:]
+
+        i = 0
+        while i < len(rectangles):
+            rect = rectangles[i]
+
+            # Check for overlap or close proximity
+            overlap_x = (current[0] <= rect[0] <= current[0] + current[2] + max_distance) or \
+                        (rect[0] <= current[0] <= rect[0] + rect[2] + max_distance)
+            overlap_y = (current[1] <= rect[1] <= current[1] + current[3] + max_distance) or \
+                        (rect[1] <= current[1] <= rect[1] + rect[3] + max_distance)
+
+            if overlap_x and overlap_y:
+                # Merge the rectangles
+                current[0] = min(current[0], rect[0])
+                current[1] = min(current[1], rect[1])
+                current[2] = max(current[0] + current[2], rect[0] + rect[2]) - current[0]
+                current[3] = max(current[1] + current[3], rect[1] + rect[3]) - current[1]
+
+                # Remove the merged rectangle
+                rectangles = np.delete(rectangles, i, axis=0)
+            else:
+                i += 1
+
+        # add post merge padding
+        current = add_padding(current, post_padding_percent)
+
+        merged.append(current)
+
+    return merged
+
+def sort_rectangles(rectangles):
+    # Convert rectangles to a numpy array for easier manipulation
+    rectangles = np.array(rectangles)
+
+    # Sort rectangles by area in descending order
+    sorted_idx = np.argsort(-(rectangles[:, 2] * rectangles[:, 3]))
+    return rectangles[sorted_idx]
+
+def add_padding(rect, padding_percent):
+    """
+    Add padding to a rectangle.
+
+    :param rect: Rectangle in the format (x, y, w, h)
+    :param padding_percent: Padding percentage (0-100)
+    :return: Padded rectangle
+    """
+    pad_x = int(rect[2] * padding_percent / 100)
+    pad_y = int(rect[3] * padding_percent / 100)
+    return [
+        rect[0] - pad_x,
+        rect[1] - pad_y,
+        rect[2] + 2 * pad_x,
+        rect[3] + 2 * pad_y
+    ]
+
+def get_area_of_interest(frame, rect):
+    """
+    Save the portion of the frame within the given rectangle as a new image.
+
+    :param frame: The full frame image
+    :param rect: The rectangle coordinates (x, y, w, h)
+    """
+    x, y, w, h = rect
+    return frame[y:y + h, x:x + w]
+
+def save_image(image, image_name):
+    """
+    Save the portion of the frame within the given rectangle as a new image.
+
+    :param image: Image to save
+    :param image_name: Name of the image
+    """
+    if image is not None and image.size > 0:
+        cv2.imwrite(f"{image_name}.jpg", image)
+
+# Function to empty a folder
+def empty_folder(folder_path):
+    if os.path.exists(folder_path):
+        shutil.rmtree(folder_path)  # Remove the entire folder
+    os.makedirs(folder_path, exist_ok=True)  # Recreate the empty folder
