@@ -5,6 +5,9 @@ import numpy as np
 
 from frame_pose_dependencies import get_frame, frame_diff, merge_rectangles, get_area_of_interest, save_image, sort_rectangles, empty_folder
 
+BASE_OUTPUT_DIR = "output"
+
+
 # Initialize MediaPipe Pose
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
@@ -57,15 +60,14 @@ intersect_rectangles = True
 output_data = []
 
 # Create a folder to save images
-output_folder = "output_pose"
+output_folder = os.path.join(BASE_OUTPUT_DIR,"output_pose")
 empty_folder(output_folder)
 
-output_folder_aoi = "output_aoi"
+output_folder_aoi = os.path.join(BASE_OUTPUT_DIR,"output_aoi")
 empty_folder(output_folder_aoi)
 
-output_folder_aoi_pose = "output_aoi_pose"
+output_folder_aoi_pose = os.path.join(BASE_OUTPUT_DIR,"output_aoi_pose")
 empty_folder(output_folder_aoi_pose)
-
 
 while True:
     # Get the next frame
