@@ -90,6 +90,11 @@ def plot_keypoints(keypoints, connections):
     plt.grid()
     plt.show()
 
-keypoints, canvas_height, canvas_width = json_parse()
+json_data = None
+if len (sys.argv) > 1:
+    print(sys.argv[1])
+    json_data = read_json_file( sys.argv[1] )
+
+keypoints, canvas_height, canvas_width = json_parse(json_data=json_data)
 connections = get_open_pose_connections()
 plot_keypoints(keypoints, connections)
