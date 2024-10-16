@@ -127,7 +127,7 @@ def initialize_mediapipe ():
     return pose, mp_drawing, mp_pose
 
 
-def plot_pose_landmarks(landmarks_3d, plot_type='3d', show_plot=True, save_path=None):
+def plot_pose_landmarks(landmarks_3d, plot_type='3d', show_plot=True, save_path=None, has_labels=False):
     """
     Plots pose landmarks in 2D or 3D.
 
@@ -151,6 +151,11 @@ def plot_pose_landmarks(landmarks_3d, plot_type='3d', show_plot=True, save_path=
         (23, 24)  # Hips
     ]
 
+    is_labelled = {}
+    show_label = []
+    if has_labels:
+        show_label = [11,12,23,24,25,26,27,28]
+
     if plot_type == '3d':
         # Create 3D plot
         fig = plt.figure(figsize=(10, 10))
@@ -165,6 +170,14 @@ def plot_pose_landmarks(landmarks_3d, plot_type='3d', show_plot=True, save_path=
             ax.plot([landmarks_3d[start, 0], landmarks_3d[end, 0]],
                     [landmarks_3d[start, 1], landmarks_3d[end, 1]],
                     [landmarks_3d[start, 2], landmarks_3d[end, 2]])
+
+            # Label start and end landmarks
+            if start in show_label and not is_labelled.get(start, False):
+                ax.text(landmarks_3d[start, 0], landmarks_3d[start, 1], landmarks_3d[start, 2], f'{start}', fontsize=16, ha='right', color='red')
+                is_labelled[start] = True
+            if end in show_label and not is_labelled.get(end, False):
+                is_labelled[end] = True
+                ax.text(landmarks_3d[end, 0], landmarks_3d[end, 1], landmarks_3d[end, 2], f'{end}', fontsize=16, ha='left', color='blue')
 
         # Set labels and title
         ax.set_xlabel('X')
@@ -191,6 +204,13 @@ def plot_pose_landmarks(landmarks_3d, plot_type='3d', show_plot=True, save_path=
             start, end = connection
             ax.plot([landmarks_3d[start, 0], landmarks_3d[end, 0]],
                     [landmarks_3d[start, 1], landmarks_3d[end, 1]], 'b-')
+
+            if start in show_label and not is_labelled.get(start, False):
+                ax.text(landmarks_3d[start, 0], landmarks_3d[start, 1], f'{start}', fontsize=16, ha='right', color='orange')
+                is_labelled[start] = True
+            if end in show_label and not is_labelled.get(end, False):
+                is_labelled[end] = True
+                ax.text(landmarks_3d[end, 0], landmarks_3d[end, 1], f'{end}', fontsize=16, ha='left', color='red')
 
         ax.invert_yaxis()
 

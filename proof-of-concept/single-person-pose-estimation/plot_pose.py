@@ -14,6 +14,7 @@ landmarks_3d = None
 dimension = '3d'
 image_name = None
 save_path = None
+show_label = False
 if len (sys.argv) > 1:
     #print(sys.argv[1])
     image_file = sys.argv[1]
@@ -23,6 +24,9 @@ if len (sys.argv) > 1:
 
         if len(sys.argv) > 3:
             save_path = sys.argv[3]
+
+        if len(sys.argv) > 4 and int(sys.argv[4]) > 0:
+            show_label = True
 
     # Detect landmarks in image
     image_name = os.path.split(image_file)[1]
@@ -41,4 +45,4 @@ if df is not None:
         save_path = os.path.join("output", save_path, f'{dimension}_{image_name}')
 
     # Plot landmarks
-    plot_pose_landmarks(landmarks_3d=landmarks_3d, plot_type=dimension, show_plot=True, save_path=save_path)
+    plot_pose_landmarks(landmarks_3d=landmarks_3d, plot_type=dimension, show_plot=True, save_path=save_path, has_labels=show_label)
