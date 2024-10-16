@@ -153,6 +153,7 @@ while True:
             results = pose.process(aoi_for_pose)
 
             if results.pose_landmarks:
+                print(results.pose_landmarks)
                 mp_drawing.draw_landmarks(
                     aoi_for_pose,
                     results.pose_landmarks,
