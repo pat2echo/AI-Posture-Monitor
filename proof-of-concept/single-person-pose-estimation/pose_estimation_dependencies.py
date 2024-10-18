@@ -277,7 +277,7 @@ def get_features(landmarks_3d, image_name=None, save_path=None):
         return np.array(percentage_differences) <= percentage_threshold
 
 
-    def is_stand_hip_height_gt_bone_length(percentage_threshold=27):
+    def is_stand_hip_height_gt_bone_length(percentage_threshold=16, percentage_threshold_for_squat=38):
         # Y distance btw hip and ankle ≥ SUM(Thigh bone, Shin bone)
         bone_length = hip_ankle_length(dim='2d')
         y_distance_hip_to_ankle = []
@@ -292,9 +292,20 @@ def get_features(landmarks_3d, image_name=None, save_path=None):
 
         # Calculate the percentage differences
         percentage_differences = calculate_percentage_difference(bone_length, y_distance_hip_to_ankle)
-        print('percent diff hip-to-ankle', percentage_differences)
+        # print('percent diff hip-to-ankle', percentage_differences)
 
-        return np.array(percentage_differences) < percentage_threshold
+        # Initialize the result array with 'non_standing'
+        result = np.full(percentage_differences.shape, 'non_standing', dtype=object)
+
+        # Test for standing
+        result[percentage_differences < percentage_threshold] = 'standing'
+
+        # Test for squatting
+        result[(percentage_differences >= percentage_threshold) & (
+                    percentage_differences < percentage_threshold_for_squat)] = 'squat'
+
+        # Return the result array
+        return result
 
     def hip_ankle_length(dim=None):
         # Hip to knee length + knee to ankle length
