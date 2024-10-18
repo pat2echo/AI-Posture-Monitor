@@ -34,16 +34,16 @@ def pose_landmarks():
     # Dictionary mapping landmark indices to body parts
     landmark_dict = {
         0: 'nose',
-        1: 'left eye (inner)',
+        1: 'left eye inner',
         2: 'left eye',
-        3: 'left eye (outer)',
-        4: 'right eye (inner)',
+        3: 'left eye outer',
+        4: 'right eye inner',
         5: 'right eye',
-        6: 'right eye (outer)',
+        6: 'right eye outer',
         7: 'left ear',
         8: 'right ear',
-        9: 'mouth (left)',
-        10: 'mouth (right)',
+        9: 'mouth left',
+        10: 'mouth right',
         11: 'left shoulder',
         12: 'right shoulder',
         13: 'left elbow',
@@ -126,6 +126,8 @@ def initialize_mediapipe ():
 
     return pose, mp_drawing, mp_pose
 
+def keypoints_of_focus():
+    return [11, 12, 23, 24, 25, 26, 27, 28]
 
 def plot_pose_landmarks(landmarks_3d, plot_type='3d', show_plot=True, save_path=None, has_labels=False):
     """
@@ -154,7 +156,7 @@ def plot_pose_landmarks(landmarks_3d, plot_type='3d', show_plot=True, save_path=
     is_labelled = {}
     show_label = []
     if has_labels:
-        show_label = [11,12,23,24,25,26,27,28]
+        show_label = keypoints_of_focus()
 
     if plot_type == '3d':
         # Create 3D plot
@@ -230,3 +232,141 @@ def plot_pose_landmarks(landmarks_3d, plot_type='3d', show_plot=True, save_path=
         plt.show()
 
     plt.close(fig)  # Close the figure to free memory
+
+def calculate_distance(point1, point2, dim=None ):
+    # Euclidean distance
+    # x1, y1, z1 = 1, 2, 3
+    # x2, y2, z2 = 4, 6, 8
+    # distance = math.sqrt((x2 - x1)**2 + (y2 - y1)**2 + (z2 - z1)**2)
+    #print(point1[:2], point2[:2])
+    if dim == '2d':
+        distance = np.linalg.norm(point1[:2] - point2[:2])
+    elif dim == 'y':
+        distance = np.linalg.norm(point1[1] - point2[1])
+    else:
+        distance = np.linalg.norm(point1 - point2)
+
+    return distance
+
+def calculate_percentage_difference(list1, list2):
+    # Calculate the percentage differences
+    # percentage_differences = [(abs(a - b) / a) * 100 for a, b in zip(list1, list2)]
+    return (np.abs(np.array(list1) - np.array(list2)) / np.array(list1)) * 100
+
+def get_features(landmarks_3d, image_name=None, save_path=None):
+    landmark_dict = pose_landmarks()
+    landmark_dict_flipped = {v: k for k, v in landmark_dict.items()}
+    # print(landmark_dict_flipped)
+
+    def is_stand_x_pos_shoulder_eq_x_pos_knee(percentage_threshold=10):
+        # X position of Shoulder ~ X position of knee ~ X position of hips
+        x_pos_shoulder_knee_hip = []
+        percentage_differences = []
+        for x in ['left', 'right']:
+            x_pos_shoulder_knee_hip.append([
+                landmarks_3d[landmark_dict_flipped[f'{x} shoulder']][0],
+                landmarks_3d[landmark_dict_flipped[f'{x} hip']][0],
+                landmarks_3d[landmark_dict_flipped[f'{x} knee']][0]
+            ])
+            distances = np.diff(np.diff(x_pos_shoulder_knee_hip[-1])) * 100
+            percentage_differences.append(distances)
+            #print('d', distances)
+
+        print('x pos shoulder hip knee', x_pos_shoulder_knee_hip)
+        print('x percent distance shoulder hip knee', percentage_differences)
+        return np.array(percentage_differences) <= percentage_threshold
+
+
+    def is_stand_hip_height_gt_bone_length(percentage_threshold=26):
+        # Y distance btw hip and ankle ≥ SUM(Thigh bone, Shin bone)
+        bone_length = hip_ankle_length(dim='2d')
+        y_distance_hip_to_ankle = []
+
+        for x in ['left', 'right']:
+            y_distance_hip_to_ankle.append(
+                calculate_distance(
+                landmarks_3d[landmark_dict_flipped[f'{x} hip']][1],
+                landmarks_3d[landmark_dict_flipped[f'{x} ankle']][1]
+                )
+            )
+
+        # Calculate the percentage differences
+        percentage_differences = calculate_percentage_difference(bone_length, y_distance_hip_to_ankle)
+        print('percent diff hip-to-ankle', percentage_differences)
+
+        return np.array(percentage_differences) <= percentage_threshold
+
+    def hip_ankle_length(dim=None):
+        # Hip to knee length + knee to ankle length
+        hip_ankle_length = []
+        for x in ['left', 'right']:
+            hip_knee_dist = calculate_distance(
+                landmarks_3d[landmark_dict_flipped[f'{x} hip']],
+                landmarks_3d[landmark_dict_flipped[f'{x} knee']],
+                dim
+            )
+            knee_ankle_dist = calculate_distance(
+                landmarks_3d[landmark_dict_flipped[f'{x} knee']],
+                landmarks_3d[landmark_dict_flipped[f'{x} ankle']],
+                dim
+            )
+
+            hip_ankle_length.append(hip_knee_dist + knee_ankle_dist)
+
+        return hip_ankle_length
+
+    # Calculate and visualize the lines
+    def plot_lines_to_validate_distance(image_name=None, dim=None):
+        fig, ax = plt.subplots(figsize=(6, 6))
+        color = {'left': 'r-', 'right': 'g-'}
+
+        for x in ['left', 'right']:
+            # Get the coordinates for the hip
+            hip = landmarks_3d[landmark_dict_flipped[f'{x} hip']][:2]  # X, Y coordinates
+
+            # Calculate hip-to-knee and knee-to-ankle distances
+            hip_knee_length = calculate_distance(
+                landmarks_3d[landmark_dict_flipped[f'{x} hip']],
+                landmarks_3d[landmark_dict_flipped[f'{x} knee']],
+                dim
+            )
+            knee_ankle_length = calculate_distance(
+                landmarks_3d[landmark_dict_flipped[f'{x} knee']],
+                landmarks_3d[landmark_dict_flipped[f'{x} ankle']],
+                dim
+            )
+
+            # Start the line at the hip
+            start_x, start_y = hip
+
+            # Calculate the knee position (drawn along the y-axis for simplicity)
+            knee_x = start_x  # Keeping X constant, this can be adjusted if needed
+            knee_y = start_y + hip_knee_length  # Moving downwards by the hip_knee_length
+
+            # Plot line from hip to knee
+            ax.plot([start_x, knee_x], [start_y, knee_y], color[x], label=f'{x} leg (hip to knee)')
+
+            # Calculate the ankle position starting from knee position
+            ankle_x = knee_x  # Keeping X constant
+            ankle_y = knee_y + knee_ankle_length  # Moving downwards by knee_ankle_length
+
+            # Plot line from knee to ankle
+            ax.plot([knee_x, ankle_x], [knee_y, ankle_y], 'orange', label=f'{x} leg (knee to ankle)')
+
+            # Plot the hip, knee, and ankle points for reference
+            ax.scatter([start_x, knee_x, ankle_x], [start_y, knee_y, ankle_y], c='b')
+
+        ax.invert_yaxis()
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_title(f'Pose {image_name.upper()}: Line from Hip to Knee to Ankle')
+        plt.legend()
+        plt.show()
+
+    # Plot the lines
+    # plot_lines_to_validate_distance(image_name=image_name, dim='3d')
+
+    kof = keypoints_of_focus()
+    print(landmarks_3d[kof])
+    print(is_stand_hip_height_gt_bone_length())
+    print(is_stand_x_pos_shoulder_eq_x_pos_knee())

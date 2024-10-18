@@ -24,4 +24,12 @@ python.exe .\get_pose_landmark.py .\woman_sitting.png
 Plot Pose
 ```aiignore
 python code/proof-of-concept/single-person-pose-estimation/plot_pose.py dataset/pose/sit.jpg 3d second_pose
+
+# plot, save and show label in plot
+python code/proof-of-concept/single-person-pose-estimation/plot_pose.py dataset/pose/sit.jpg 3d second_pose/label 1
+```
+
+Get Features from Keypoints
+```aiignore
+python code/proof-of-concept/single-person-pose-estimation/get_features.py dataset/pose/sit.jpg
 ```
