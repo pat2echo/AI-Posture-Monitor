@@ -287,6 +287,28 @@ def get_features(landmarks_3d, image_name=None, save_path=None):
         # print('is Y of knee ≥ Y position of hip', knee_gt_hip)
         return knee_gt_hip
 
+    def is_sit_hip_ankle_lt_shin_bone():
+        # Y distance btw hip and ankle ≤ Shin bone
+        hip_ankle_lt_shin_bone = []
+        for x in ['left', 'right']:
+            # shin bone = knee to ankle length
+            shin_bone = calculate_distance(
+                landmarks_3d[landmark_dict_flipped[f'{x} knee']],
+                landmarks_3d[landmark_dict_flipped[f'{x} ankle']],
+                '2d'
+            )
+
+            hip_ankle_height = calculate_distance(
+                landmarks_3d[landmark_dict_flipped[f'{x} hip']][1],
+                landmarks_3d[landmark_dict_flipped[f'{x} ankle']][1]
+            )
+
+            hip_ankle_lt_shin_bone.append(
+                hip_ankle_height <= shin_bone
+            )
+        # print('is Y distance btw hip and ankle ≤ Shin bone', hip_ankle_lt_shin_bone)
+        return hip_ankle_lt_shin_bone
+
     def is_sit_shoulder_gt_hip_plus(percentage_threshold=10):
         # Avg distance of Y pos of shoulders > avg distance of Y pos of hips
         x = 'left'
@@ -436,6 +458,6 @@ def get_features(landmarks_3d, image_name=None, save_path=None):
     kof = keypoints_of_focus()
     print(landmarks_3d[kof])
     print(is_stand_hip_height_gt_bone_length())
-    # print(is_stand_x_pos_shoulder_eq_x_pos_knee())
     print(is_sit_knee_gt_hip())
     print(is_sit_shoulder_gt_hip_plus())
+    print(is_sit_hip_ankle_lt_shin_bone())
