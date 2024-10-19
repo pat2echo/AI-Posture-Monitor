@@ -276,6 +276,29 @@ def get_features(landmarks_3d, image_name=None, save_path=None):
         print('x percent distance shoulder hip knee', percentage_differences)
         return np.array(percentage_differences) <= percentage_threshold
 
+    def is_lie_shoulder_eq_hip_knee_ankle():
+        # Y position of shoulder ~ ( Y position of hips || Y position of knee || Y position of ankle )
+        y_shoulder = []
+        for x in ['left', 'right']:
+            # conditional operator has be flipped due to the inverted y-axis
+            y_shoulder.append(
+                np.mean( calculate_percentage_difference(
+                    [
+                        landmarks_3d[landmark_dict_flipped[f'{x} shoulder']][1],
+                        landmarks_3d[landmark_dict_flipped[f'{x} shoulder']][1],
+                        landmarks_3d[landmark_dict_flipped[f'{x} shoulder']][1]]
+                    ,
+                    [
+                        landmarks_3d[landmark_dict_flipped[f'{x} hip']][1],
+                        landmarks_3d[landmark_dict_flipped[f'{x} knee']][1],
+                        landmarks_3d[landmark_dict_flipped[f'{x} ankle']][1]
+                    ]
+                ) )
+            )
+
+        # print('is Y position of shoulder ~ ( Y position of hips || Y position of knee || Y position of ankle )', y_shoulder)
+        return np.array(y_shoulder)
+
     def is_sit_knee_gt_hip():
         # Y position of knee ≥ Y position of hip
         knee_gt_hip = []
@@ -355,6 +378,17 @@ def get_features(landmarks_3d, image_name=None, save_path=None):
         print('is Y of shoulder > Y of hip + (Length of Shoulder to Hip * sin(40))', shoulder_gt_hip)
         return shoulder_gt_hip
 
+    def is_lie(percentage_threshold=20):
+        # Determine if position is lying
+        shoulder_lying = is_lie_shoulder_eq_hip_knee_ankle()
+
+        # Initialize the result array with 'non_lying'
+        result = np.full(shoulder_lying.shape, 'non_lying', dtype=object)
+
+        # Test for standing
+        result[shoulder_lying < percentage_threshold] = 'lying'
+
+        return result
 
     def is_sit():
         # Determine if position is sitting
@@ -477,3 +511,5 @@ def get_features(landmarks_3d, image_name=None, save_path=None):
     print(is_sit_hip_ankle_lt_shin_bone())
     print(is_sit())
     print('is upright', is_upright_shoulder_gt_hip_plus())
+    # print(is_lie_shoulder_eq_hip_knee_ankle())
+    print(is_lie())
