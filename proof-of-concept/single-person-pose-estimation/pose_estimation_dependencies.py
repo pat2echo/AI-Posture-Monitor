@@ -276,6 +276,62 @@ def get_features(landmarks_3d, image_name=None, save_path=None):
         print('x percent distance shoulder hip knee', percentage_differences)
         return np.array(percentage_differences) <= percentage_threshold
 
+    def is_sit_knee_gt_hip():
+        # Y position of knee ≥ Y position of hip
+        knee_gt_hip = []
+        for x in ['left', 'right']:
+            # conditional operator has be flipped due to the inverted y-axis
+            knee_gt_hip.append(
+                landmarks_3d[landmark_dict_flipped[f'{x} knee']][1] < landmarks_3d[landmark_dict_flipped[f'{x} hip']][1]
+            )
+        # print('is Y of knee ≥ Y position of hip', knee_gt_hip)
+        return knee_gt_hip
+
+    def is_sit_shoulder_gt_hip_plus(percentage_threshold=10):
+        # Avg distance of Y pos of shoulders > avg distance of Y pos of hips
+        x = 'left'
+        y = 'right'
+        avg_distance = []
+
+        for x in ['shoulder', 'hip']:
+            # avg distance btw Y pos of shoulders, hips
+            # minus 1 used to compensate for inverted y-axis
+            avg_distance.append(
+                1 - ( ( landmarks_3d[landmark_dict_flipped[f'left {x}']][1] + landmarks_3d[landmark_dict_flipped[f'right {x}']][1] ) / 2 )
+            )
+
+        percentage_differences = calculate_percentage_difference(avg_distance[0], avg_distance[1])
+        # print('is Avg distance of Y pos of shoulders > avg distance of Y pos of hips', percentage_differences)
+        return percentage_differences >= percentage_threshold
+
+    def is_sit_shoulder_gt_hip_plus_angle(sine_of_angle_btw_back_and_chair=0.6428):
+        # Too complicated: not being used
+        # Y of shoulder > Y of hip + (Length of Shoulder to Hip * sin(40))
+        # sin(40) = 0.6428
+        # sin(60) = 0.866
+        shoulder_gt_hip = []
+        x = 'left'
+        y = 'right'
+        mhip = 1 - max(landmarks_3d[landmark_dict_flipped[f'{x} hip']][1], landmarks_3d[landmark_dict_flipped[f'{y} hip']][1] )
+        mshl = 1 - max(landmarks_3d[landmark_dict_flipped[f'{x} shoulder']][1], landmarks_3d[landmark_dict_flipped[f'{y} shoulder']][1] )
+
+        # avg. distance btw both shoulders and hips
+        shl_hip = ( calculate_distance(
+            landmarks_3d[landmark_dict_flipped[f'{x} shoulder']][0],
+            landmarks_3d[landmark_dict_flipped[f'{x} hip']][0]
+        ) + calculate_distance(
+            landmarks_3d[landmark_dict_flipped[f'{y} shoulder']][0],
+            landmarks_3d[landmark_dict_flipped[f'{y} hip']][0]
+        ) ) / 2
+
+        shoulder_gt_hip.append((
+            mshl + calculate_distance( landmarks_3d[landmark_dict_flipped[f'{x} shoulder']][:2] , landmarks_3d[landmark_dict_flipped[f'{y} shoulder']][:2] ) / 2
+            >
+            ( sine_of_angle_btw_back_and_chair * shl_hip ) + mhip + calculate_distance( landmarks_3d[landmark_dict_flipped[f'{x} hip']][:2] , landmarks_3d[landmark_dict_flipped[f'{y} hip']][:2] ) / 2
+        ))
+
+        print('is Y of shoulder > Y of hip + (Length of Shoulder to Hip * sin(40))', shoulder_gt_hip)
+        return shoulder_gt_hip
 
     def is_stand_hip_height_gt_bone_length(percentage_threshold=16, percentage_threshold_for_squat=38):
         # Y distance btw hip and ankle ≥ SUM(Thigh bone, Shin bone)
@@ -380,4 +436,6 @@ def get_features(landmarks_3d, image_name=None, save_path=None):
     kof = keypoints_of_focus()
     print(landmarks_3d[kof])
     print(is_stand_hip_height_gt_bone_length())
-    print(is_stand_x_pos_shoulder_eq_x_pos_knee())
+    # print(is_stand_x_pos_shoulder_eq_x_pos_knee())
+    print(is_sit_knee_gt_hip())
+    print(is_sit_shoulder_gt_hip_plus())
