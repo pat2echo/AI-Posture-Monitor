@@ -309,7 +309,7 @@ def get_features(landmarks_3d, image_name=None, save_path=None):
         # print('is Y distance btw hip and ankle ≤ Shin bone', hip_ankle_lt_shin_bone)
         return hip_ankle_lt_shin_bone
 
-    def is_sit_shoulder_gt_hip_plus(percentage_threshold=10):
+    def is_upright_shoulder_gt_hip_plus(percentage_threshold=10):
         # Avg distance of Y pos of shoulders > avg distance of Y pos of hips
         x = 'left'
         y = 'right'
@@ -354,6 +354,21 @@ def get_features(landmarks_3d, image_name=None, save_path=None):
 
         print('is Y of shoulder > Y of hip + (Length of Shoulder to Hip * sin(40))', shoulder_gt_hip)
         return shoulder_gt_hip
+
+
+    def is_sit():
+        # Determine if position is sitting
+        sit_left_right_leg = ['non_sitting', 'non_sitting']
+
+        hip_ankle_lt_shin_bone = is_sit_hip_ankle_lt_shin_bone()
+        knee_gt_hip = is_sit_knee_gt_hip()
+        for x, v in enumerate(knee_gt_hip):
+            if v:
+                sit_left_right_leg[x] = 'sitting'
+            elif hip_ankle_lt_shin_bone[x]:
+                sit_left_right_leg[x] = 'sitting'
+
+        return sit_left_right_leg
 
     def is_stand_hip_height_gt_bone_length(percentage_threshold=16, percentage_threshold_for_squat=38):
         # Y distance btw hip and ankle ≥ SUM(Thigh bone, Shin bone)
@@ -459,5 +474,6 @@ def get_features(landmarks_3d, image_name=None, save_path=None):
     print(landmarks_3d[kof])
     print(is_stand_hip_height_gt_bone_length())
     print(is_sit_knee_gt_hip())
-    print(is_sit_shoulder_gt_hip_plus())
     print(is_sit_hip_ankle_lt_shin_bone())
+    print(is_sit())
+    print('is upright', is_upright_shoulder_gt_hip_plus())
