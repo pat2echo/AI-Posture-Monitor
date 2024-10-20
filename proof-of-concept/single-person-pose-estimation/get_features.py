@@ -29,4 +29,5 @@ if df is not None:
         save_path = os.path.join("output", save_path, f'{image_name.split(".")[0]}.csv')
 
     # Plot landmarks
-    get_features(landmarks_3d=landmarks_3d, image_name=image_name.split(".")[0], save_path=save_path)
+    features = get_features(landmarks_3d=landmarks_3d, image_name=image_name.split(".")[0], save_path=save_path)
+    print(features)

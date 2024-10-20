@@ -504,12 +504,14 @@ def get_features(landmarks_3d, image_name=None, save_path=None):
     # Plot the lines
     # plot_lines_to_validate_distance(image_name=image_name, dim='3d')
 
-    kof = keypoints_of_focus()
-    print(landmarks_3d[kof])
-    print(is_stand_hip_height_gt_bone_length())
-    print(is_sit_knee_gt_hip())
-    print(is_sit_hip_ankle_lt_shin_bone())
-    print(is_sit())
-    print('is upright', is_upright_shoulder_gt_hip_plus())
+    # kof = keypoints_of_focus()
+    # print(landmarks_3d[kof])
+    # print(is_sit_knee_gt_hip())
+    # print(is_sit_hip_ankle_lt_shin_bone())
     # print(is_lie_shoulder_eq_hip_knee_ankle())
-    print(is_lie())
+    # print('is upright', is_upright_shoulder_gt_hip_plus())
+    # print('stand', is_stand_hip_height_gt_bone_length())
+    # print('sit', is_sit())
+    # print('lie', is_lie())
+
+    return [image_name, is_upright_shoulder_gt_hip_plus()] + list(is_stand_hip_height_gt_bone_length()) + list(is_sit()) + list(is_lie())
