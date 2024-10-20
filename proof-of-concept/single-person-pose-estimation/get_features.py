@@ -4,7 +4,7 @@ import sys
 import numpy as np
 import mediapipe as mp
 import pandas as pd
-from pose_estimation_dependencies import detect_pose_landmarks, get_features
+from pose_estimation_dependencies import detect_pose_landmarks, get_features, predict_features, get_groundtruth_from_image_name
 
 landmarks_3d = None
 image_name = None
@@ -30,4 +30,8 @@ if df is not None:
 
     # Plot landmarks
     features = get_features(landmarks_3d=landmarks_3d, image_name=image_name.split(".")[0], save_path=save_path)
+
+    #features.append(get_groundtruth_from_image_name(image_name=image_name.split(".")[0]))
+    #features.append(predict_features(features))
+
     print(features)

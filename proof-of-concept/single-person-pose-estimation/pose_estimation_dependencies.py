@@ -515,3 +515,53 @@ def get_features(landmarks_3d, image_name=None, save_path=None):
     # print('lie', is_lie())
 
     return [image_name, is_upright_shoulder_gt_hip_plus()] + list(is_stand_hip_height_gt_bone_length()) + list(is_sit()) + list(is_lie())
+
+def get_groundtruth_from_image_name(image_name=''):
+    dic = {'stand':'stand', 'squat':'squat', 'sit':'sit', 'lying':'lie', 'lie':'lie', 'bend':'stand', 'fall':'lie', 'climb':'stand', 'get':'sit'}
+    if image_name != '':
+        for x in dic:
+            if image_name.startswith(x):
+                return dic[x]
+    return None
+
+def get_attr_of_features():
+    return ['image_name', 'is_upright', 'stand_left', 'stand_right', 'sit_left', 'sit_right', 'lie_left', 'lie_right']
+
+def predict_features(features=[]):
+    # Use features list to make prediction
+    label = None
+    feature_list = dict(zip(get_attr_of_features(), features))
+
+    def pred_stand_to_lie(feature_list):
+        label = None
+        if feature_list['stand_left'] == 'standing' and feature_list['stand_right'] == 'standing':
+            label = 'stand'
+        elif feature_list['stand_left'] == 'squat' and feature_list['stand_right'] == 'squat':
+            label = 'squat'
+        elif feature_list['sit_left'] == 'sitting' and feature_list['sit_right'] == 'sitting':
+            label = 'sit'
+        elif feature_list['stand_left'] == 'standing' or feature_list['stand_right'] == 'standing':
+            label = 'stand'
+        elif feature_list['sit_left'] == 'sitting' or feature_list['sit_right'] == 'sitting':
+            label = 'sit'
+        elif feature_list['stand_left'] == 'squat' or feature_list['stand_right'] == 'squat':
+            label = 'squat'
+        if feature_list['lie_left'] == 'lying' and feature_list['lie_right'] == 'lying':
+            label = 'lie'
+        elif feature_list['lie_left'] == 'lying' or feature_list['lie_right'] == 'lying':
+            label = 'lie'
+        return label
+
+    if feature_list['is_upright']:
+        # stand or sit
+        label = pred_stand_to_lie(feature_list)
+    else:
+        # likely lie
+        if feature_list['lie_left'] == 'lying' and feature_list['lie_right'] == 'lying':
+            label = 'lie'
+        elif feature_list['lie_left'] == 'lying' or feature_list['lie_right'] == 'lying':
+            label = 'lie'
+        else:
+            label = pred_stand_to_lie(feature_list)
+
+    return label
