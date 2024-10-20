@@ -1,6 +1,5 @@
 import os
 import sys
-from pyexpat import features
 
 import pandas as pd
 
