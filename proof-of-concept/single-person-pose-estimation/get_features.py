@@ -4,9 +4,8 @@ import sys
 import numpy as np
 import mediapipe as mp
 import pandas as pd
-from pyparsing import empty
 
-from pose_estimation_dependencies import detect_pose_landmarks, get_features, predict_features, get_groundtruth_from_image_name, get_attr_of_features
+from pose_estimation_dependencies import detect_pose_landmarks, get_features, get_attr_of_features
 
 landmarks_3d = None
 image_name = None
