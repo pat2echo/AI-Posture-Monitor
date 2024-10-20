@@ -253,7 +253,7 @@ def calculate_percentage_difference(list1, list2):
     # percentage_differences = [(abs(a - b) / a) * 100 for a, b in zip(list1, list2)]
     return (np.abs(np.array(list1) - np.array(list2)) / np.array(list1)) * 100
 
-def get_features(landmarks_3d, image_name=None, save_path=None):
+def get_features(landmarks_3d, image_name=None):
     landmark_dict = pose_landmarks()
     landmark_dict_flipped = {v: k for k, v in landmark_dict.items()}
     # print(landmark_dict_flipped)
