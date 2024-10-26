@@ -331,6 +331,8 @@ def get_features(landmarks_3d, image_name=None):
             hip_ankle_lt_shin_bone.append(
                 hip_ankle_height <= shin_bone
             )
+            # print('is Y distance btw hip and ankle ≤ Shin bone', hip_ankle_height, shin_bone)
+
         # print('is Y distance btw hip and ankle ≤ Shin bone', hip_ankle_lt_shin_bone)
         return hip_ankle_lt_shin_bone
 
@@ -408,7 +410,7 @@ def get_features(landmarks_3d, image_name=None):
 
     def is_stand_hip_height_gt_bone_length(percentage_threshold=16, percentage_threshold_for_squat=38):
         # Y distance btw hip and ankle ≥ SUM(Thigh bone, Shin bone)
-        bone_length = hip_ankle_length(dim='2d')
+        bone_length = hip_ankle_length(dim='3d')
         y_distance_hip_to_ankle = []
 
         for x in ['left', 'right']:
@@ -421,7 +423,8 @@ def get_features(landmarks_3d, image_name=None):
 
         # Calculate the percentage differences
         percentage_differences = calculate_percentage_difference(bone_length, y_distance_hip_to_ankle)
-        # print('percent diff hip-to-ankle', percentage_differences)
+        #print('bone_length and y_distance_hip_to_ankle', bone_length, y_distance_hip_to_ankle)
+        #print('percent diff hip-to-ankle', percentage_differences)
 
         # Initialize the result array with 'non_standing'
         result = np.full(percentage_differences.shape, 'non_standing', dtype=object)
@@ -512,7 +515,7 @@ def get_features(landmarks_3d, image_name=None):
     # print(is_sit_hip_ankle_lt_shin_bone())
     # print(is_lie_shoulder_eq_hip_knee_ankle())
     # print('is upright', is_upright_shoulder_gt_hip_plus())
-    # print('stand', is_stand_hip_height_gt_bone_length())
+    print('stand', is_stand_hip_height_gt_bone_length())
     # print('sit', is_sit())
     # print('lie', is_lie())
 
