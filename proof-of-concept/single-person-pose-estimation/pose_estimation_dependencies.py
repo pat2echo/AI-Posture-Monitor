@@ -6,9 +6,7 @@ import numpy as np
 import os
 import pandas as pd
 
-
 import matplotlib
-from pyparsing import empty
 
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
@@ -312,8 +310,14 @@ def get_features(landmarks_3d, image_name=None):
 
             # test Y & Z coordinates
             if knee[1] < hip[1] and knee[2] < hip[2]:
+                is_knee_gt = 3
+            elif knee[1] < hip[1]:
                 is_knee_gt = 2
-            elif knee[1] < hip[1] or knee[2] < hip[2]:
+            elif knee[2] < hip[2]:
+                #distances = calculate_percentage_difference( np.abs(knee[1:]), np.abs(hip[1:]) )
+                #print('d', distances)
+                distances = calculate_percentage_difference( [knee[2]], [hip[2]] )
+                #print('d2', distances)
                 is_knee_gt = 1
 
             knee_gt_hip.append(
@@ -334,18 +338,30 @@ def get_features(landmarks_3d, image_name=None):
                 landmarks_3d[landmark_dict_flipped[f'{x} ankle']],
                 '2d'
             )
-
             hip_ankle_height = calculate_distance(
                 landmarks_3d[landmark_dict_flipped[f'{x} hip']][1],
                 landmarks_3d[landmark_dict_flipped[f'{x} ankle']][1]
             )
 
-            hip_ankle_lt_shin_bone.append(
-                hip_ankle_height <= shin_bone
-            )
-            # print('is Y distance btw hip and ankle ≤ Shin bone', hip_ankle_height, shin_bone)
+            is_hip_ankle_less = 0
+            if hip_ankle_height <= shin_bone:
+                is_hip_ankle_less = 3
+            else:
+                percentage_diff = calculate_percentage_difference(hip_ankle_height, shin_bone + (shin_bone*.33))
+                #print('percentage_diff 2d', percentage_diff)
+                if percentage_diff < 10:
+                    is_hip_ankle_less = 2
+                elif percentage_diff < 20:
+                    is_hip_ankle_less = 1
 
-        # print('is Y distance btw hip and ankle ≤ Shin bone', hip_ankle_lt_shin_bone)
+            hip_ankle_lt_shin_bone.append(
+                is_hip_ankle_less
+            )
+            #print('is hip and ankle ≤ Shin bone', np.array([hip_ankle_height] + [hip_ankle_height_3d]) <= np.array([shin_bone] + [shin_bone_3d]))
+            #print('is 3d distance btw hip and ankle ≤ Shin bone', hip_ankle_height_3d, shin_bone_3d)
+            #print('is Y distance btw hip and ankle ≤ Shin bone', hip_ankle_height, shin_bone)
+
+        #print('is Y distance btw hip and ankle ≤ Shin bone', hip_ankle_lt_shin_bone)
         return hip_ankle_lt_shin_bone
 
     def is_upright_shoulder_gt_hip_plus(percentage_threshold=10):
@@ -412,8 +428,9 @@ def get_features(landmarks_3d, image_name=None):
 
         hip_ankle_lt_shin_bone = is_sit_hip_ankle_lt_shin_bone()
         knee_gt_hip = is_sit_knee_gt_hip()
+        #print('knee_gt_hip', knee_gt_hip)
         for x, v in enumerate(knee_gt_hip):
-            if v == 2:
+            if v >= 2:
                 sit_left_right_leg[x] = 'sitting'
             elif hip_ankle_lt_shin_bone[x]:
                 sit_left_right_leg[x] = 'sitting'
@@ -573,6 +590,10 @@ def predict_features(features=[], features_df=None):
             label = 'squat'
         elif feature_list['sit_left'] == 'sitting' and feature_list['sit_right'] == 'sitting':
             label = 'sit'
+        elif feature_list['stand_left'] == 'standing' and feature_list['stand_right'] == 'squat':
+            label = 'stand'
+        elif feature_list['stand_right'] == 'standing' and feature_list['stand_left'] == 'squat':
+            label = 'stand'
         elif feature_list['stand_left'] == 'standing' or feature_list['stand_right'] == 'standing':
             label = 'stand'
         elif feature_list['sit_left'] == 'sitting' or feature_list['sit_right'] == 'sitting':
@@ -587,6 +608,10 @@ def predict_features(features=[], features_df=None):
             label = 'stand'
         elif feature_list['stand_left'] == 'uncertain_squat' and feature_list['stand_right'] == 'uncertain_squat':
             label = 'squat'
+        elif feature_list['stand_left'] == 'uncertain_standing' and feature_list['stand_right'] == 'uncertain_squat':
+            label = 'stand'
+        elif feature_list['stand_right'] == 'uncertain_standing' and feature_list['stand_left'] == 'uncertain_squat':
+            label = 'stand'
         elif feature_list['sit_left'] == 'uncertain_sitting' and feature_list['sit_right'] == 'uncertain_sitting':
             label = 'sit'
         elif feature_list['stand_left'] == 'uncertain_standing' or feature_list['stand_right'] == 'uncertain_standing':
