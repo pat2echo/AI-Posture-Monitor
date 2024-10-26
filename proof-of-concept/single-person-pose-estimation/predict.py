@@ -14,7 +14,7 @@ if len(sys.argv) > 1:
         df = pd.read_csv(features_file)
         df['label'] = df.apply(lambda row: get_groundtruth_from_image_name(image_name=row["image_name"]), axis=1)
         df['predicted_label'] = df.apply(lambda row: predict_features(features_df=row), axis=1)
-        save_path = features_file.split('.')[0] + '_predicted.csv'
+        save_path = features_file.replace('./','').split('.')[0] + '_predicted.csv'
         df.to_csv(save_path, index=False)
         print(df.dropna(axis=0, how='any'))
     else:

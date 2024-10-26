@@ -410,7 +410,8 @@ def get_features(landmarks_3d, image_name=None):
 
     def is_stand_hip_height_gt_bone_length(percentage_threshold=16, percentage_threshold_for_squat=38):
         # Y distance btw hip and ankle ≥ SUM(Thigh bone, Shin bone)
-        bone_length = hip_ankle_length(dim='3d')
+        bone_length = hip_ankle_length(dim='2d')
+        bone_length_3d = hip_ankle_length(dim='3d')
         y_distance_hip_to_ankle = []
 
         for x in ['left', 'right']:
@@ -422,7 +423,7 @@ def get_features(landmarks_3d, image_name=None):
             )
 
         # Calculate the percentage differences
-        percentage_differences = calculate_percentage_difference(bone_length, y_distance_hip_to_ankle)
+        percentage_differences = calculate_percentage_difference(bone_length + bone_length_3d, y_distance_hip_to_ankle + y_distance_hip_to_ankle)
         #print('bone_length and y_distance_hip_to_ankle', bone_length, y_distance_hip_to_ankle)
         #print('percent diff hip-to-ankle', percentage_differences)
 
@@ -436,8 +437,22 @@ def get_features(landmarks_3d, image_name=None):
         result[(percentage_differences >= percentage_threshold) & (
                     percentage_differences < percentage_threshold_for_squat)] = 'squat'
 
+        # print('initial result', result)
+
+        final_result = []
+        # both legs in 2d space indicates standing
+        if result[0] == result[1]:
+            final_result = result[:2]
+        else:
+            # perform comparison / voting btw 2d results and 3d results of bone length
+            for x in range(2):
+                if result[x] == result[x + 2]:
+                    final_result.append(result[x])
+                else:
+                    final_result.append('uncertain_' + result[x])
+
         # Return the result array
-        return result
+        return final_result
 
     def hip_ankle_length(dim=None):
         # Hip to knee length + knee to ankle length

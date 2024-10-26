@@ -44,3 +44,8 @@ Predict All Features
 ```aiignore
 python code/proof-of-concept/single-person-pose-estimation/predict.py ./dataset/pose/features_output.csv
 ```
+
+Get Evaluation Metrics
+```aiignore
+python code/proof-of-concept/single-person-pose-estimation/metrics.py ./dataset/pose/features_output_predicted.csv
+```
