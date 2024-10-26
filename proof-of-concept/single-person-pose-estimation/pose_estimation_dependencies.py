@@ -428,13 +428,17 @@ def get_features(landmarks_3d, image_name=None):
 
         hip_ankle_lt_shin_bone = is_sit_hip_ankle_lt_shin_bone()
         knee_gt_hip = is_sit_knee_gt_hip()
+        #print('hip_ankle_lt_shin_bone', hip_ankle_lt_shin_bone)
         #print('knee_gt_hip', knee_gt_hip)
         for x, v in enumerate(knee_gt_hip):
+            print('ss', np.sum(hip_ankle_lt_shin_bone[x]))
             if v >= 2:
                 sit_left_right_leg[x] = 'sitting'
-            elif hip_ankle_lt_shin_bone[x]:
+            elif hip_ankle_lt_shin_bone[x] >= 2:
                 sit_left_right_leg[x] = 'sitting'
-            elif v == 1:
+            elif v == 1 and hip_ankle_lt_shin_bone[x]:
+                sit_left_right_leg[x] = 'sitting'
+            elif v == 1 or hip_ankle_lt_shin_bone[x] > 0:
                 sit_left_right_leg[x] = 'uncertain_sitting'
 
         return sit_left_right_leg
