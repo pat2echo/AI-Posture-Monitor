@@ -306,9 +306,21 @@ def get_features(landmarks_3d, image_name=None):
         knee_gt_hip = []
         for x in ['left', 'right']:
             # conditional operator has be flipped due to the inverted y-axis
+            is_knee_gt = 0
+            knee = landmarks_3d[landmark_dict_flipped[f'{x} knee']]
+            hip = landmarks_3d[landmark_dict_flipped[f'{x} hip']]
+
+            # test Y & Z coordinates
+            if knee[1] < hip[1] and knee[2] < hip[2]:
+                is_knee_gt = 2
+            elif knee[1] < hip[1] or knee[2] < hip[2]:
+                is_knee_gt = 1
+
             knee_gt_hip.append(
-                landmarks_3d[landmark_dict_flipped[f'{x} knee']][1] < landmarks_3d[landmark_dict_flipped[f'{x} hip']][1]
+                is_knee_gt
             )
+            #print('is Y of knee ≥ Y position of hip', 1-landmarks_3d[landmark_dict_flipped[f'{x} knee']][1], 1-landmarks_3d[landmark_dict_flipped[f'{x} hip']][1])
+            #print('is Z of knee ≥ Z position of hip', 1-landmarks_3d[landmark_dict_flipped[f'{x} knee']][2], 1-landmarks_3d[landmark_dict_flipped[f'{x} hip']][2])
         # print('is Y of knee ≥ Y position of hip', knee_gt_hip)
         return knee_gt_hip
 
@@ -401,10 +413,12 @@ def get_features(landmarks_3d, image_name=None):
         hip_ankle_lt_shin_bone = is_sit_hip_ankle_lt_shin_bone()
         knee_gt_hip = is_sit_knee_gt_hip()
         for x, v in enumerate(knee_gt_hip):
-            if v:
+            if v == 2:
                 sit_left_right_leg[x] = 'sitting'
             elif hip_ankle_lt_shin_bone[x]:
                 sit_left_right_leg[x] = 'sitting'
+            elif v == 1:
+                sit_left_right_leg[x] = 'uncertain_sitting'
 
         return sit_left_right_leg
 
@@ -530,7 +544,7 @@ def get_features(landmarks_3d, image_name=None):
     # print(is_sit_hip_ankle_lt_shin_bone())
     # print(is_lie_shoulder_eq_hip_knee_ankle())
     # print('is upright', is_upright_shoulder_gt_hip_plus())
-    print('stand', is_stand_hip_height_gt_bone_length())
+    # print('stand', is_stand_hip_height_gt_bone_length())
     # print('sit', is_sit())
     # print('lie', is_lie())
 
