@@ -431,12 +431,11 @@ def get_features(landmarks_3d, image_name=None):
         #print('hip_ankle_lt_shin_bone', hip_ankle_lt_shin_bone)
         #print('knee_gt_hip', knee_gt_hip)
         for x, v in enumerate(knee_gt_hip):
-            print('ss', np.sum(hip_ankle_lt_shin_bone[x]))
             if v >= 2:
                 sit_left_right_leg[x] = 'sitting'
             elif hip_ankle_lt_shin_bone[x] >= 2:
                 sit_left_right_leg[x] = 'sitting'
-            elif v == 1 and hip_ankle_lt_shin_bone[x]:
+            elif v == 1 and hip_ankle_lt_shin_bone[x] >= 2:
                 sit_left_right_leg[x] = 'sitting'
             elif v == 1 or hip_ankle_lt_shin_bone[x] > 0:
                 sit_left_right_leg[x] = 'uncertain_sitting'
@@ -472,7 +471,7 @@ def get_features(landmarks_3d, image_name=None):
         result[(percentage_differences >= percentage_threshold) & (
                     percentage_differences < percentage_threshold_for_squat)] = 'squat'
 
-        # print('initial result', result)
+        #print('initial result', result)
 
         final_result = []
         # both legs in 2d space indicates standing
@@ -483,6 +482,10 @@ def get_features(landmarks_3d, image_name=None):
             for x in range(2):
                 if result[x] == result[x + 2]:
                     final_result.append(result[x])
+                elif percentage_differences[x] <= percentage_threshold and percentage_differences[x+2] <= percentage_threshold_for_squat:
+                    final_result.append(result[x])
+                elif percentage_differences[x+2] <= percentage_threshold and percentage_differences[x] <= percentage_threshold_for_squat:
+                    final_result.append(result[x+2])
                 else:
                     final_result.append('uncertain_' + result[x])
 
