@@ -395,9 +395,8 @@ def get_features(landmarks_3d, image_name=None):
 
         is_upright = False
         percentage_upright = 100 - int((avg_length_should_to_hip - np.abs(avg_distance[0] - avg_distance[1])) / avg_length_should_to_hip * 100)
-        if percentage_differences >= percentage_threshold and percentage_differences >= percentage_upright:
+        if percentage_differences >= percentage_threshold:
             is_upright = True
-
 
         #print('percentage non upright',  percentage_upright)
         #print('is Avg distance of Y pos of shoulders > avg distance of Y pos of hips', percentage_differences, percentage_upright)
