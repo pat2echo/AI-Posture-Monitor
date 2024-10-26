@@ -603,6 +603,29 @@ def predict_features(features=[], features_df=None):
             label = 'stand'
         elif feature_list['stand_right'] == 'standing' and feature_list['stand_left'] == 'squat':
             label = 'stand'
+
+        elif feature_list['stand_left'] == 'standing' and feature_list['stand_right'] == 'uncertain_standing':
+            label = 'stand'
+        elif feature_list['stand_left'] == 'squat' and feature_list['stand_right'] == 'uncertain_squat':
+            label = 'squat'
+        elif feature_list['sit_left'] == 'sitting' and feature_list['sit_right'] == 'uncertain_sitting':
+            label = 'sit'
+        elif feature_list['stand_left'] == 'standing' and feature_list['stand_right'] == 'uncertain_squat':
+            label = 'stand'
+        elif feature_list['stand_right'] == 'uncertain_standing' and feature_list['stand_left'] == 'squat':
+            label = 'stand'
+
+        elif feature_list['stand_right'] == 'standing' and feature_list['stand_left'] == 'uncertain_standing':
+            label = 'stand'
+        elif feature_list['stand_right'] == 'squat' and feature_list['stand_left'] == 'uncertain_squat':
+            label = 'squat'
+        elif feature_list['sit_right'] == 'sitting' and feature_list['sit_left'] == 'uncertain_sitting':
+            label = 'sit'
+        elif feature_list['stand_right'] == 'standing' and feature_list['stand_left'] == 'uncertain_squat':
+            label = 'stand'
+        elif feature_list['stand_left'] == 'uncertain_standing' and feature_list['stand_right'] == 'squat':
+            label = 'stand'
+
         elif feature_list['stand_left'] == 'standing' or feature_list['stand_right'] == 'standing':
             label = 'stand'
         elif feature_list['sit_left'] == 'sitting' or feature_list['sit_right'] == 'sitting':
