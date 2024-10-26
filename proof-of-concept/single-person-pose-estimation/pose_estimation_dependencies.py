@@ -618,6 +618,8 @@ def predict_features(features=[], features_df=None):
             label = 'stand'
         elif feature_list['stand_left'] == 'squat' and feature_list['stand_right'] == 'squat':
             label = 'squat'
+        elif feature_list['percent_upright'] < 20 and feature_list['sit_left'] == 'sitting' and feature_list['sit_right'] == 'sitting' and feature_list['lie_left'] == 'lying' and feature_list['lie_right'] == 'lying':
+            label = 'lie'
         elif feature_list['sit_left'] == 'sitting' and feature_list['sit_right'] == 'sitting':
             label = 'sit'
         elif feature_list['stand_left'] == 'standing' and feature_list['stand_right'] == 'squat':
