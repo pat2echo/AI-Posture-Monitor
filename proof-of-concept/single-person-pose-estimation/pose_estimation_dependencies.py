@@ -486,6 +486,8 @@ def get_features(landmarks_3d, image_name=None):
                     final_result.append(result[x])
                 elif percentage_differences[x+2] <= percentage_threshold and percentage_differences[x] <= percentage_threshold_for_squat:
                     final_result.append(result[x+2])
+                elif percentage_differences[x] <= ( percentage_threshold / 2 ):
+                    final_result.append(result[x])
                 else:
                     final_result.append('uncertain_' + result[x])
 

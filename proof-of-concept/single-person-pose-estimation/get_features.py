@@ -5,7 +5,7 @@ import numpy as np
 import mediapipe as mp
 import pandas as pd
 
-from pose_estimation_dependencies import detect_pose_landmarks, get_features, get_attr_of_features
+from pose_estimation_dependencies import detect_pose_landmarks, get_features, get_attr_of_features, predict_features
 
 landmarks_3d = None
 image_name = None
@@ -21,7 +21,7 @@ if len(sys.argv) > 1:
         if df is not None and not df.empty:
             landmarks_3d = df[['X', 'Y', 'Z']].values
             features = get_features(landmarks_3d=landmarks_3d, image_name=image_name.split(".")[0])
-            print(features)
+            print(features, predict_features(features=features) )
         else:
             print(f"No landmarks detected in image: {image_name}")
 
