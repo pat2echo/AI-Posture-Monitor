@@ -33,3 +33,14 @@ Get Features from Keypoints
 ```aiignore
 python code/proof-of-concept/single-person-pose-estimation/get_features.py dataset/pose/sit.jpg
 ```
+
+Get All Features
+```aiignore
+python code/proof-of-concept/single-person-pose-estimation/get_features.py ./dataset/pose
+```
+
+
+Predict All Features
+```aiignore
+python code/proof-of-concept/single-person-pose-estimation/predict.py ./dataset/pose/features_output.csv
+```
