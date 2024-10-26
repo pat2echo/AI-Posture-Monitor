@@ -569,6 +569,22 @@ def predict_features(features=[], features_df=None):
             label = 'lie'
         elif feature_list['lie_left'] == 'lying' or feature_list['lie_right'] == 'lying':
             label = 'lie'
+        elif feature_list['stand_left'] == 'uncertain_standing' and feature_list['stand_right'] == 'uncertain_standing':
+            label = 'stand'
+        elif feature_list['stand_left'] == 'uncertain_squat' and feature_list['stand_right'] == 'uncertain_squat':
+            label = 'squat'
+        elif feature_list['sit_left'] == 'uncertain_sitting' and feature_list['sit_right'] == 'uncertain_sitting':
+            label = 'sit'
+        elif feature_list['stand_left'] == 'uncertain_standing' or feature_list['stand_right'] == 'uncertain_standing':
+            label = 'stand'
+        elif feature_list['sit_left'] == 'uncertain_sitting' or feature_list['sit_right'] == 'uncertain_sitting':
+            label = 'sit'
+        elif feature_list['stand_left'] == 'uncertain_squat' or feature_list['stand_right'] == 'uncertain_squat':
+            label = 'squat'
+        elif feature_list['lie_left'] == 'uncertain_lying' and feature_list['lie_right'] == 'uncertain_lying':
+            label = 'lie'
+        elif feature_list['lie_left'] == 'uncertain_lying' or feature_list['lie_right'] == 'uncertain_lying':
+            label = 'lie'
         return label
 
     if len(features) > 0:
