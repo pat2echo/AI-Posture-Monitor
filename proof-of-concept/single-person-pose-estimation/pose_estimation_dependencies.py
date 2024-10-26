@@ -248,10 +248,13 @@ def calculate_distance(point1, point2, dim=None ):
 
     return distance
 
-def calculate_percentage_difference(list1, list2):
+def calculate_percentage_difference(list1, list2, abs=True):
     # Calculate the percentage differences
     # percentage_differences = [(abs(a - b) / a) * 100 for a, b in zip(list1, list2)]
-    return (np.abs(np.array(list1) - np.array(list2)) / np.array(list1)) * 100
+    if abs:
+        return (np.abs(np.array(list1) - np.array(list2)) / np.array(list1)) * 100
+    else:
+        return ((np.array(list1) - np.array(list2)) / np.array(list1)) * 100
 
 def get_features(landmarks_3d, image_name=None):
     landmark_dict = pose_landmarks()
@@ -369,6 +372,7 @@ def get_features(landmarks_3d, image_name=None):
         x = 'left'
         y = 'right'
         avg_distance = []
+        shoulder_to_hip = []
 
         for x in ['shoulder', 'hip']:
             # avg distance btw Y pos of shoulders, hips
@@ -377,9 +381,27 @@ def get_features(landmarks_3d, image_name=None):
                 1 - ( ( landmarks_3d[landmark_dict_flipped[f'left {x}']][1] + landmarks_3d[landmark_dict_flipped[f'right {x}']][1] ) / 2 )
             )
 
-        percentage_differences = calculate_percentage_difference(avg_distance[0], avg_distance[1])
-        # print('is Avg distance of Y pos of shoulders > avg distance of Y pos of hips', percentage_differences)
-        return percentage_differences >= percentage_threshold
+        for x in ['left', 'right']:
+            shoulder_to_hip.append(
+                calculate_distance(
+                    landmarks_3d[landmark_dict_flipped[f'{x} shoulder']],
+                    landmarks_3d[landmark_dict_flipped[f'{x} hip']],
+                    '3d'
+                )
+            )
+
+        avg_length_should_to_hip = (shoulder_to_hip[0] + shoulder_to_hip[1]) / 2
+        percentage_differences = calculate_percentage_difference(avg_distance[0], avg_distance[1], abs=False)
+
+        is_upright = False
+        if percentage_differences >= percentage_threshold:
+            is_upright = True
+
+        percentage_upright = 100 - int((avg_length_should_to_hip - np.abs(avg_distance[0] - avg_distance[1])) / avg_length_should_to_hip * 100)
+
+        #print('percentage non upright',  percentage_upright)
+        #print('is Avg distance of Y pos of shoulders > avg distance of Y pos of hips', percentage_differences, percentage_upright)
+        return is_upright, percentage_upright
 
     def is_sit_shoulder_gt_hip_plus_angle(sine_of_angle_btw_back_and_chair=0.6428):
         # Too complicated: not being used
@@ -407,7 +429,7 @@ def get_features(landmarks_3d, image_name=None):
             ( sine_of_angle_btw_back_and_chair * shl_hip ) + mhip + calculate_distance( landmarks_3d[landmark_dict_flipped[f'{x} hip']][:2] , landmarks_3d[landmark_dict_flipped[f'{y} hip']][:2] ) / 2
         ))
 
-        print('is Y of shoulder > Y of hip + (Length of Shoulder to Hip * sin(40))', shoulder_gt_hip)
+        #print('is Y of shoulder > Y of hip + (Length of Shoulder to Hip * sin(40))', shoulder_gt_hip)
         return shoulder_gt_hip
 
     def is_lie(percentage_threshold=20):
@@ -573,8 +595,8 @@ def get_features(landmarks_3d, image_name=None):
     # print('stand', is_stand_hip_height_gt_bone_length())
     # print('sit', is_sit())
     # print('lie', is_lie())
-
-    return [image_name, is_upright_shoulder_gt_hip_plus()] + list(is_stand_hip_height_gt_bone_length()) + list(is_sit()) + list(is_lie())
+    is_upright, percent_upright = is_upright_shoulder_gt_hip_plus()
+    return [image_name, is_upright, percent_upright] + list(is_stand_hip_height_gt_bone_length()) + list(is_sit()) + list(is_lie())
 
 def get_groundtruth_from_image_name(image_name=''):
     dic = {'stand':'stand', 'squat':'squat', 'sit':'sit', 'lying':'lie', 'lie':'lie', 'bend':'stand', 'fall':'lie', 'climb':'stand', 'get':'sit'}
@@ -585,7 +607,7 @@ def get_groundtruth_from_image_name(image_name=''):
     return None
 
 def get_attr_of_features():
-    return ['image_name', 'is_upright', 'stand_left', 'stand_right', 'sit_left', 'sit_right', 'lie_left', 'lie_right']
+    return ['image_name', 'is_upright', 'percent_upright', 'stand_left', 'stand_right', 'sit_left', 'sit_right', 'lie_left', 'lie_right']
 
 def predict_features(features=[], features_df=None):
     # Use features list to make prediction
