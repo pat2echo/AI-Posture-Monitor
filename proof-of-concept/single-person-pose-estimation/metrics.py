@@ -36,10 +36,19 @@ save_path = None
 if len(sys.argv) > 1:
     features_file = sys.argv[1]
 
+    non_match = None
+    if len(sys.argv) > 2:
+        non_match = sys.argv[2]
+
     if os.path.isfile(features_file) and features_file.endswith('.csv'):
         df = pd.read_csv(features_file)
         metrics = calculate_metrics(df.dropna(axis=0, how='any'))
         print(metrics)
+
+        if non_match is not None:
+            dfa = df.dropna(axis=0, how='any')
+            dfr = dfa[dfa['label'] == non_match]
+            print(dfr[dfa['predicted_label'] != non_match])
     else:
         print("Specify input features file in csv format")
 else:

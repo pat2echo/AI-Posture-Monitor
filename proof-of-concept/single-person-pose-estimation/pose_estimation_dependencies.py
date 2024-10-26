@@ -394,10 +394,10 @@ def get_features(landmarks_3d, image_name=None):
         percentage_differences = calculate_percentage_difference(avg_distance[0], avg_distance[1], abs=False)
 
         is_upright = False
-        if percentage_differences >= percentage_threshold:
+        percentage_upright = 100 - int((avg_length_should_to_hip - np.abs(avg_distance[0] - avg_distance[1])) / avg_length_should_to_hip * 100)
+        if percentage_differences >= percentage_threshold and percentage_differences >= percentage_upright:
             is_upright = True
 
-        percentage_upright = 100 - int((avg_length_should_to_hip - np.abs(avg_distance[0] - avg_distance[1])) / avg_length_should_to_hip * 100)
 
         #print('percentage non upright',  percentage_upright)
         #print('is Avg distance of Y pos of shoulders > avg distance of Y pos of hips', percentage_differences, percentage_upright)
@@ -689,6 +689,8 @@ def predict_features(features=[], features_df=None):
         if feature_list['is_upright']:
             # stand or sit
             label = pred_stand_to_lie(feature_list)
+        elif feature_list['stand_left'] == 'standing' and feature_list['stand_right'] == 'standing':
+            label = 'stand'
         else:
             # likely lie
             if feature_list['lie_left'] == 'lying' and feature_list['lie_right'] == 'lying':
