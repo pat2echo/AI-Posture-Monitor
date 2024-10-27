@@ -313,19 +313,23 @@ def get_features(landmarks_3d, image_name=None):
 
             # test Y & Z coordinates
             if knee[1] < hip[1] and knee[2] < hip[2]:
-                is_knee_gt = 3
+                is_knee_gt = 5
             elif knee[1] < hip[1]:
                 is_knee_gt = 2
             elif knee[2] < hip[2]:
                 #distances = calculate_percentage_difference( np.abs(knee[1:]), np.abs(hip[1:]) )
                 #print('d', distances)
-                distances = calculate_percentage_difference( [knee[2]], [hip[2]] )
+                #distances = calculate_percentage_difference( [knee[2]], [hip[2]] )
                 #print('d2', distances)
                 is_knee_gt = 1
 
             knee_gt_hip.append(
                 is_knee_gt
             )
+
+            #distances = calculate_percentage_difference(np.abs(knee[1:]), np.abs(hip[1:]), abs=False)
+            #print('d', distances)
+
             #print('is Y of knee ≥ Y position of hip', 1-landmarks_3d[landmark_dict_flipped[f'{x} knee']][1], 1-landmarks_3d[landmark_dict_flipped[f'{x} hip']][1])
             #print('is Z of knee ≥ Z position of hip', 1-landmarks_3d[landmark_dict_flipped[f'{x} knee']][2], 1-landmarks_3d[landmark_dict_flipped[f'{x} hip']][2])
         # print('is Y of knee ≥ Y position of hip', knee_gt_hip)
@@ -348,7 +352,7 @@ def get_features(landmarks_3d, image_name=None):
 
             is_hip_ankle_less = 0
             if hip_ankle_height <= shin_bone:
-                is_hip_ankle_less = 3
+                is_hip_ankle_less = 5
             else:
                 percentage_diff = calculate_percentage_difference(hip_ankle_height, shin_bone + (shin_bone*.33))
                 #print('percentage_diff 2d', percentage_diff)
@@ -451,6 +455,10 @@ def get_features(landmarks_3d, image_name=None):
         knee_gt_hip = is_sit_knee_gt_hip()
         #print('hip_ankle_lt_shin_bone', hip_ankle_lt_shin_bone)
         #print('knee_gt_hip', knee_gt_hip)
+
+        # max value obtainable is 5 for each function, hence scale to 100%
+        max = (100/10)
+
         for x, v in enumerate(knee_gt_hip):
             if v >= 2:
                 sit_left_right_leg[x] = 'sitting'
@@ -460,6 +468,8 @@ def get_features(landmarks_3d, image_name=None):
                 sit_left_right_leg[x] = 'sitting'
             elif v == 1 or hip_ankle_lt_shin_bone[x] > 0:
                 sit_left_right_leg[x] = 'uncertain_sitting'
+
+            sit_left_right_leg.append( int(max * ( v + hip_ankle_lt_shin_bone[x] )) )
 
         return sit_left_right_leg
 
@@ -481,6 +491,7 @@ def get_features(landmarks_3d, image_name=None):
         percentage_differences = calculate_percentage_difference(bone_length + bone_length_3d, y_distance_hip_to_ankle + y_distance_hip_to_ankle)
         #print('bone_length and y_distance_hip_to_ankle', bone_length, y_distance_hip_to_ankle)
         #print('percent diff hip-to-ankle', percentage_differences)
+        #print('mean percent diff hip-to-ankle', np.mean(percentage_differences[::2]), np.mean(percentage_differences[1::2]) )
 
         # Initialize the result array with 'non_standing'
         result = np.full(percentage_differences.shape, 'non_standing', dtype=object)
@@ -497,7 +508,7 @@ def get_features(landmarks_3d, image_name=None):
         final_result = []
         # both legs in 2d space indicates standing
         if result[0] == result[1]:
-            final_result = result[:2]
+            final_result = list(result[:2])
         else:
             # perform comparison / voting btw 2d results and 3d results of bone length
             for x in range(2):
@@ -513,6 +524,9 @@ def get_features(landmarks_3d, image_name=None):
                     final_result.append('uncertain_' + result[x])
 
         # Return the result array
+        final_result.append(100 - int(np.mean(percentage_differences[::2])) )
+        final_result.append(100 - int(np.mean(percentage_differences[1::2])) )
+
         return final_result
 
     def hip_ankle_length(dim=None):
@@ -606,7 +620,7 @@ def get_groundtruth_from_image_name(image_name=''):
     return None
 
 def get_attr_of_features():
-    return ['image_name', 'is_upright', 'percent_upright', 'stand_left', 'stand_right', 'sit_left', 'sit_right', 'lie_left', 'lie_right']
+    return ['image_name', 'is_upright', 'percent_upright', 'stand_left', 'stand_right', 'percent_stand_left', 'percent_stand_right', 'sit_left', 'sit_right', 'percent_sit_left', 'percent_sit_right', 'lie_left', 'lie_right']
 
 def predict_features(features=[], features_df=None):
     # Use features list to make prediction
@@ -625,6 +639,9 @@ def predict_features(features=[], features_df=None):
         elif feature_list['stand_left'] == 'standing' and feature_list['stand_right'] == 'squat':
             label = 'stand'
         elif feature_list['stand_right'] == 'standing' and feature_list['stand_left'] == 'squat':
+            label = 'stand'
+
+        elif max([feature_list['percent_stand_right'], feature_list['percent_stand_right']]) > 90 and min([feature_list['percent_sit_right'], feature_list['percent_sit_right']]) < 20 :
             label = 'stand'
 
         elif feature_list['stand_left'] == 'standing' and feature_list['stand_right'] == 'uncertain_standing':
