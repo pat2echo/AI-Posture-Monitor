@@ -641,7 +641,7 @@ def predict_features(features=[], features_df=None):
         elif feature_list['stand_right'] == 'standing' and feature_list['stand_left'] == 'squat':
             label = 'stand'
 
-        elif max([feature_list['percent_stand_right'], feature_list['percent_stand_right']]) > 90 and min([feature_list['percent_sit_right'], feature_list['percent_sit_right']]) < 20 :
+        elif max([feature_list['percent_stand_left'], feature_list['percent_stand_right']]) > 90 and min([feature_list['percent_sit_right'], feature_list['percent_sit_left']]) < 20 :
             label = 'stand'
 
         elif feature_list['stand_left'] == 'standing' and feature_list['stand_right'] == 'uncertain_standing':
