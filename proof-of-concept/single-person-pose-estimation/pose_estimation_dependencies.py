@@ -612,7 +612,8 @@ def get_features(landmarks_3d, image_name=None):
     return [image_name, is_upright, percent_upright] + list(is_stand_hip_height_gt_bone_length()) + list(is_sit()) + list(is_lie())
 
 def get_groundtruth_from_image_name(image_name=''):
-    dic = {'stand':'stand', 'squat':'squat', 'sit':'sit', 'lying':'lie', 'lie':'lie', 'bend':'stand', 'fall':'lie', 'climb':'stand', 'get':'sit'}
+    #dic = {'stand':'stand', 'squat':'squat', 'sit':'sit', 'lying':'lie', 'lie':'lie', 'bend':'stand', 'fall':'lie', 'climb':'stand', 'get':'sit'}
+    dic = {'stand':'stand', 'squat':'stand', 'sit':'sit', 'lying':'lie', 'lie':'lie', 'bend':'stand', 'fall':'lie', 'climb':'stand', 'get':'sit'}
     if image_name != '':
         for x in dic:
             if image_name.startswith(x):
@@ -628,10 +629,12 @@ def predict_features(features=[], features_df=None):
 
     def pred_stand_to_lie(feature_list):
         label = None
+        squat = 'squat'
+        squat = 'stand'
         if feature_list['stand_left'] == 'standing' and feature_list['stand_right'] == 'standing':
             label = 'stand'
         elif feature_list['stand_left'] == 'squat' and feature_list['stand_right'] == 'squat':
-            label = 'squat'
+            label = squat
         elif feature_list['percent_upright'] < 20 and feature_list['sit_left'] == 'sitting' and feature_list['sit_right'] == 'sitting' and feature_list['lie_left'] == 'lying' and feature_list['lie_right'] == 'lying':
             label = 'lie'
         elif feature_list['sit_left'] == 'sitting' and feature_list['sit_right'] == 'sitting':
@@ -644,10 +647,13 @@ def predict_features(features=[], features_df=None):
         elif max([feature_list['percent_stand_left'], feature_list['percent_stand_right']]) > 90 and min([feature_list['percent_sit_right'], feature_list['percent_sit_left']]) < 20 :
             label = 'stand'
 
+        elif max([feature_list['percent_stand_left'], feature_list['percent_stand_right']]) > 70 and min([feature_list['percent_sit_right'], feature_list['percent_sit_left']]) < 20  and max([feature_list['percent_sit_right'], feature_list['percent_sit_left']]) < 70 :
+            label = 'stand'
+
         elif feature_list['stand_left'] == 'standing' and feature_list['stand_right'] == 'uncertain_standing':
             label = 'stand'
         elif feature_list['stand_left'] == 'squat' and feature_list['stand_right'] == 'uncertain_squat':
-            label = 'squat'
+            label = squat
         elif feature_list['sit_left'] == 'sitting' and feature_list['sit_right'] == 'uncertain_sitting':
             label = 'sit'
         elif feature_list['stand_left'] == 'standing' and feature_list['stand_right'] == 'uncertain_squat':
@@ -658,7 +664,7 @@ def predict_features(features=[], features_df=None):
         elif feature_list['stand_right'] == 'standing' and feature_list['stand_left'] == 'uncertain_standing':
             label = 'stand'
         elif feature_list['stand_right'] == 'squat' and feature_list['stand_left'] == 'uncertain_squat':
-            label = 'squat'
+            label = squat
         elif feature_list['sit_right'] == 'sitting' and feature_list['sit_left'] == 'uncertain_sitting':
             label = 'sit'
         elif feature_list['stand_right'] == 'standing' and feature_list['stand_left'] == 'uncertain_squat':
@@ -671,7 +677,7 @@ def predict_features(features=[], features_df=None):
         elif feature_list['sit_left'] == 'sitting' or feature_list['sit_right'] == 'sitting':
             label = 'sit'
         elif feature_list['stand_left'] == 'squat' or feature_list['stand_right'] == 'squat':
-            label = 'squat'
+            label = squat
         elif feature_list['lie_left'] == 'lying' and feature_list['lie_right'] == 'lying':
             label = 'lie'
         elif feature_list['lie_left'] == 'lying' or feature_list['lie_right'] == 'lying':
@@ -679,7 +685,7 @@ def predict_features(features=[], features_df=None):
         elif feature_list['stand_left'] == 'uncertain_standing' and feature_list['stand_right'] == 'uncertain_standing':
             label = 'stand'
         elif feature_list['stand_left'] == 'uncertain_squat' and feature_list['stand_right'] == 'uncertain_squat':
-            label = 'squat'
+            label = squat
         elif feature_list['stand_left'] == 'uncertain_standing' and feature_list['stand_right'] == 'uncertain_squat':
             label = 'stand'
         elif feature_list['stand_right'] == 'uncertain_standing' and feature_list['stand_left'] == 'uncertain_squat':
@@ -688,10 +694,10 @@ def predict_features(features=[], features_df=None):
             label = 'sit'
         elif feature_list['stand_left'] == 'uncertain_standing' or feature_list['stand_right'] == 'uncertain_standing':
             label = 'stand'
+        elif feature_list['stand_left'] == 'uncertain_squat' or feature_list['stand_right'] == 'uncertain_squat':
+            label = squat
         elif feature_list['sit_left'] == 'uncertain_sitting' or feature_list['sit_right'] == 'uncertain_sitting':
             label = 'sit'
-        elif feature_list['stand_left'] == 'uncertain_squat' or feature_list['stand_right'] == 'uncertain_squat':
-            label = 'squat'
         elif feature_list['lie_left'] == 'uncertain_lying' and feature_list['lie_right'] == 'uncertain_lying':
             label = 'lie'
         elif feature_list['lie_left'] == 'uncertain_lying' or feature_list['lie_right'] == 'uncertain_lying':
