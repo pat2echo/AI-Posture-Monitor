@@ -1,0 +1,4 @@
+Predict Pose
+```aiignore
+python code/proof-of-concept/pose-estimation-on-video/predict_pose.py ./dataset/hr_fall_detection_3.mp4
+```

@@ -265,8 +265,8 @@ class FrameDiff:
         os.makedirs(folder_path, exist_ok=True)  # Recreate the empty folder
 
     def get_bounding_box(self, diff_frame=None, frame_output=None, intersect_rectangles=True,
-                         frame_count=0, save_interval=0, output_folder_aoi=None):
-
+                         frame_count=0, save_interval=0):
+        rectangles = []
         if diff_frame is not None:
             # Threshold the difference frame
             _, thresh_frame = cv2.threshold(diff_frame, 0.5, 255, cv2.THRESH_BINARY)
@@ -275,7 +275,6 @@ class FrameDiff:
             contours, _ = cv2.findContours(thresh_frame, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
             # Get rectangles for all significant contours
-            rectangles = []
             for contour in contours:
                 if cv2.contourArea(contour) > 800:  # Adjust this threshold as needed
                     rect = cv2.boundingRect(contour)
@@ -301,3 +300,4 @@ class FrameDiff:
                         # Save aoi
                         self.save_image(aoi,
                                         os.path.join(self.output_folder_aoi, f"object_{frame_count:04d}_{x}_{y}"))
+        return rectangles

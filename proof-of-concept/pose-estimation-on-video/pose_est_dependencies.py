@@ -7,7 +7,7 @@ import shutil
 from frame_diff_dependencies import FrameDiff
 
 class PoseEstimation:
-    def process_video(self, video_file=None, scaling_factor=0.5, predict_pose=False, frame_count=-1,
+    def process_video(self, video_file=None, scaling_factor=0.5, predict_pose=False,
                                    BASE_OUTPUT_DIR=None):
 
         # Initialize MediaPipe Pose
@@ -83,12 +83,14 @@ class PoseEstimation:
             # Increment current frame number
             self.frame_count += 1
 
-
             # Set max absolute value to 0 in case frame was not processed
             max_value = 0
 
             # Initialize control variable to process image or not
             process_image = True
+
+            # Convert frame to RGB for MediaPipe
+            frame_output = cv2.cvtColor(frame.copy(), cv2.COLOR_GRAY2RGB)
 
             if process_image:
                 # Perform frame differencing
@@ -99,11 +101,10 @@ class PoseEstimation:
                 if max_abs_threshold and max_value < max_abs_threshold:
                     process_image = False
 
-            # Convert frame to RGB for MediaPipe
-            frame_output = cv2.cvtColor(frame.copy(), cv2.COLOR_GRAY2RGB)
-            if process_image:
-                self.my_frame_diff.get_bounding_box(diff_frame=diff_frame, frame_output=frame_output, intersect_rectangles=True,
-                         frame_count=self.frame_count, save_interval=self.save_interval)
+                if process_image:
+                    rectangles = self.my_frame_diff.get_bounding_box(diff_frame=diff_frame, frame_output=frame_output, intersect_rectangles=intersect_rectangles,
+                             frame_count=self.frame_count, save_interval=self.save_interval)
+                    self.process_frame(frame_output=frame_output, predict_pose=predict_pose, rectangles=rectangles)
 
             # Display the result
             cv2.imshow('Motion Detection and Pose Estimation', frame_output)
