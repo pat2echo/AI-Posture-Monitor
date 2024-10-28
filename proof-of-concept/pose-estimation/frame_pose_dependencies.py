@@ -261,7 +261,7 @@ def empty_folder(folder_path):
     os.makedirs(folder_path, exist_ok=True)  # Recreate the empty folder
 
 
-def frame_diff_pose_estimation(video_file=None, scaling_factor=0.5, frame_count=-1, BASE_OUTPUT_DIR=None):
+def frame_diff_pose_estimation(video_file=None, scaling_factor=0.5, predict_pose=False, frame_count=-1, BASE_OUTPUT_DIR=None):
     # Initialize MediaPipe Pose
     mp_pose = mp.solutions.pose
     mp_drawing = mp.solutions.drawing_utils
@@ -310,6 +310,14 @@ def frame_diff_pose_estimation(video_file=None, scaling_factor=0.5, frame_count=
 
     output_folder_aoi_pose = os.path.join(BASE_OUTPUT_DIR, "output_aoi_pose")
     empty_folder(output_folder_aoi_pose)
+
+    # Define the text and its position
+    prefix_text = "Hello Frame"
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    font_scale = 0.7
+    font_color = (0, 255, 0)  # Green color in BGR
+    font_thickness = 2
+
 
     while True:
         # Get the next frame
@@ -395,7 +403,7 @@ def frame_diff_pose_estimation(video_file=None, scaling_factor=0.5, frame_count=
                 results = pose.process(aoi_for_pose)
 
                 if results.pose_landmarks:
-                    print(results.pose_landmarks)
+                    #print(results.pose_landmarks)
                     mp_drawing.draw_landmarks(
                         aoi_for_pose,
                         results.pose_landmarks,
@@ -403,6 +411,22 @@ def frame_diff_pose_estimation(video_file=None, scaling_factor=0.5, frame_count=
                         mp_drawing.DrawingSpec(color=(0, 117, 66), thickness=1, circle_radius=2),
                         mp_drawing.DrawingSpec(color=(245, 66, 0), thickness=1, circle_radius=2)
                     )
+
+                    if predict_pose:
+                        landmarks_data = []
+                        for i, landmark in enumerate(results.pose_landmarks.landmark):
+                            landmarks_data.append([landmark.x, landmark.y, landmark.z])
+
+                        #features = get_features(landmarks_3d=np.array(landmarks_data), image_name=None)
+                        #print(features, predict_features(features=features))
+
+                        # Get the frame dimensions and calculate the text position
+                        frame_label = f'{prefix_text} {frame_count}'
+                        frame_height, frame_width = frame_output.shape[:2]
+                        (text_width, text_height), _ = cv2.getTextSize(frame_label, font, font_scale, font_thickness)
+                        text_x = frame_width - text_width - 10  # 10 px padding from the right edge
+                        text_y = 20  # Position near the top
+                        cv2.putText(frame_output, frame_label, (text_x, text_y), font, font_scale, font_color, font_thickness)
 
                 # Save aoi for pose
                 if frame_count % save_interval == 0:
