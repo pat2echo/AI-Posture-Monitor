@@ -18,6 +18,7 @@ import os
 Sample Pose Estimation with MediaPipe
 ```
 python.exe .\frame_pose.py M:\work\project\hr_fall_detection_3.mp4
+python code/proof-of-concept/pose-estimation/frame_pose.py ./dataset/hr_fall_detection_3.mp4 
 
 python.exe .\frame_pose.py .\walking_to_sit.mp4 0.3
 
