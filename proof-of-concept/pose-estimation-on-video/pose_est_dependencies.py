@@ -2,13 +2,14 @@ import mediapipe as mp
 import cv2
 import numpy as np
 import os
-import pandas as pd
-import shutil
 from frame_diff_dependencies import FrameDiff
+from features_dependencies import  get_features
+from predict_dependencies import  predict_pose, get_attr_of_features
 
 class PoseEstimation:
-    def process_video(self, video_file=None, scaling_factor=0.5, predict_pose=False,
+    def process_video(self, video_file=None, scaling_factor=0.5, is_predict_pose=False,
                                    BASE_OUTPUT_DIR=None):
+        self.is_predict_pose = is_predict_pose
 
         # Initialize MediaPipe Pose
         self.mp_pose = mp.solutions.pose
@@ -38,7 +39,7 @@ class PoseEstimation:
         self.frame_count = -1
 
         # Initialize interval for saving frames; to ensures not all frames are saved
-        self.save_interval = 30
+        self.save_interval = 1
 
         # Initialize absolute values of frame difference; only frame_diff above this value are processed set to 0 to ignore
         max_abs_threshold = 26
@@ -92,6 +93,9 @@ class PoseEstimation:
             # Convert frame to RGB for MediaPipe
             frame_output = cv2.cvtColor(frame.copy(), cv2.COLOR_GRAY2RGB)
 
+            features = []
+            prediction = None
+
             if process_image:
                 # Perform frame differencing
                 diff_frame = self.my_frame_diff.frame_diff(prev_frame, cur_frame, next_frame)
@@ -104,20 +108,20 @@ class PoseEstimation:
                 if process_image:
                     rectangles = self.my_frame_diff.get_bounding_box(diff_frame=diff_frame, frame_output=frame_output, intersect_rectangles=intersect_rectangles,
                              frame_count=self.frame_count, save_interval=self.save_interval)
-                    self.process_frame(frame_output=frame_output, predict_pose=predict_pose, rectangles=rectangles)
+                    prediction, features = self.process_frame(frame_output=frame_output, rectangles=rectangles)
 
             # Display the result
             cv2.imshow('Motion Detection and Pose Estimation', frame_output)
 
             # Save frame at regular intervals
-            if self.frame_count % self.save_interval == 0:
+            if process_image and self.frame_count % self.save_interval == 0:
                 frame_title = f"frame_{self.frame_count:04d}.jpg"
                 output_path = os.path.join(self.my_frame_diff.output_folder, frame_title)
-                cv2.imwrite(output_path, frame_output)
+                #cv2.imwrite(output_path, frame_output)
 
                 # Save max value of absolute difference to csv
                 print(frame_title, max_value, process_image)
-                output_data.append([frame_title, max_value, process_image])
+                output_data.append([frame_title, max_value, process_image, prediction, ', '.join(map(str, features))])
 
             # Break the loop if 'q' is pressed
             # Check for the ESC key press
@@ -126,8 +130,9 @@ class PoseEstimation:
                 break
 
         # Save the NumPy array to CSV
+        features_attr = get_attr_of_features()
         np.savetxt(os.path.join(self.my_frame_diff.output_folder, 'frame_max_values.csv'), np.array(output_data), fmt='%s', delimiter=',',
-                   header='file_name,max_value,process_image', comments='')
+                   header='file_name,max_value,process_image,prediction,' + ','.join(features_attr), comments='')
 
         # Release resources
         cap.release()
@@ -141,9 +146,11 @@ class PoseEstimation:
         self.font_color = (0, 255, 0)  # Green color in BGR
         self.font_thickness = 2
 
-    def process_frame(self, frame_output, predict_pose=False, rectangles=None):
+    def process_frame(self, frame_output, rectangles=None):
         # Initialize control variable to process image or not
         process_image = True
+        features = []
+        prediction = None
 
         if process_image and len(rectangles) > 0:
             # Get area of interest from the biggest frame
@@ -167,16 +174,17 @@ class PoseEstimation:
                         self.mp_drawing.DrawingSpec(color=(245, 66, 0), thickness=1, circle_radius=2)
                     )
 
-                    if predict_pose:
+                    if self.is_predict_pose:
                         landmarks_data = []
                         for i, landmark in enumerate(results.pose_landmarks.landmark):
                             landmarks_data.append([landmark.x, landmark.y, landmark.z])
 
-                        # features = get_features(landmarks_3d=np.array(landmarks_data), image_name=None)
-                        # print(features, predict_features(features=features))
+                        features = get_features(landmarks_3d=np.array(landmarks_data), image_name=None)
+                        prediction = predict_pose( features=features)
+                        print(features, prediction)
 
                         # Get the frame dimensions and calculate the text position
-                        frame_label = f'{self.prefix_text} {self.frame_count}'
+                        frame_label = f'{self.prefix_text} {prediction} {self.frame_count}'
                         frame_height, frame_width = frame_output.shape[:2]
                         (text_width, text_height), _ = cv2.getTextSize(frame_label, self.font, self.font_scale, self.font_thickness)
                         text_x = frame_width - text_width - 10  # 10 px padding from the right edge
@@ -191,3 +199,5 @@ class PoseEstimation:
         else:
             # frame_output = frame_rgb
             pass
+
+        return prediction, features

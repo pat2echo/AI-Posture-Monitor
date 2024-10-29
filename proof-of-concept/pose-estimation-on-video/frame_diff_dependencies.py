@@ -79,44 +79,7 @@ class FrameDiff:
         return img_rgb
 
     def pose_landmarks(self, ):
-        # Dictionary mapping landmark indices to body parts
-        landmark_dict = {
-            0: 'nose',
-            1: 'left eye (inner)',
-            2: 'left eye',
-            3: 'left eye (outer)',
-            4: 'right eye (inner)',
-            5: 'right eye',
-            6: 'right eye (outer)',
-            7: 'left ear',
-            8: 'right ear',
-            9: 'mouth (left)',
-            10: 'mouth (right)',
-            11: 'left shoulder',
-            12: 'right shoulder',
-            13: 'left elbow',
-            14: 'right elbow',
-            15: 'left wrist',
-            16: 'right wrist',
-            17: 'left pinky',
-            18: 'right pinky',
-            19: 'left index',
-            20: 'right index',
-            21: 'left thumb',
-            22: 'right thumb',
-            23: 'left hip',
-            24: 'right hip',
-            25: 'left knee',
-            26: 'right knee',
-            27: 'left ankle',
-            28: 'right ankle',
-            29: 'left heel',
-            30: 'right heel',
-            31: 'left foot index',
-            32: 'right foot index'
-        }
-
-        return landmark_dict
+        return pose_landmarks()
 
     def detect_pose_landmarks(self, image_path, pose, show=False):
         img_rgb = self.get_rgb_image_from_cv2(image_path, show=False)
@@ -283,7 +246,7 @@ class FrameDiff:
             if len(rectangles) > 0:
                 if intersect_rectangles:
                     # Merge close or intersecting rectangles
-                    rectangles = self.merge_rectangles(rectangles, max_distance=1000)
+                    rectangles = self.merge_rectangles(rectangles, max_distance=100)
                 else:
                     # Sort rectangles in desc order by area
                     rectangles = self.sort_rectangles(rectangles)
@@ -298,6 +261,45 @@ class FrameDiff:
                         aoi = self.get_area_of_interest(frame_output, (x, y, w, h))
 
                         # Save aoi
-                        self.save_image(aoi,
-                                        os.path.join(self.output_folder_aoi, f"object_{frame_count:04d}_{x}_{y}"))
+                        self.save_image(aoi, os.path.join(self.output_folder_aoi, f"object_{frame_count:04d}_{x}_{y}"))
         return rectangles
+
+def pose_landmarks():
+    # Dictionary mapping landmark indices to body parts
+    landmark_dict = {
+        0: 'nose',
+        1: 'left eye (inner)',
+        2: 'left eye',
+        3: 'left eye (outer)',
+        4: 'right eye (inner)',
+        5: 'right eye',
+        6: 'right eye (outer)',
+        7: 'left ear',
+        8: 'right ear',
+        9: 'mouth (left)',
+        10: 'mouth (right)',
+        11: 'left shoulder',
+        12: 'right shoulder',
+        13: 'left elbow',
+        14: 'right elbow',
+        15: 'left wrist',
+        16: 'right wrist',
+        17: 'left pinky',
+        18: 'right pinky',
+        19: 'left index',
+        20: 'right index',
+        21: 'left thumb',
+        22: 'right thumb',
+        23: 'left hip',
+        24: 'right hip',
+        25: 'left knee',
+        26: 'right knee',
+        27: 'left ankle',
+        28: 'right ankle',
+        29: 'left heel',
+        30: 'right heel',
+        31: 'left foot index',
+        32: 'right foot index'
+    }
+
+    return landmark_dict
