@@ -129,15 +129,17 @@ class PoseEstimation:
                 frame_title = f"frame_{self.frame_count:04d}.jpg"
                 output_path = os.path.join(self.my_frame_diff.output_folder, frame_title)
                 #cv2.imwrite(output_path, frame)
-                #cv2.imwrite(output_path, frame_output)
+                cv2.imwrite(output_path, frame_output)
 
                 # Save max value of absolute difference to csv
                 print(frame_title, max_value, process_image)
                 output_data.append([frame_title, max_value, process_image, prediction, ', '.join(map(str, features))])
 
-            # Break the loop if 'q' is pressed
             # Check for the ESC key press
-            key = cv2.waitKey(1)  # Adjust the wait time for smoother video playback
+
+            #wait_time = int(1000 / fps)
+            wait_time = 1   #fast play
+            key = cv2.waitKey(wait_time)
             if key == 27:  # ESC key
                 break
 
@@ -206,8 +208,8 @@ class PoseEstimation:
 
             # Save aoi for pose
             if self.frame_count % self.save_interval == 0:
-                self.my_frame_diff.save_image(aoi_for_pose,
-                                              os.path.join(self.my_frame_diff.output_folder_aoi_pose, f"pose_{self.frame_count:04d}"))
+                #self.my_frame_diff.save_image(aoi_for_pose, os.path.join(self.my_frame_diff.output_folder_aoi_pose, f"pose_{self.frame_count:04d}"))
+                pass
 
 
         return prediction, features

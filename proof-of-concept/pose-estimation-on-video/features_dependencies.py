@@ -215,7 +215,7 @@ def calculate_percentage_difference(list1, list2, abs=True):
     else:
         return ((np.array(list1) - np.array(list2)) / np.array(list1)) * 100
 
-def get_features(landmarks_3d, image_name=None, model=1):
+def get_features(landmarks_3d, image_name=None, model=2):
     landmark_dict = pose_landmarks()
     landmark_dict_flipped = {v: k for k, v in landmark_dict.items()}
     # print(landmark_dict_flipped)
@@ -449,7 +449,7 @@ def get_features(landmarks_3d, image_name=None, model=1):
                 sit_left_right_leg[x] = 'sitting'
             elif hip_ankle_lt_shin_bone[x] >= 2:
                 sit_left_right_leg[x] = 'sitting'
-            elif zx_hip_knee[x] is not None and zx_hip_knee[x] <= 1:
+            elif zx_hip_knee[x] is not None and zx_hip_knee[x] <= 10:
                 sit_left_right_leg[x] = 'sitting'
             elif v == 1 and hip_ankle_lt_shin_bone[x] >= 2:
                 sit_left_right_leg[x] = 'sitting'
@@ -459,7 +459,7 @@ def get_features(landmarks_3d, image_name=None, model=1):
             if zx_hip_knee[x] is not None:
                 if zx_hip_knee[x] > 25:
                     v = v - (v*zx_hip_knee[x]/100)
-                elif zx_hip_knee[x] < 1:
+                elif zx_hip_knee[x] < 10:
                     v = v * 3
 
             sit_left_right_leg.append( int(max * ( v + hip_ankle_lt_shin_bone[x] )) )
@@ -489,7 +489,7 @@ def get_features(landmarks_3d, image_name=None, model=1):
         #print('percent diff hip-to-ankle', percentage_differences)
         zx_hip_knee = is_sit_compare_z_hip_knee_thigh_bone()
         for x in range(2):
-            if zx_hip_knee[x] is not None and zx_hip_knee[x] < 1:
+            if zx_hip_knee[x] is not None and zx_hip_knee[x] < 10:
                 reduce = 1.2 + zx_hip_knee[x]
                 percentage_differences[x] = percentage_differences[x] + (percentage_differences[x] * reduce)
                 percentage_differences[x+2] = percentage_differences[x+2] + (percentage_differences[x+2] * reduce)
@@ -505,11 +505,13 @@ def get_features(landmarks_3d, image_name=None, model=1):
         result[(percentage_differences >= percentage_threshold) & (
                     percentage_differences < percentage_threshold_for_squat)] = 'squat'
 
-        #print('initial result', result)
+        print('initial result', result)
 
         final_result = []
+        mean = [ 100 - int(np.mean(percentage_differences[::2])), 100 - int(np.mean(percentage_differences[1::2])) ]
+
         # both legs in 2d space indicates standing
-        if result[0] == result[1]:
+        if result[0] == result[1] and mean[0] >= percentage_threshold and mean[1] >= percentage_threshold:
             final_result = list(result[:2])
         else:
             # perform comparison / voting btw 2d results and 3d results of bone length
@@ -520,14 +522,14 @@ def get_features(landmarks_3d, image_name=None, model=1):
                     final_result.append(result[x])
                 elif percentage_differences[x+2] <= percentage_threshold and percentage_differences[x] <= percentage_threshold_for_squat:
                     final_result.append(result[x+2])
-                elif percentage_differences[x] <= ( percentage_threshold / 2 ):
+                elif percentage_differences[x] <= ( percentage_threshold / 2 ) and mean[x] >= percentage_threshold:
                     final_result.append(result[x])
                 else:
                     final_result.append('uncertain_' + result[x])
 
         # Return the result array
-        final_result.append(100 - int(np.mean(percentage_differences[::2])) )
-        final_result.append(100 - int(np.mean(percentage_differences[1::2])) )
+        final_result.append( mean[0] )
+        final_result.append( mean[1] )
 
         return final_result
 
