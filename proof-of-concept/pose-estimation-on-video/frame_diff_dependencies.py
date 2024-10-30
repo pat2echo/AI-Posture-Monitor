@@ -362,7 +362,7 @@ class FrameDiff:
 
                 rectangles = self.get_bounding_box(diff_frame=bg_diff_frame, frame_output=frame_output, intersect_rectangles=False,
                                                    frame_count=frame_count, save_interval=save_interval)
-                self.draw_gridlines(frame=frame_output)
+                self.draw_gridlines(frame=frame_output, num_rows=30, num_cols=30, color=(255, 255, 0), thickness=1)
 
             # Display the result
             cv2.imshow('Motion Detection and Pose Estimation', frame_output)
