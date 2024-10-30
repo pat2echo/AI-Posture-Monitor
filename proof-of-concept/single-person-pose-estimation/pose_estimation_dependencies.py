@@ -256,7 +256,7 @@ def calculate_percentage_difference(list1, list2, abs=True):
     else:
         return ((np.array(list1) - np.array(list2)) / np.array(list1)) * 100
 
-def get_features(landmarks_3d, image_name=None):
+def get_features(landmarks_3d, image_name=None, model=1):
     landmark_dict = pose_landmarks()
     landmark_dict_flipped = {v: k for k, v in landmark_dict.items()}
     # print(landmark_dict_flipped)
@@ -371,6 +371,30 @@ def get_features(landmarks_3d, image_name=None):
         #print('is Y distance btw hip and ankle ≤ Shin bone', hip_ankle_lt_shin_bone)
         return hip_ankle_lt_shin_bone
 
+    def is_sit_compare_z_hip_knee_thigh_bone():
+        # Z distance btw hip and ankle ≤ Thigh bone along such axis
+        if model == 1:
+            return [None,None]
+
+        z_hip_knee_thigh_bone = []
+        for x in ['left', 'right']:
+            hip_knee = calculate_distance(
+                landmarks_3d[landmark_dict_flipped[f'{x} hip']][0::2],
+                landmarks_3d[landmark_dict_flipped[f'{x} knee']][0::2]
+            )
+            thigh_bone = calculate_distance(
+                landmarks_3d[landmark_dict_flipped[f'{x} hip']],
+                landmarks_3d[landmark_dict_flipped[f'{x} knee']]
+            )
+
+            percentage_diff = calculate_percentage_difference(thigh_bone,hip_knee)
+            #print('percentage_diff 2d', percentage_diff, hip_knee, thigh_bone)
+            z_hip_knee_thigh_bone.append(percentage_diff)
+
+        # higher values supports standing, lower values support sitting
+        #print('is Z distance btw hip and ankle ≤ Thigh bone along such axis', z_hip_knee_thigh_bone)
+        return z_hip_knee_thigh_bone
+
     def is_upright_shoulder_gt_hip_plus(percentage_threshold=10):
         # Avg distance of Y pos of shoulders > avg distance of Y pos of hips
         x = 'left'
@@ -453,6 +477,8 @@ def get_features(landmarks_3d, image_name=None):
 
         hip_ankle_lt_shin_bone = is_sit_hip_ankle_lt_shin_bone()
         knee_gt_hip = is_sit_knee_gt_hip()
+        zx_hip_knee = is_sit_compare_z_hip_knee_thigh_bone()
+        #print('zx_hip_knee', zx_hip_knee)
         #print('hip_ankle_lt_shin_bone', hip_ankle_lt_shin_bone)
         #print('knee_gt_hip', knee_gt_hip)
 
@@ -464,10 +490,18 @@ def get_features(landmarks_3d, image_name=None):
                 sit_left_right_leg[x] = 'sitting'
             elif hip_ankle_lt_shin_bone[x] >= 2:
                 sit_left_right_leg[x] = 'sitting'
+            elif zx_hip_knee[x] is not None and zx_hip_knee[x] <= 1:
+                sit_left_right_leg[x] = 'sitting'
             elif v == 1 and hip_ankle_lt_shin_bone[x] >= 2:
                 sit_left_right_leg[x] = 'sitting'
             elif v == 1 or hip_ankle_lt_shin_bone[x] > 0:
                 sit_left_right_leg[x] = 'uncertain_sitting'
+
+            if zx_hip_knee[x] is not None:
+                if zx_hip_knee[x] > 25:
+                    v = v - (v*zx_hip_knee[x]/100)
+                elif zx_hip_knee[x] < 1:
+                    v = v * 3
 
             sit_left_right_leg.append( int(max * ( v + hip_ankle_lt_shin_bone[x] )) )
 
@@ -492,6 +526,15 @@ def get_features(landmarks_3d, image_name=None):
         #print('bone_length and y_distance_hip_to_ankle', bone_length, y_distance_hip_to_ankle)
         #print('percent diff hip-to-ankle', percentage_differences)
         #print('mean percent diff hip-to-ankle', np.mean(percentage_differences[::2]), np.mean(percentage_differences[1::2]) )
+
+        #print('percent diff hip-to-ankle', percentage_differences)
+        zx_hip_knee = is_sit_compare_z_hip_knee_thigh_bone()
+        for x in range(2):
+            if zx_hip_knee[x] is not None and zx_hip_knee[x] < 1:
+                reduce = 1.2 + zx_hip_knee[x]
+                percentage_differences[x] = percentage_differences[x] + (percentage_differences[x] * reduce)
+                percentage_differences[x+2] = percentage_differences[x+2] + (percentage_differences[x+2] * reduce)
+        #print('percent diff hip-to-ankle', percentage_differences)
 
         # Initialize the result array with 'non_standing'
         result = np.full(percentage_differences.shape, 'non_standing', dtype=object)
