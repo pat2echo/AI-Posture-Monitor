@@ -51,4 +51,5 @@ python code/proof-of-concept/single-person-pose-estimation/metrics.py ./dataset/
 
 # Run all
 python code/proof-of-concept/single-person-pose-estimation/get_features.py ./dataset/pose && python code/proof-of-concept/single-person-pose-estimation/predict.py ./dataset/pose/features_output.csv && python code/proof-of-concept/single-person-pose-estimation/metrics.py ./dataset/pose/features_output_predicted.csv
+python code/proof-of-concept/single-person-pose-estimation/get_features.py ./dataset/video-pose-2 && python code/proof-of-concept/single-person-pose-estimation/predict.py ./dataset/pose/features_output.csv && python code/proof-of-concept/single-person-pose-estimation/metrics.py ./dataset/pose/features_output_predicted.csv
 ```

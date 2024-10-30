@@ -7,6 +7,8 @@ import pandas as pd
 
 from pose_estimation_dependencies import detect_pose_landmarks, get_features, get_attr_of_features, predict_features
 
+import time
+
 landmarks_3d = None
 image_name = None
 save_path = None
@@ -44,6 +46,8 @@ if len(sys.argv) > 1:
                     # Create an empty list for this image if no landmarks are detected
                     features = [image_name] + [None] * (len(features_field_names) - 1)
                     all_features.append(features)
+
+                time.sleep(2)
             else:
                 print(f"Skipping non-image file: {file}")
 
