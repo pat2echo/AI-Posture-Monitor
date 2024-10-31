@@ -1,3 +1,5 @@
+from curses.textpad import rectangle
+
 import cv2
 import numpy as np
 import os
@@ -244,6 +246,10 @@ class FrameDiff:
                     # Sort rectangles in desc order by area
                     rectangles = self.sort_rectangles(rectangles)
 
+
+            _, __, rectangles = self.draw_gridlines(frame=frame_output, num_rows=20, num_cols=20,
+                                    color=(255, 255, 0), thickness=1, rect=rectangles, rect_color=(255, 0, 255))
+            if len(rectangles) > 0:
                 for rect in rectangles:
                     x, y, w, h = rect
                     cv2.rectangle(frame_output, (x, y), (x + w, y + h), (0, 255, 0), 2)
@@ -264,7 +270,7 @@ class FrameDiff:
 
         return rectangles
 
-    def draw_gridlines(frame, num_rows=30, num_cols=30, color=(0, 255, 0), thickness=1):
+    def draw_gridlines(self, frame, num_rows=10, num_cols=10, color=(0, 255, 0), thickness=1, rect=None, rect_color=(255, 0, 255)):
         # Get the image dimensions
         height, width = frame.shape[:2]
 
@@ -282,7 +288,71 @@ class FrameDiff:
             x = j * col_spacing
             cv2.line(frame, (x, 0), (x, height), color, thickness)
 
-        return frame
+        quadrant = []
+        rectangles = []
+        if rect is not None and len(rect) > 0:
+            biggest = True
+            for rec in rect:
+                x1, y1, w, h = rec
+                x2, y2 = x1 + w, y1 + h
+
+                # Find the grid boundaries that enclose the smaller rectangle
+                top_row = (y1 // row_spacing) * row_spacing
+                bottom_row = ((y2 + row_spacing - 1) // row_spacing) * row_spacing
+                left_col = (x1 // col_spacing) * col_spacing
+                right_col = ((x2 + col_spacing - 1) // col_spacing) * col_spacing
+
+                quadrant = [top_row, bottom_row, left_col, right_col]
+                area = ( bottom_row - top_row ) * (right_col - left_col)
+                # Set surrounding boundary to start from top to bottom of image
+                if biggest:
+                    top_row = 0
+                    bottom_row = height - 1
+
+                #quad_key = '-'.join(map(str, quadrant))
+                quad_key = f'{left_col}-{right_col}'
+
+                if len(self.previous_frames) > 0 and quad_key in self.previous_frames:
+                    if self.previous_frames.count(quad_key) > 1:
+                        left_col2, right_col2 = left_col, right_col
+                        # Expand the area of interest to encompass the previous intersecting region
+                        if len(self.last_displayed_frame) > 0 and ( ( self.last_displayed_frame[0] <= left_col and self.last_displayed_frame[2] >= right_col ) or ( self.last_displayed_frame[2] >= left_col and self.last_displayed_frame[2] <= right_col ) or ( self.last_displayed_frame[0] >= left_col and self.last_displayed_frame[0] <= right_col ) ):
+                            if self.last_displayed_frame[0] < left_col:
+                                left_col2 = self.last_displayed_frame[0]
+                            if self.last_displayed_frame[2] > right_col:
+                                right_col2 = self.last_displayed_frame[2]
+
+                        self.last_displayed_frame = [left_col, top_row, right_col, bottom_row, left_col2, right_col2]
+                        print('prev', quad_key, self.previous_frames)
+                        rectangles.append(rec)
+                        # Draw the enclosing rectangle in red
+                        cv2.rectangle(frame, (left_col2, top_row), (right_col2, bottom_row), rect_color, 3)
+                    #else:
+                        #print('skip1 prev', quad_key, self.previous_frames)
+                #else:
+                    #print('skip prev', quad_key, self.previous_frames)
+
+                # if quad_key not in self.quads:
+                #     self.quads[quad_key] = {'count': 0, 'frequency': 0, 'count_appearance': 0, 'frequency_appearance': 0, 'area':0}
+                # if biggest:
+                #     self.quads[quad_key]['count'] += 1
+                #     self.quads[quad_key]['frequency'] = self.quads[quad_key]['count'] / self.processed_frames
+                # self.quads[quad_key]['area'] = area
+                # self.quads[quad_key]['count_appearance'] += 1
+                # self.quads[quad_key]['frequency_appearance'] = self.quads[quad_key]['count_appearance'] / self.processed_frames
+
+
+                self.previous_frames.append(quad_key)
+                if len(self.previous_frames) > self.previous_frames_limit:
+                    self.previous_frames.pop(0)
+
+                biggest = False
+
+        # Period of no movement, display rectangle from memory
+        if len(rectangles) == 0 and len(self.last_displayed_frame) > 0:
+            rectangles = [(self.last_displayed_frame[4], 0, self.last_displayed_frame[5] - self.last_displayed_frame[4], height - 1)]
+
+        return frame, quadrant, rectangles
 
     def analyze_frames(self, video_file=None, scaling_factor=0.5, BASE_OUTPUT_DIR=None):
         self.output_folder = os.path.join(BASE_OUTPUT_DIR, "frame_analysis")
@@ -310,6 +380,11 @@ class FrameDiff:
         frame_count = -1
         output_data = []
         max_abs_threshold = 0
+        self.quads = {}
+        self.processed_frames = 0
+        self.last_displayed_frame = []
+        self.previous_frames = []
+        self.previous_frames_limit = 3
 
         while True:
             # Get the next frame
@@ -360,9 +435,9 @@ class FrameDiff:
                 if max_abs_threshold > 0 and max_value < max_abs_threshold:
                     process_image = False
 
-                rectangles = self.get_bounding_box(diff_frame=bg_diff_frame, frame_output=frame_output, intersect_rectangles=False,
+                self.processed_frames += 1
+                rectangles = self.get_bounding_box(diff_frame=bg_diff_frame, frame_output=frame_output, intersect_rectangles=True,
                                                    frame_count=frame_count, save_interval=save_interval)
-                self.draw_gridlines(frame=frame_output, num_rows=30, num_cols=30, color=(255, 255, 0), thickness=1)
 
             # Display the result
             cv2.imshow('Motion Detection and Pose Estimation', frame_output)
@@ -380,8 +455,10 @@ class FrameDiff:
 
             wait_time = int(1000 / fps)
             # fast-forward
-            #wait_time = 1
+            wait_time = 1
             key = cv2.waitKey(wait_time)
+
+            #print('quads', quads)
 
             if key == 27:  # ESC key
                 break
@@ -389,6 +466,11 @@ class FrameDiff:
         # Save the NumPy array to CSV
         np.savetxt(os.path.join(self.output_folder, 'frame_max_values.csv'), np.array(output_data), fmt='%s', delimiter=',',
                    header='file_name,max_value,sum_of_squares,process_image', comments='')
+
+        # Save Quadrants to CSV
+        #output_data = [[key, val['count'], val['frequency'], val['count_appearance'], val['frequency_appearance'], val['area']] for key, val in self.quads.items()]
+        #np.savetxt(os.path.join(self.output_folder, 'quadrants.csv'), np.array(output_data), fmt='%s',
+        #           delimiter=',', header='quad,count,frequency,count_appearance,frequency_appearance,area', comments='')
 
         # Release resources
         cap.release()
