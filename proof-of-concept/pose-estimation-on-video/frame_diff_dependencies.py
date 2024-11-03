@@ -11,6 +11,13 @@ class FrameDiff:
         self.output_folder = None
         self.output_folder_aoi = None
         self.output_folder_aoi_pose = None
+        self.previous_frame_diff = None
+
+        self.quads = {}
+        self.processed_frames = 0
+        self.last_displayed_frame = []
+        self.previous_frames = []
+        self.previous_frames_limit = 3
 
     # Function to capture and resize frames
     def get_frame(self, cap, scaling_factor=None, res=None):
@@ -35,10 +42,19 @@ class FrameDiff:
 
 
     # Function to calculate frame difference
-    def frame_diff(self, prev_frame, cur_frame, next_frame):
+    def frame_diff(self, prev_frame, cur_frame, next_frame, dual_frame_difference=True):
         diff_frames1 = cv2.absdiff(next_frame, cur_frame)
         diff_frames2 = cv2.absdiff(cur_frame, prev_frame)
-        return cv2.bitwise_and(diff_frames1, diff_frames2)
+        diff_frame = cv2.bitwise_and(diff_frames1, diff_frames2)
+
+        if dual_frame_difference:
+            bg_diff_frame = None
+            if self.previous_frame_diff is not None:
+                bg_diff_frame = cv2.absdiff(self.previous_frame_diff, diff_frame)
+            self.previous_frame_diff = diff_frame
+            diff_frame = bg_diff_frame
+
+        return diff_frame
 
     def get_rgb_image_from_cv2(self, image_path, show=False):
         # Read image
@@ -211,6 +227,7 @@ class FrameDiff:
     def get_bounding_box(self, diff_frame=None, frame_output=None, intersect_rectangles=True,
                          frame_count=0, save_interval=0):
         rectangles = []
+        area_of_interest = {}
         if diff_frame is not None:
             # Threshold the difference frame
             _, thresh_frame = cv2.threshold(diff_frame, 0.5, 255, cv2.THRESH_BINARY)
@@ -247,12 +264,25 @@ class FrameDiff:
                     rectangles = self.sort_rectangles(rectangles)
 
 
-            _, __, rectangles = self.draw_gridlines(frame=frame_output, num_rows=20, num_cols=20,
-                                    color=(255, 255, 0), thickness=1, rect=rectangles, rect_color=(255, 0, 255))
-            if len(rectangles) > 0:
+            _, __, rectangles, area_of_interest = self.draw_gridlines(frame=frame_output, num_rows=20, num_cols=20,
+                                    color=(155, 155, 155), thickness=1, rect=rectangles)
+
+            # Yellow: expanded area of interest taking into consideration previous area of interest and get their union if they intersect
+            aoi_from_memory = False
+            if 'rect' in area_of_interest and len(area_of_interest['rect']) > 0:
+                x, y, w, h = area_of_interest['rect']
+                aoi_color = (255, 0, 0)
+                aoi_from_memory = area_of_interest['memory']
+                if aoi_from_memory:
+                    aoi_color = (0, 255, 255)
+                cv2.rectangle(frame_output, (x, y), (x + w, y + h), aoi_color, 3)
+
+            if aoi_from_memory == False and len(rectangles) > 0:
                 for rect in rectangles:
                     x, y, w, h = rect
                     cv2.rectangle(frame_output, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+                    # Display black and white
                     #cv2.rectangle(bw_diff_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
                     # Save area of interest (aoi) at regular intervals
@@ -264,13 +294,14 @@ class FrameDiff:
                         #self.save_image(aoi, os.path.join(self.output_folder_aoi, f"object_{frame_count:04d}_{x}_{y}"))
                         pass
 
+                    # Use the biggest rectangle
                     break
 
                 #self.save_image(frame_output, os.path.join(self.output_folder_aoi, f"bg_{frame_count:04d}"))
 
-        return rectangles
+        return rectangles, area_of_interest
 
-    def draw_gridlines(self, frame, num_rows=10, num_cols=10, color=(0, 255, 0), thickness=1, rect=None, rect_color=(255, 0, 255)):
+    def draw_gridlines(self, frame, num_rows=10, num_cols=10, color=(0, 255, 0), thickness=1, rect=None):
         # Get the image dimensions
         height, width = frame.shape[:2]
 
@@ -289,6 +320,7 @@ class FrameDiff:
             cv2.line(frame, (x, 0), (x, height), color, thickness)
 
         quadrant = []
+        area_of_interest = []
         rectangles = []
         if rect is not None and len(rect) > 0:
             biggest = True
@@ -322,11 +354,13 @@ class FrameDiff:
                             if self.last_displayed_frame[2] > right_col:
                                 right_col2 = self.last_displayed_frame[2]
 
+
                         self.last_displayed_frame = [left_col, top_row, right_col, bottom_row, left_col2, right_col2]
                         print('prev', quad_key, self.previous_frames)
                         rectangles.append(rec)
+
                         # Draw the enclosing rectangle in red
-                        cv2.rectangle(frame, (left_col2, top_row), (right_col2, bottom_row), rect_color, 3)
+                        area_of_interest = {'rect': (left_col2, 0, right_col2 - left_col2, height - 1), 'memory':False }
                     #else:
                         #print('skip1 prev', quad_key, self.previous_frames)
                 #else:
@@ -350,9 +384,10 @@ class FrameDiff:
 
         # Period of no movement, display rectangle from memory
         if len(rectangles) == 0 and len(self.last_displayed_frame) > 0:
-            rectangles = [(self.last_displayed_frame[4], 0, self.last_displayed_frame[5] - self.last_displayed_frame[4], height - 1)]
+            area_of_interest = {'rect':(self.last_displayed_frame[4], 0, self.last_displayed_frame[5] - self.last_displayed_frame[4], height - 1), 'memory':True}
+            rectangles = [area_of_interest['rect']]
 
-        return frame, quadrant, rectangles
+        return frame, quadrant, rectangles, area_of_interest
 
     def analyze_frames(self, video_file=None, scaling_factor=0.5, BASE_OUTPUT_DIR=None):
         self.output_folder = os.path.join(BASE_OUTPUT_DIR, "frame_analysis")
@@ -380,11 +415,6 @@ class FrameDiff:
         frame_count = -1
         output_data = []
         max_abs_threshold = 0
-        self.quads = {}
-        self.processed_frames = 0
-        self.last_displayed_frame = []
-        self.previous_frames = []
-        self.previous_frames_limit = 3
 
         while True:
             # Get the next frame

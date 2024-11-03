@@ -71,6 +71,7 @@ class PoseEstimation:
         # Get font Attributes
         self.get_font_attributes()
 
+
         while True:
             # Get the next frame
             frame = self.my_frame_diff.get_frame(cap, scaling_factor=scaling_factor)
@@ -105,21 +106,28 @@ class PoseEstimation:
 
             if process_image:
                 rectangles = None
+                area_of_interest = None
                 if use_frame_diff:
                     # Perform frame differencing
                     diff_frame = self.my_frame_diff.frame_diff(prev_frame, cur_frame, next_frame)
 
-                    # Get max value of absolute difference
-                    max_value = np.max(diff_frame)
-                    if max_abs_threshold and max_value < max_abs_threshold:
+                    if diff_frame is None:
                         process_image = False
+                    else:
+                        # Get max value of absolute difference
+                        max_value = np.max(diff_frame)
+                        if max_abs_threshold and max_value < max_abs_threshold:
+                            process_image = False
 
                     if use_bounding_box and process_image:
-                        rectangles = self.my_frame_diff.get_bounding_box(diff_frame=diff_frame, frame_output=frame_output, intersect_rectangles=intersect_rectangles,
+                        rectangles, area_of_interest = self.my_frame_diff.get_bounding_box(diff_frame=diff_frame, frame_output=frame_output, intersect_rectangles=intersect_rectangles,
                                  frame_count=self.frame_count, save_interval=self.save_interval)
 
                 if process_image:
-                    prediction, features = self.process_frame(frame_output=frame_output, use_bounding_box=use_bounding_box, rectangles=rectangles)
+                    predict_rect = None
+                    if 'rect' in area_of_interest:
+                        predict_rect = [area_of_interest['rect']]
+                    prediction, features = self.process_frame(frame_output=frame_output, use_bounding_box=use_bounding_box, rectangles=predict_rect)
 
             # Display the result
             cv2.imshow('Motion Detection and Pose Estimation', frame_output)
@@ -208,7 +216,7 @@ class PoseEstimation:
 
             # Save aoi for pose
             if self.frame_count % self.save_interval == 0:
-                #self.my_frame_diff.save_image(aoi_for_pose, os.path.join(self.my_frame_diff.output_folder_aoi_pose, f"pose_{self.frame_count:04d}"))
+                self.my_frame_diff.save_image(aoi_for_pose, os.path.join(self.my_frame_diff.output_folder_aoi_pose, f"pose_{self.frame_count:04d}"))
                 pass
 
 
