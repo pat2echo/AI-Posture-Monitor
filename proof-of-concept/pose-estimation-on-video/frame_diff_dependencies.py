@@ -225,7 +225,7 @@ class FrameDiff:
         os.makedirs(folder_path, exist_ok=True)  # Recreate the empty folder
 
     def get_bounding_box(self, diff_frame=None, frame_output=None, intersect_rectangles=True,
-                         frame_count=0, save_interval=0):
+                         frame_count=0, save_interval=0, show_grid=False):
         rectangles = []
         area_of_interest = {}
         if diff_frame is not None:
@@ -265,7 +265,7 @@ class FrameDiff:
 
 
             _, __, rectangles, area_of_interest = self.draw_gridlines(frame=frame_output, num_rows=20, num_cols=20,
-                                    color=(155, 155, 155), thickness=1, rect=rectangles)
+                                    color=(155, 155, 155), thickness=1, rect=rectangles, show_grid=show_grid)
 
             # Yellow: expanded area of interest taking into consideration previous area of interest and get their union if they intersect
             aoi_from_memory = False
@@ -301,7 +301,7 @@ class FrameDiff:
 
         return rectangles, area_of_interest
 
-    def draw_gridlines(self, frame, num_rows=10, num_cols=10, color=(0, 255, 0), thickness=1, rect=None):
+    def draw_gridlines(self, frame, num_rows=10, num_cols=10, color=(0, 255, 0), thickness=1, rect=None, show_grid=True):
         # Get the image dimensions
         height, width = frame.shape[:2]
 
@@ -309,15 +309,16 @@ class FrameDiff:
         row_spacing = height // num_rows
         col_spacing = width // num_cols
 
-        # Draw horizontal grid lines
-        for i in range(1, num_rows):
-            y = i * row_spacing
-            cv2.line(frame, (0, y), (width, y), color, thickness)
+        if show_grid:
+            # Draw horizontal grid lines
+            for i in range(1, num_rows):
+                y = i * row_spacing
+                cv2.line(frame, (0, y), (width, y), color, thickness)
 
-        # Draw vertical grid lines
-        for j in range(1, num_cols):
-            x = j * col_spacing
-            cv2.line(frame, (x, 0), (x, height), color, thickness)
+            # Draw vertical grid lines
+            for j in range(1, num_cols):
+                x = j * col_spacing
+                cv2.line(frame, (x, 0), (x, height), color, thickness)
 
         quadrant = []
         area_of_interest = []
