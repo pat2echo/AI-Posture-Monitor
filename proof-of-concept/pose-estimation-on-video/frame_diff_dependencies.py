@@ -448,27 +448,20 @@ class FrameDiff:
             frame_output = cv2.cvtColor(frame.copy(), cv2.COLOR_GRAY2RGB)
 
             if process_image:
-                diff_frame_prev = diff_frame
-
                 # Perform frame differencing
-                diff_frame = self.frame_diff(prev_frame, cur_frame, next_frame)
-                if diff_frame_prev is None:
-                    process_image = False
-                    continue
-                else:
-                    bg_diff_frame = cv2.absdiff(diff_frame_prev, diff_frame)
+                diff_frame = self.frame_diff(prev_frame, cur_frame, next_frame, dual_frame_difference=True)
 
             if process_image:
                 rectangles = None
                 # Get max value of absolute difference
-                max_value = np.max(bg_diff_frame)
-                sum_of_squares = np.sum(bg_diff_frame)
+                max_value = np.max(diff_frame)
+                sum_of_squares = np.sum(diff_frame)
                 if max_abs_threshold > 0 and max_value < max_abs_threshold:
                     process_image = False
 
                 self.processed_frames += 1
-                rectangles = self.get_bounding_box(diff_frame=bg_diff_frame, frame_output=frame_output, intersect_rectangles=True,
-                                                   frame_count=frame_count, save_interval=save_interval)
+                rectangles, aoi = self.get_bounding_box(diff_frame=diff_frame, frame_output=frame_output, intersect_rectangles=True,
+                                                   frame_count=frame_count, save_interval=save_interval, show_grid=True)
 
             # Display the result
             cv2.imshow('Motion Detection and Pose Estimation', frame_output)
