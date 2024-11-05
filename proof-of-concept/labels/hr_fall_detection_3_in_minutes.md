@@ -32,9 +32,25 @@
 2:59 - 3:10 Stand
 3:11 - 3:14 None
 3:15 - 3:22 Stand
-3:23 - 3:24 Stand-Lie
+3:23 - 3:24 Stand-Lie (Fall)
 3:24 - 3:31 Lie
 3:32 - 3:32 Lie-Sit
 3:33 - 3:33 Sit
 3:34 - 3:34 Sit-Stand
-3:35
+3:35 - 3:37 Stand
+3:38 - 3:39 Stand-Sit (Fall)
+3:40 - 3:41 Sit-Stand
+3:42 - 4:15 Stand
+4:16 - 4:17 Stand-Sit
+4:18 - 4:20 Sit
+4:21 - 4:21 Sit-Stand
+4:22 - 4:57 Stand
+4:58 - 5:14 None
+5:15 - 5:23 Stand
+5:24 - 5:45 None
+5:46 - 6:21 Sit
+6:22 - 6:22 Sit-Stand
+6:23 - 6:23 Stand-Lie (Fall)
+6:24 - 6:24 Sit-Stand
+6:25 - 6:28 Stand
+6:29 - 6:30 None
