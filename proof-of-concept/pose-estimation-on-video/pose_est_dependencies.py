@@ -225,3 +225,43 @@ class PoseEstimation:
 
 
         return prediction, features
+
+    def generate_frames_for_groundtruth(self, video_file=None):
+        cap = cv2.VideoCapture(video_file)
+
+        # Get video frame rate and set frame interval to 1 frame per second
+        fps = cap.get(cv2.CAP_PROP_FPS)
+        frame_interval = int(fps)  # Number of frames to skip to get 1 frame per second
+
+        frame_count = 0
+
+        while cap.isOpened():
+            ret, frame = cap.read()
+
+            # Break if no more frames
+            if not ret:
+                break
+
+            # Check if the current frame is at the 1-second interval
+            if frame_count % frame_interval == 0:
+                # Calculate timestamp in seconds
+                timestamp_sec = frame_count // int(fps)
+
+                # Convert timestamp to format hh:mm:ss
+                timestamp_text = f"{timestamp_sec // 3600:02}:{(timestamp_sec % 3600) // 60:02}:{timestamp_sec % 60:02}"
+
+                # Put timestamp text on frame
+                cv2.putText(frame, timestamp_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
+                            cv2.LINE_AA)
+
+                # Save the frame with timestamp
+                frame_filename = os.path.join(self.my_frame_diff.output_folder, f"frame_{timestamp_sec:04d}.jpg")
+                cv2.imwrite(frame_filename, frame)
+
+            # Increment frame count
+            frame_count += 1
+
+        # Release the video capture object
+        cap.release()
+        print("Done saving frames.")
+
