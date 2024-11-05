@@ -19,6 +19,10 @@ class FrameDiff:
         self.previous_frames = []
         self.previous_frames_limit = 3
 
+        self.plot_data = {}
+        self.plot_contour_range = 500
+        self.plot_histogram = None
+
     # Function to capture and resize frames
     def get_frame(self, cap, scaling_factor=None, res=None):
         def get_frame_scale_down(cap, scaling_factor):
@@ -26,14 +30,14 @@ class FrameDiff:
             if not ret:
                 return None
             frame = cv2.resize(frame, None, fx=scaling_factor, fy=scaling_factor, interpolation=cv2.INTER_AREA)
-            return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), frame
 
         def get_frame_resized(cap, res):
             ret, frame = cap.read()
             if not ret:
                 return None
             frame = cv2.resize(frame, res, interpolation=cv2.INTER_AREA)
-            return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), frame
 
         if scaling_factor is not None:
             return get_frame_scale_down(cap, scaling_factor)
@@ -225,7 +229,7 @@ class FrameDiff:
         os.makedirs(folder_path, exist_ok=True)  # Recreate the empty folder
 
     def get_bounding_box(self, diff_frame=None, frame_output=None, intersect_rectangles=True,
-                         frame_count=0, save_interval=0, show_grid=False):
+                         frame_count=0, save_interval=0, show_grid=False, snap_to_grid=True):
         rectangles = []
         area_of_interest = {}
         if diff_frame is not None:
@@ -242,12 +246,19 @@ class FrameDiff:
             cas = []
             for contour in contours:
                 ca = cv2.contourArea(contour)
-                if ca > 5000:  # Adjust this threshold as needed
+
+                if ca > 0 and self.plot_histogram == 'contour_area':
+                    # group contour area in range of 500
+                    group_ca = ca // self.plot_contour_range
+                    if group_ca > 0:
+                        self.plot_data[group_ca] = self.plot_data.get(group_ca, 0) + 1
+
+                if ca > 6000:
                     rect = cv2.boundingRect(contour)
                     rectangles.append(rect)
 
                     # Draw the contour onto the black-and-white image
-                    #cv2.drawContours(bw_diff_image, [contour], -1, 255, -1)
+                    cv2.drawContours(bw_diff_image, [contour], -1, 255, -1)
                     #cas.append(ca)
 
             #cv2.imshow('Differences Only', bw_diff_image)
@@ -263,18 +274,25 @@ class FrameDiff:
                     # Sort rectangles in desc order by area
                     rectangles = self.sort_rectangles(rectangles)
 
+                if self.plot_histogram == 'bounding_box':
+                    for rect in rectangles:
+                        x, y, w, h = rect
+                        box_area = w * h
+                        self.plot_data[box_area] = self.plot_data.get(box_area, 0) + 1
 
-            _, __, rectangles, area_of_interest = self.draw_gridlines(frame=frame_output, num_rows=20, num_cols=20,
+            if snap_to_grid:
+                _, __, rectangles, area_of_interest = self.draw_gridlines(frame=frame_output, num_rows=20, num_cols=20,
                                     color=(155, 155, 155), thickness=1, rect=rectangles, show_grid=show_grid)
+
 
             # Yellow: expanded area of interest taking into consideration previous area of interest and get their union if they intersect
             aoi_from_memory = False
             if 'rect' in area_of_interest and len(area_of_interest['rect']) > 0:
                 x, y, w, h = area_of_interest['rect']
-                aoi_color = (255, 0, 0)
+                aoi_color = (0, 0, 255)
                 aoi_from_memory = area_of_interest['memory']
                 if aoi_from_memory:
-                    aoi_color = (0, 255, 255)
+                    aoi_color = (255, 255, 0)
                 cv2.rectangle(frame_output, (x, y), (x + w, y + h), aoi_color, 3)
 
             if aoi_from_memory == False and len(rectangles) > 0:
@@ -419,7 +437,7 @@ class FrameDiff:
 
         while True:
             # Get the next frame
-            frame = self.get_frame(cap, scaling_factor=scaling_factor)
+            frame, frame_color = self.get_frame(cap, scaling_factor=scaling_factor)
 
             if frame is None:
                 break
@@ -445,7 +463,7 @@ class FrameDiff:
             process_image = True
 
             # Convert frame to RGB for MediaPipe
-            frame_output = cv2.cvtColor(frame.copy(), cv2.COLOR_GRAY2RGB)
+            frame_output = cv2.cvtColor(frame_color.copy(), cv2.COLOR_BGR2RGB)
 
             if process_image:
                 # Perform frame differencing
@@ -464,7 +482,7 @@ class FrameDiff:
                                                    frame_count=frame_count, save_interval=save_interval, show_grid=True)
 
             # Display the result
-            cv2.imshow('Motion Detection and Pose Estimation', frame_output)
+            #cv2.imshow('Motion Detection and Pose Estimation', cv2.cvtColor(frame_output, cv2.COLOR_RGB2BGR))
 
             # Save frame at regular intervals
             if process_image and ((save_interval == 0) or (save_interval > 0 and frame_count % save_interval == 0)):
@@ -480,10 +498,13 @@ class FrameDiff:
             wait_time = int(1000 / fps)
             # fast-forward
             wait_time = 1
-            key = cv2.waitKey(wait_time)
+            #key = cv2.waitKey(wait_time)
 
             #print('quads', quads)
+            if frame_count > 265:
+                break
 
+            key = None
             if key == 27:  # ESC key
                 break
 
@@ -539,45 +560,3 @@ def pose_landmarks():
     }
 
     return landmark_dict
-
-# Reference: from Adrian Clark Computer Vision Lab 1 - CSEE - University of Essex
-def plot_histogram (x, y, title, colours=["blue", "green", "red"]):
-    """
-    Plot a histogram (bar-chart) of the data in `x` and `y` using
-    Matplotlib.  The `y` array can be either a single-dimensional one
-    (for the histogram of a monochrome image) or two-dimensional for a
-    colour image, in which case the first dimension selects the colour
-    band and the second the value in that colour band.  `title` is the
-    title of the plot, shown along its top edge.
-
-    Args:
-        x (array): numpy array containing the values to plot along the
-                   abscissa (x) axis
-        y (array): numpy array of the same length as `x` containing the
-                   values to plot along the ordinate (y) axis
-        title (str): title to put along the top edge of the plot
-        colours (list of strings): the colours to use when there is more
-                                   than one plot on the axes
-                                   (default: blue, green, red)
-    """
-    # ASIDE: This routine handles monochrome and multi-channel image histogram
-    # plotting in essentially the same way as examine did for images.
-
-    # Set up the plot.
-    plt.figure ()
-    plt.grid ()
-    plt.xlim ([0, x[-1]])
-    plt.xlabel ("grey level")
-    plt.ylabel ("frequency")
-    plt.title (title)
-
-    # Plot the data.
-    if len (y.shape) == 1:
-        plt.bar (x, y, color="grey")
-    else:
-        nc, np = y.shape
-        for c in range (0, nc):
-            plt.bar (x, y[c], color=colours[c])
-
-    # Show the result.
-    plt.show()

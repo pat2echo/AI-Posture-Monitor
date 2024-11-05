@@ -74,7 +74,7 @@ class PoseEstimation:
 
         while True:
             # Get the next frame
-            frame = self.my_frame_diff.get_frame(cap, scaling_factor=scaling_factor)
+            frame, frame_color = self.my_frame_diff.get_frame(cap, scaling_factor=scaling_factor)
 
             if frame is None:
                 break
@@ -99,7 +99,8 @@ class PoseEstimation:
             process_image = True
 
             # Convert frame to RGB for MediaPipe
-            frame_output = cv2.cvtColor(frame.copy(), cv2.COLOR_GRAY2RGB)
+            #frame_gray = cv2.cvtColor(frame.copy(), cv2.COLOR_GRAY2RGB)
+            frame_output = cv2.cvtColor(frame_color.copy(), cv2.COLOR_BGR2RGB)
 
             features = []
             prediction = None
@@ -109,7 +110,7 @@ class PoseEstimation:
                 area_of_interest = None
                 if use_frame_diff:
                     # Perform frame differencing
-                    diff_frame = self.my_frame_diff.frame_diff(prev_frame, cur_frame, next_frame)
+                    diff_frame = self.my_frame_diff.frame_diff(prev_frame, cur_frame, next_frame, dual_frame_difference=True)
 
                     if diff_frame is None:
                         process_image = False
@@ -121,16 +122,18 @@ class PoseEstimation:
 
                     if use_bounding_box and process_image:
                         rectangles, area_of_interest = self.my_frame_diff.get_bounding_box(diff_frame=diff_frame, frame_output=frame_output, intersect_rectangles=intersect_rectangles,
-                                 frame_count=self.frame_count, save_interval=self.save_interval)
+                                 frame_count=self.frame_count, save_interval=self.save_interval, show_grid=False, snap_to_grid=True)
 
                 if process_image:
                     predict_rect = None
                     if 'rect' in area_of_interest:
                         predict_rect = [area_of_interest['rect']]
+                    elif rectangles is not None and len(rectangles) > 0:
+                        predict_rect = rectangles
                     prediction, features = self.process_frame(frame_output=frame_output, use_bounding_box=use_bounding_box, rectangles=predict_rect)
 
             # Display the result
-            cv2.imshow('Motion Detection and Pose Estimation', frame_output)
+            cv2.imshow('Motion Detection and Pose Estimation', cv2.cvtColor(frame_output, cv2.COLOR_RGB2BGR))
 
             # Save frame at regular intervals
             if process_image and self.frame_count % self.save_interval == 0:
