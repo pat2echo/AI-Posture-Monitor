@@ -227,6 +227,7 @@ class PoseEstimation:
         return prediction, features
 
     def generate_frames_for_groundtruth(self, video_file=None, BASE_OUTPUT_DIR=None):
+        self.my_frame_diff = FrameDiff()
         self.my_frame_diff.output_folder = os.path.join(BASE_OUTPUT_DIR, "output_frames")
         self.my_frame_diff.empty_folder(self.my_frame_diff.output_folder)
 
