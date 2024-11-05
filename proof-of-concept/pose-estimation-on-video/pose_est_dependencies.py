@@ -133,7 +133,8 @@ class PoseEstimation:
                     prediction, features = self.process_frame(frame_output=frame_output, use_bounding_box=use_bounding_box, rectangles=predict_rect)
 
             # Display the result
-            cv2.imshow('Motion Detection and Pose Estimation', cv2.cvtColor(frame_output, cv2.COLOR_RGB2BGR))
+            frame_output = cv2.cvtColor(frame_output, cv2.COLOR_RGB2BGR)
+            cv2.imshow('Motion Detection and Pose Estimation', frame_output)
 
             # Save frame at regular intervals
             if process_image and self.frame_count % self.save_interval == 0:
