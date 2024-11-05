@@ -482,7 +482,7 @@ class FrameDiff:
                                                    frame_count=frame_count, save_interval=save_interval, show_grid=True)
 
             # Display the result
-            #cv2.imshow('Motion Detection and Pose Estimation', cv2.cvtColor(frame_output, cv2.COLOR_RGB2BGR))
+            cv2.imshow('Motion Detection and Pose Estimation', cv2.cvtColor(frame_output, cv2.COLOR_RGB2BGR))
 
             # Save frame at regular intervals
             if process_image and ((save_interval == 0) or (save_interval > 0 and frame_count % save_interval == 0)):
@@ -498,13 +498,13 @@ class FrameDiff:
             wait_time = int(1000 / fps)
             # fast-forward
             wait_time = 1
-            #key = cv2.waitKey(wait_time)
+            key = cv2.waitKey(wait_time)
 
             #print('quads', quads)
-            if frame_count > 265:
-                break
+            #if frame_count > 265:
+            #    break
 
-            key = None
+            #key = None
             if key == 27:  # ESC key
                 break
 
