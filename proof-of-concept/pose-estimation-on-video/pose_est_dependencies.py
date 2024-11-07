@@ -36,6 +36,7 @@ class PoseEstimation:
             processing_interval = self.video_fps // 30
 
         # Get labels
+        self.previous_label = None
         self.label_df = None
         if label_file is not None:
             self.label_df = df.read_csv(label_file)
@@ -71,6 +72,10 @@ class PoseEstimation:
         output_data = []
 
         self.my_frame_diff = FrameDiff()
+
+        # results folder
+        output_results = os.path.join(BASE_OUTPUT_DIR, "output_results")
+        os.makedirs(output_results, exist_ok=True)
 
         # Create a folder to save images
         self.my_frame_diff.output_folder = os.path.join(BASE_OUTPUT_DIR, "output_pose")
@@ -172,7 +177,7 @@ class PoseEstimation:
 
         # Save the NumPy array to CSV
         features_attr = get_attr_of_features()
-        np.savetxt(os.path.join(self.my_frame_diff.output_folder, 'frame_values.csv'), np.array(output_data), fmt='%s', delimiter=',',
+        np.savetxt(os.path.join(output_results, f'{video_file.replace('./','').split(".")[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
                    header='file_name,max_value,process_image,label,prediction,' + ','.join(features_attr), comments='')
 
         # Release resources
@@ -181,7 +186,7 @@ class PoseEstimation:
 
     def get_font_attributes(self):
         # Define the text and its position
-        self.prefix_text = "Hello Frame"
+        self.prefix_text = "Hi Frame"
         self.font = cv2.FONT_HERSHEY_SIMPLEX
         self.font_scale = 0.7
         self.font_color = (0, 255, 0)  # Green color in BGR
@@ -225,6 +230,9 @@ class PoseEstimation:
                     d_label = self.label_df[(self.label_df["start_time"] <= timestamp_secs) & (self.label_df["end_time"] >= timestamp_secs)]
                     if d_label.shape[0] > 0:
                         label = d_label["action"].values[0].lower()
+                        self.previous_label = label
+                    else:
+                        label = self.previous_label
 
 
                 if self.is_predict_pose:

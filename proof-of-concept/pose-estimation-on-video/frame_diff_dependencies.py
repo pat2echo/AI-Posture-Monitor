@@ -28,14 +28,14 @@ class FrameDiff:
         def get_frame_scale_down(cap, scaling_factor):
             ret, frame = cap.read()
             if not ret:
-                return None
+                return None, None
             frame = cv2.resize(frame, None, fx=scaling_factor, fy=scaling_factor, interpolation=cv2.INTER_AREA)
             return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), frame
 
         def get_frame_resized(cap, res):
             ret, frame = cap.read()
             if not ret:
-                return None
+                return None, None
             frame = cv2.resize(frame, res, interpolation=cv2.INTER_AREA)
             return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), frame
 
@@ -375,7 +375,7 @@ class FrameDiff:
 
 
                         self.last_displayed_frame = [left_col, top_row, right_col, bottom_row, left_col2, right_col2]
-                        print('prev', quad_key, self.previous_frames)
+                        # print('prev', quad_key, self.previous_frames)
                         rectangles.append(rec)
 
                         # Draw the enclosing rectangle in red
