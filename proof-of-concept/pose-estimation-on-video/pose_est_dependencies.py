@@ -1,14 +1,15 @@
 import mediapipe as mp
 import cv2
 import numpy as np
+import pandas as df
 import os
 from frame_diff_dependencies import FrameDiff
 from features_dependencies import  get_features
 from predict_dependencies import  predict_pose, get_attr_of_features
 
 class PoseEstimation:
-    def process_video(self, video_file=None, scaling_factor=0.5, use_bounding_box=True,
-                      model_number=1, is_predict_pose=False, is_labelled=False, use_frame_diff=True, BASE_OUTPUT_DIR=None):
+    def process_video(self, video_file=None, label_file=None, scaling_factor=0.5, use_bounding_box=True,
+                      model_number=1, is_predict_pose=False, use_frame_diff=True, BASE_OUTPUT_DIR=None):
         self.is_predict_pose = is_predict_pose
 
         self.model_number = model_number
@@ -33,6 +34,13 @@ class PoseEstimation:
         if self.video_fps > 59:
             # limit to 30fps if video is > 30fps
             processing_interval = self.video_fps // 30
+
+        # Get labels
+        label_df = None
+        if label_file is not None:
+            label_df = df.read_csv(label_file)
+            print(label_df)
+            return
 
         # Initialize frame variables
         prev_frame = None
@@ -130,7 +138,7 @@ class PoseEstimation:
                         predict_rect = [area_of_interest['rect']]
                     elif rectangles is not None and len(rectangles) > 0:
                         predict_rect = rectangles
-                    prediction, features = self.process_frame(frame_output=frame_output, use_bounding_box=use_bounding_box, rectangles=predict_rect)
+                    prediction, features, timestamp_sec = self.process_frame(frame_output=frame_output, use_bounding_box=use_bounding_box, rectangles=predict_rect)
 
             # Display the result
             frame_output = cv2.cvtColor(frame_output, cv2.COLOR_RGB2BGR)
@@ -145,8 +153,9 @@ class PoseEstimation:
 
                 # Save max value of absolute difference to csv
                 print(frame_title, max_value, process_image)
-                if is_labelled:
-                    output_data.append([frame_title, max_value, process_image, prediction, ', '.join(map(str, features))])
+                if label_df is not None:
+                    frame_label = frame_label
+                    output_data.append([self.frame_count, max_value, process_image, frame_label, prediction, ', '.join(map(str, features))])
                 else:
                     output_data.append([frame_title, max_value, process_image, prediction, ', '.join(map(str, features))])
 
@@ -179,6 +188,7 @@ class PoseEstimation:
         features = []
         prediction = None
         aoi_for_pose = None
+        timestamp_secs = 0
 
         if use_bounding_box and rectangles is not None and len(rectangles) > 0:
             # Get area of interest from the biggest frame
@@ -213,7 +223,8 @@ class PoseEstimation:
                     print(features, prediction)
 
                     # Get the frame dimensions and calculate the text position
-                    frame_label = f'{self.prefix_text} {prediction} {self.get_timestamp(frame_count=self.frame_count, video_fps=self.video_fps)}'
+                    timestamp_text, timestamp_secs = self.get_timestamp(frame_count=self.frame_count, video_fps=self.video_fps)
+                    frame_label = f'{self.prefix_text} {prediction} {timestamp_text}'
 
                     frame_height, frame_width = frame_output.shape[:2]
                     (text_width, text_height), _ = cv2.getTextSize(frame_label, self.font, self.font_scale, self.font_thickness)
@@ -228,7 +239,7 @@ class PoseEstimation:
                 pass
 
 
-        return prediction, features
+        return prediction, features, timestamp_secs
 
     def get_timestamp(self, frame_count=None, video_fps=None, export_fps=0):
         # Calculate timestamp in seconds (with fraction for frames_per_second)
@@ -243,7 +254,7 @@ class PoseEstimation:
             fraction = int((timestamp_sec * export_fps) % export_fps)
 
         timestamp_text = f"frame: {frame_count:04d} - {hours:02}:{minutes:02}:{seconds:02}.{fraction:01} - {timestamp_sec:.6f} - fps: {video_fps:02}"
-        return timestamp_text
+        return timestamp_text, timestamp_sec
 
     def generate_frames_for_groundtruth(self, video_file=None, frames_per_second=1, BASE_OUTPUT_DIR=None):
         self.my_frame_diff = FrameDiff()
@@ -267,7 +278,7 @@ class PoseEstimation:
 
             # Check if the current frame is at the specified interval
             if frame_count % frame_interval == 0:
-                timestamp_text = self.get_timestamp(frame_count=frame_count, video_fps=fps, export_fps=frames_per_second)
+                timestamp_text, _ = self.get_timestamp(frame_count=frame_count, video_fps=fps, export_fps=frames_per_second)
 
                 # Put timestamp text on frame
                 cv2.putText(frame, timestamp_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
