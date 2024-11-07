@@ -8,7 +8,7 @@ from predict_dependencies import  predict_pose, get_attr_of_features
 
 class PoseEstimation:
     def process_video(self, video_file=None, scaling_factor=0.5, use_bounding_box=True,
-                      model_number=1, is_predict_pose=False, use_frame_diff=True, BASE_OUTPUT_DIR=None):
+                      model_number=1, is_predict_pose=False, is_labelled=False, use_frame_diff=True, BASE_OUTPUT_DIR=None):
         self.is_predict_pose = is_predict_pose
 
         self.model_number = model_number
@@ -25,14 +25,14 @@ class PoseEstimation:
         cap = cv2.VideoCapture(video_file)
 
         # Get the FPS of the video
-        fps = cap.get(cv2.CAP_PROP_FPS)
-        print(f"Frames per second: {fps}")
+        self.video_fps = cap.get(cv2.CAP_PROP_FPS)
+        print(f"Frames per second: {self.video_fps}")
 
         # Initialize processing frame interval; set to 0 use recording speed
         processing_interval = 0
-        if fps > 59:
+        if self.video_fps > 59:
             # limit to 30fps if video is > 30fps
-            processing_interval = fps // 30
+            processing_interval = self.video_fps // 30
 
         # Initialize frame variables
         prev_frame = None
@@ -145,7 +145,10 @@ class PoseEstimation:
 
                 # Save max value of absolute difference to csv
                 print(frame_title, max_value, process_image)
-                output_data.append([frame_title, max_value, process_image, prediction, ', '.join(map(str, features))])
+                if is_labelled:
+                    output_data.append([frame_title, max_value, process_image, prediction, ', '.join(map(str, features))])
+                else:
+                    output_data.append([frame_title, max_value, process_image, prediction, ', '.join(map(str, features))])
 
             # Check for the ESC key press
 
@@ -210,7 +213,8 @@ class PoseEstimation:
                     print(features, prediction)
 
                     # Get the frame dimensions and calculate the text position
-                    frame_label = f'{self.prefix_text} {prediction} {self.frame_count}'
+                    frame_label = f'{self.prefix_text} {prediction} {self.get_timestamp(frame_count=self.frame_count, video_fps=self.video_fps)}'
+
                     frame_height, frame_width = frame_output.shape[:2]
                     (text_width, text_height), _ = cv2.getTextSize(frame_label, self.font, self.font_scale, self.font_thickness)
                     text_x = frame_width - text_width - 10  # 10 px padding from the right edge
@@ -226,16 +230,31 @@ class PoseEstimation:
 
         return prediction, features
 
-    def generate_frames_for_groundtruth(self, video_file=None, BASE_OUTPUT_DIR=None):
+    def get_timestamp(self, frame_count=None, video_fps=None, export_fps=0):
+        # Calculate timestamp in seconds (with fraction for frames_per_second)
+        timestamp_sec = frame_count / video_fps
+
+        # Convert timestamp to format hh:mm:ss:ff (including frame fraction)
+        hours = int(timestamp_sec // 3600)
+        minutes = int((timestamp_sec % 3600) // 60)
+        seconds = int(timestamp_sec)
+        fraction = 0
+        if export_fps > 0:
+            fraction = int((timestamp_sec * export_fps) % export_fps)
+
+        timestamp_text = f"frame: {frame_count:04d} - {hours:02}:{minutes:02}:{seconds:02}.{fraction:01} - {timestamp_sec:.6f} - fps: {video_fps:02}"
+        return timestamp_text
+
+    def generate_frames_for_groundtruth(self, video_file=None, frames_per_second=1, BASE_OUTPUT_DIR=None):
         self.my_frame_diff = FrameDiff()
         self.my_frame_diff.output_folder = os.path.join(BASE_OUTPUT_DIR, "output_frames")
         self.my_frame_diff.empty_folder(self.my_frame_diff.output_folder)
 
         cap = cv2.VideoCapture(video_file)
 
-        # Get video frame rate and set frame interval to 1 frame per second
+        # Get video frame rate and set the interval based on frames_per_second
         fps = cap.get(cv2.CAP_PROP_FPS)
-        frame_interval = int(fps)  # Number of frames to skip to get 1 frame per second
+        frame_interval = int(fps // frames_per_second)  # Adjust frame interval to capture specified frames per second
 
         frame_count = 0
 
@@ -246,20 +265,17 @@ class PoseEstimation:
             if not ret:
                 break
 
-            # Check if the current frame is at the 1-second interval
+            # Check if the current frame is at the specified interval
             if frame_count % frame_interval == 0:
-                # Calculate timestamp in seconds
-                timestamp_sec = frame_count // int(fps)
-
-                # Convert timestamp to format hh:mm:ss
-                timestamp_text = f"{timestamp_sec // 3600:02}:{(timestamp_sec % 3600) // 60:02}:{timestamp_sec % 60:02}"
+                timestamp_text = self.get_timestamp(frame_count=frame_count, video_fps=fps, export_fps=frames_per_second)
 
                 # Put timestamp text on frame
                 cv2.putText(frame, timestamp_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
                             cv2.LINE_AA)
 
-                # Save the frame with timestamp
-                frame_filename = os.path.join(self.my_frame_diff.output_folder, f"frame_{timestamp_sec:04d}.jpg")
+                # Save the frame with timestamp, including fraction for unique filename
+                frame_filename = os.path.join(self.my_frame_diff.output_folder,
+                                              f"frame_{frame_count:04d}.jpg")
                 cv2.imwrite(frame_filename, frame)
 
             # Increment frame count
@@ -268,4 +284,6 @@ class PoseEstimation:
         # Release the video capture object
         cap.release()
         print("Done saving frames.")
+
+
 
