@@ -6,7 +6,8 @@ start_time,end_time,action,is_fall
 28,28,Stand-Lie,True
 29,29,Lie,False
 30,30,Lie-Stand,False
-31,35,Stand,False
+31,34,Stand,False
+35,35,Stand-Sit,False
 36,42,Sit,False
 43,55,Stand,False
 56,56,Stand-Lie,True

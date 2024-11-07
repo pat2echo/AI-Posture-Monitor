@@ -5,7 +5,8 @@
 28 - 28 Stand-Lie (Fall)
 29 - 29 Lie
 30 - 30 Lie-Stand
-31 - 35 Stand
+31 - 34 Stand
+35 - 35 Stand-Sit
 36 - 42 Sit
 43 - 55 Stand
 56 - 56 Stand-Lie (Fall)

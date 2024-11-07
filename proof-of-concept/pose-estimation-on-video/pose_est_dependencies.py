@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import pandas as df
 import os
+
 from frame_diff_dependencies import FrameDiff
 from features_dependencies import  get_features
 from predict_dependencies import  predict_pose, get_attr_of_features
@@ -36,6 +37,8 @@ class PoseEstimation:
             processing_interval = self.video_fps // 30
 
         # Get labels
+        self.pass_count = 0
+        self.fail_count = 0
         self.previous_label = None
         self.label_df = None
         if label_file is not None:
@@ -177,7 +180,7 @@ class PoseEstimation:
 
         # Save the NumPy array to CSV
         features_attr = get_attr_of_features()
-        np.savetxt(os.path.join(output_results, f'{video_file.replace('./','').split(".")[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
+        np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
                    header='file_name,max_value,process_image,label,prediction,' + ','.join(features_attr), comments='')
 
         # Release resources
@@ -227,13 +230,17 @@ class PoseEstimation:
                                                                     video_fps=self.video_fps)
 
                 if self.label_df is not None:
-                    d_label = self.label_df[(self.label_df["start_time"] <= timestamp_secs) & (self.label_df["end_time"] >= timestamp_secs)]
+                    timestamp_rounded = np.floor(timestamp_secs)
+                    d_label = self.label_df[(self.label_df["start_time"] <= timestamp_rounded) & (self.label_df["end_time"] >= timestamp_rounded)]
+                    #print(self.frame_count, d_label, timestamp_rounded)
                     if d_label.shape[0] > 0:
                         label = d_label["action"].values[0].lower()
                         self.previous_label = label
                     else:
                         label = self.previous_label
 
+
+                frame_height, frame_width = frame_output.shape[:2]
 
                 if self.is_predict_pose:
                     landmarks_data = []
@@ -243,9 +250,24 @@ class PoseEstimation:
                     features = get_features(landmarks_3d=np.array(landmarks_data), image_name=None, model=self.model_number)
                     prediction = predict_pose( features=features)
                     #print(features, prediction)
+                    font_color = (255,0,0)
+                    pass_fail = 'FAIL'
+                    if (label is None and prediction is None) or (label is not None and prediction in label):
+                        self.pass_count += 1
+                        font_color = (0,0,255)
+                        pass_fail = 'PASS'
+                    else:
+                        self.fail_count += 1
+                    acc = (self.pass_count * 100) / (self.pass_count + self.fail_count)
 
-                frame_text = f'{self.prefix_text} {label} {prediction} {timestamp_text}'
-                frame_height, frame_width = frame_output.shape[:2]
+                    frame_text = f'{pass_fail} - Accuracy: {acc:.2f}'
+                    (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale,
+                                                                   self.font_thickness)
+                    cv2.putText(frame_output, frame_text, (20, frame_height - text_height - 10), self.font, self.font_scale, font_color,
+                                self.font_thickness)
+
+                frame_text = f'Label: {label} Pred: {prediction} {timestamp_text}'
+                #frame_text = f'{self.prefix_text} Label: {label} Pred: {prediction} {timestamp_text}'
                 (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale, self.font_thickness)
                 text_x = frame_width - text_width - 10  # 10 px padding from the right edge
                 text_y = 20  # Position near the top
