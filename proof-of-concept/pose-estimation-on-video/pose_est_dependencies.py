@@ -39,8 +39,14 @@ class PoseEstimation:
         label_df = None
         if label_file is not None:
             label_df = df.read_csv(label_file)
-            print(label_df)
-            return
+
+            label_df["action"] = label_df["action"].astype(str)
+            #label_df["start_time"] = label_df["start_time"].astype(float)
+            #label_df["end_time"] = label_df["end_time"].astype(float)
+
+            #label_df["start_frame"] = label_df["start_time"] * self.video_fps
+            #label_df["end_frame"] = label_df["end_time"] * self.video_fps
+            #print(label_df)
 
         # Initialize frame variables
         prev_frame = None
@@ -99,6 +105,7 @@ class PoseEstimation:
 
             # Increment current frame number
             self.frame_count += 1
+            timestamp_sec = 0
 
             # Set max absolute value to 0 in case frame was not processed
             max_value = 0
@@ -152,12 +159,15 @@ class PoseEstimation:
                 cv2.imwrite(output_path, frame_output)
 
                 # Save max value of absolute difference to csv
-                print(frame_title, max_value, process_image)
+                #print(frame_title, max_value, process_image)
+                d_label = None
                 if label_df is not None:
-                    frame_label = frame_label
-                    output_data.append([self.frame_count, max_value, process_image, frame_label, prediction, ', '.join(map(str, features))])
-                else:
-                    output_data.append([frame_title, max_value, process_image, prediction, ', '.join(map(str, features))])
+                    frame_label = label_df[(label_df["start_time"] <= timestamp_sec) & (label_df["end_time"] >= timestamp_sec)]
+
+                    if 'action' in frame_label:
+                        d_label = frame_label["action"].values[0].lower()
+
+                output_data.append([self.frame_count, max_value, process_image, d_label, prediction, ', '.join(map(str, features))])
 
             # Check for the ESC key press
 
@@ -169,8 +179,8 @@ class PoseEstimation:
 
         # Save the NumPy array to CSV
         features_attr = get_attr_of_features()
-        np.savetxt(os.path.join(self.my_frame_diff.output_folder, 'frame_max_values.csv'), np.array(output_data), fmt='%s', delimiter=',',
-                   header='file_name,max_value,process_image,prediction,' + ','.join(features_attr), comments='')
+        np.savetxt(os.path.join(self.my_frame_diff.output_folder, 'frame_values.csv'), np.array(output_data), fmt='%s', delimiter=',',
+                   header='file_name,max_value,process_image,label,prediction,' + ','.join(features_attr), comments='')
 
         # Release resources
         cap.release()
