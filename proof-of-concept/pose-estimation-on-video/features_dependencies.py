@@ -505,7 +505,7 @@ def get_features(landmarks_3d, image_name=None, model=2):
         result[(percentage_differences >= percentage_threshold) & (
                     percentage_differences < percentage_threshold_for_squat)] = 'squat'
 
-        print('initial result', result)
+        #print('initial result', result)
 
         final_result = []
         mean = [ 100 - int(np.mean(percentage_differences[::2])), 100 - int(np.mean(percentage_differences[1::2])) ]
