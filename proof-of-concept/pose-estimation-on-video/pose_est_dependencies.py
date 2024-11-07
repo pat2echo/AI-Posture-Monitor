@@ -36,11 +36,11 @@ class PoseEstimation:
             processing_interval = self.video_fps // 30
 
         # Get labels
-        label_df = None
+        self.label_df = None
         if label_file is not None:
-            label_df = df.read_csv(label_file)
+            self.label_df = df.read_csv(label_file)
 
-            label_df["action"] = label_df["action"].astype(str)
+            self.label_df["action"] = self.label_df["action"].astype(str)
             #label_df["start_time"] = label_df["start_time"].astype(float)
             #label_df["end_time"] = label_df["end_time"].astype(float)
 
@@ -105,7 +105,7 @@ class PoseEstimation:
 
             # Increment current frame number
             self.frame_count += 1
-            timestamp_sec = 0
+            frame_label = 0
 
             # Set max absolute value to 0 in case frame was not processed
             max_value = 0
@@ -145,7 +145,7 @@ class PoseEstimation:
                         predict_rect = [area_of_interest['rect']]
                     elif rectangles is not None and len(rectangles) > 0:
                         predict_rect = rectangles
-                    prediction, features, timestamp_sec = self.process_frame(frame_output=frame_output, use_bounding_box=use_bounding_box, rectangles=predict_rect)
+                    prediction, features, frame_label, _ = self.process_frame(frame_output=frame_output, use_bounding_box=use_bounding_box, rectangles=predict_rect)
 
             # Display the result
             frame_output = cv2.cvtColor(frame_output, cv2.COLOR_RGB2BGR)
@@ -160,14 +160,7 @@ class PoseEstimation:
 
                 # Save max value of absolute difference to csv
                 #print(frame_title, max_value, process_image)
-                d_label = None
-                if label_df is not None:
-                    frame_label = label_df[(label_df["start_time"] <= timestamp_sec) & (label_df["end_time"] >= timestamp_sec)]
-
-                    if 'action' in frame_label:
-                        d_label = frame_label["action"].values[0].lower()
-
-                output_data.append([self.frame_count, max_value, process_image, d_label, prediction, ', '.join(map(str, features))])
+                output_data.append([self.frame_count, max_value, process_image, frame_label, prediction, ', '.join(map(str, features))])
 
             # Check for the ESC key press
 
@@ -199,6 +192,7 @@ class PoseEstimation:
         prediction = None
         aoi_for_pose = None
         timestamp_secs = 0
+        label = None
 
         if use_bounding_box and rectangles is not None and len(rectangles) > 0:
             # Get area of interest from the biggest frame
@@ -223,6 +217,16 @@ class PoseEstimation:
                     self.mp_drawing.DrawingSpec(color=(245, 66, 0), thickness=1, circle_radius=2)
                 )
 
+                # Get the frame dimensions and calculate the text position
+                timestamp_text, timestamp_secs = self.get_timestamp(frame_count=self.frame_count,
+                                                                    video_fps=self.video_fps)
+
+                if self.label_df is not None:
+                    d_label = self.label_df[(self.label_df["start_time"] <= timestamp_secs) & (self.label_df["end_time"] >= timestamp_secs)]
+                    if d_label.shape[0] > 0:
+                        label = d_label["action"].values[0].lower()
+
+
                 if self.is_predict_pose:
                     landmarks_data = []
                     for i, landmark in enumerate(results.pose_landmarks.landmark):
@@ -230,18 +234,15 @@ class PoseEstimation:
 
                     features = get_features(landmarks_3d=np.array(landmarks_data), image_name=None, model=self.model_number)
                     prediction = predict_pose( features=features)
-                    print(features, prediction)
+                    #print(features, prediction)
 
-                    # Get the frame dimensions and calculate the text position
-                    timestamp_text, timestamp_secs = self.get_timestamp(frame_count=self.frame_count, video_fps=self.video_fps)
-                    frame_label = f'{self.prefix_text} {prediction} {timestamp_text}'
-
-                    frame_height, frame_width = frame_output.shape[:2]
-                    (text_width, text_height), _ = cv2.getTextSize(frame_label, self.font, self.font_scale, self.font_thickness)
-                    text_x = frame_width - text_width - 10  # 10 px padding from the right edge
-                    text_y = 20  # Position near the top
-                    cv2.putText(frame_output, frame_label, (text_x, text_y), self.font, self.font_scale, self.font_color,
-                                self.font_thickness)
+                frame_text = f'{self.prefix_text} {label} {prediction} {timestamp_text}'
+                frame_height, frame_width = frame_output.shape[:2]
+                (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale, self.font_thickness)
+                text_x = frame_width - text_width - 10  # 10 px padding from the right edge
+                text_y = 20  # Position near the top
+                cv2.putText(frame_output, frame_text, (text_x, text_y), self.font, self.font_scale, self.font_color,
+                            self.font_thickness)
 
             # Save aoi for pose
             if self.frame_count % self.save_interval == 0:
@@ -249,7 +250,7 @@ class PoseEstimation:
                 pass
 
 
-        return prediction, features, timestamp_secs
+        return prediction, features, label, timestamp_secs
 
     def get_timestamp(self, frame_count=None, video_fps=None, export_fps=0):
         # Calculate timestamp in seconds (with fraction for frames_per_second)
@@ -263,7 +264,7 @@ class PoseEstimation:
         if export_fps > 0:
             fraction = int((timestamp_sec * export_fps) % export_fps)
 
-        timestamp_text = f"frame: {frame_count:04d} - {hours:02}:{minutes:02}:{seconds:02}.{fraction:01} - {timestamp_sec:.6f} - fps: {video_fps:02}"
+        timestamp_text = f"frame: {frame_count:04d} - {hours:02}:{minutes:02}:{seconds:02}.{fraction:01} - {timestamp_sec:.6f} - fps: {video_fps:.2f}"
         return timestamp_text, timestamp_sec
 
     def generate_frames_for_groundtruth(self, video_file=None, frames_per_second=1, BASE_OUTPUT_DIR=None):
