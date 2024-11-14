@@ -30,7 +30,7 @@ class Evaluate:
         f1 = f1_score(y_true, y_pred, average='macro')
 
         # Calculate confusion matrix to derive specificity
-        # tn, fp, fn, tp = confusion_matrix(y_true == 'stand',
+        #tn, fp, fn, tp = confusion_matrix(y_true == 'stand',
         #                                   y_pred == 'stand').ravel()  # Assuming 'stand' as positive class
         #
         # specificity = tn / (tn + fp) if (tn + fp) > 0 else 0
