@@ -1,9 +1,7 @@
 import os
 import sys
-from traceback import print_tb
 
 import pandas as pd
-from pyparsing import empty
 
 from pose_estimation_dependencies import detect_pose_boundingbox, initialize_mediapipe
 

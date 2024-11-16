@@ -61,3 +61,10 @@ python code/proof-of-concept/static-image-pose-estimation/collect_fuzzy_data.py 
 
 python code/proof-of-concept/static-image-pose-estimation/collect_fuzzy_data.py ./dataset/pose
 ```
+
+Analysis to get thresholds for fuzzy sets
+```aiignore
+python code/proof-of-concept/static-image-pose-estimation/clustering.py ./dataset/pose/static_pose_boundingbox_data.csv kmeans aspect_ratio 3
+
+python code/proof-of-concept/static-image-pose-estimation/clustering.py ./dataset/pose/static_pose_boundingbox_data.csv histogram aspect_ratio 30
+```
