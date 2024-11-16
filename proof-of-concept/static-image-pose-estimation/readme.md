@@ -53,3 +53,11 @@ python code/proof-of-concept/static-image-pose-estimation/metrics.py ./dataset/p
 python code/proof-of-concept/static-image-pose-estimation/get_features.py ./dataset/pose && python code/proof-of-concept/static-image-pose-estimation/predict.py ./dataset/pose/features_output.csv && python code/proof-of-concept/static-image-pose-estimation/metrics.py ./dataset/pose/features_output_predicted.csv
 python code/proof-of-concept/static-image-pose-estimation/get_features.py ./dataset/video-pose-2 && python code/proof-of-concept/static-image-pose-estimation/predict.py ./dataset/pose/features_output.csv && python code/proof-of-concept/static-image-pose-estimation/metrics.py ./dataset/pose/features_output_predicted.csv
 ```
+
+
+Get Aspect Ratio, and Relative Width / Height for Fuzzy Set Thresholds
+```aiignore
+python code/proof-of-concept/static-image-pose-estimation/collect_fuzzy_data.py ./dataset/pose/sit.jpg
+
+python code/proof-of-concept/static-image-pose-estimation/collect_fuzzy_data.py ./dataset/pose
+```

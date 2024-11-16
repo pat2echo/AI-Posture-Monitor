@@ -7,6 +7,7 @@ import os
 import pandas as pd
 
 import matplotlib
+from pyparsing import empty
 
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
@@ -770,3 +771,68 @@ def predict_features(features=[], features_df=None):
                 label = pred_stand_to_lie(feature_list)
 
     return label
+
+
+def detect_pose_boundingbox(image_path, pose=None, show=False):
+    # Get Pose Landmarks
+    results, img_rgb, df = detect_pose_landmarks(image_path=image_path, pose=pose, show=True)
+    frame_height, frame_width = img_rgb.shape[:2]
+
+
+    # Initialize bounding box
+    bbox = {'xmin': 1, 'ymin': 1, 'xmax': 0, 'ymax': 0}
+
+     # Update bounding box dimensions
+    if df is not None and not df.empty:
+        kof = keypoints_of_focus()
+        #print(kof, df.iloc[kof])
+        df = df.iloc[kof]
+
+        bbox['xmin'] = min(bbox['xmin'], df['X'].min())
+        bbox['ymin'] = min(bbox['ymin'], df['Y'].min())
+        bbox['xmax'] = max(bbox['xmax'], df['X'].max())
+        bbox['ymax'] = max(bbox['ymax'], df['Y'].max())
+
+    # Calculate bounding box parameters
+    bbox_width = bbox['xmax'] - bbox['xmin']
+    bbox_height = bbox['ymax'] - bbox['ymin']
+    aspect_ratio = bbox_width / bbox_height if bbox_height != 0 else 0
+
+    # Calculate relative width and height of bounding box
+    relative_bbox_width = bbox_width
+    relative_bbox_height = bbox_height
+
+    # Show the bounding box on the image if show is True
+    if show:
+        # Convert bounding box coordinates to pixel values
+        bbox_pixel = {
+            'xmin': int(bbox['xmin'] * frame_width),
+            'ymin': int(bbox['ymin'] * frame_height),
+            'xmax': int(bbox['xmax'] * frame_width),
+            'ymax': int(bbox['ymax'] * frame_height)
+        }
+
+        img_copy = cv2.cvtColor(img_rgb.copy(), cv2.COLOR_BGR2RGB)
+        cv2.rectangle(
+            img_copy,
+            (bbox_pixel['xmin'], bbox_pixel['ymin']),
+            (bbox_pixel['xmax'], bbox_pixel['ymax']),
+            (0, 255, 0), 2
+        )
+
+        # Print results for debugging
+        print(f"BBox Width: {bbox_pixel['xmax'] - bbox_pixel['xmin']}, "f"BBox Height: {bbox_pixel['ymax'] - bbox_pixel['ymin']}")
+        print(f"Frame Width: {frame_width}, Frame Height: {frame_height}")
+        print(f"Aspect Ratio: {aspect_ratio}")
+        print(f"Relative Width: {relative_bbox_width}, Relative Height: {relative_bbox_height}")
+        cv2.imshow("Bounding Box", img_copy)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+    return {
+        'frame_width': frame_width,
+        'frame_height': frame_height,
+        'aspect_ratio': aspect_ratio,
+        'relative_width': relative_bbox_width,
+        'relative_height': relative_bbox_height
+    }
