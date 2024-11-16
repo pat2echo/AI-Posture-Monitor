@@ -119,13 +119,21 @@ def clustering_analysis(file_path, method='kmeans', field_name='aspect_ratio', n
         cluster_centers = kmeans.cluster_centers_
         print(f"K-means Cluster Centers:\n{cluster_centers}")
 
+        print(df['cluster'].value_counts())
+
+        grouped = df.groupby("cluster")[["aspect_ratio"]].agg(
+            ['min', 'max', 'mean', 'count'])
+        print(grouped)
+        save_path = os.path.join(os.path.dirname(file_path), 'grouped_kmeans_static_pose_boundingbox_data.csv')
+        grouped.to_csv(save_path, index=False)
+
     # Apply DBSCAN Clustering
     elif method == 'dbscan':
         dbscan = DBSCAN(eps=eps, min_samples=min_samples)
         labels = dbscan.fit_predict(X_scaled)
         df['cluster'] = labels
         n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
-        print(f"DBSCAN detected {n_clusters} clusters (excluding noise)")
+        print(f"DBSCAN detected {n_clusters} clusters")
     elif method == 'histogram':
         # Convert the aspect ratios to a numpy array (optional, if not already)
         aspect_ratios = df[features].values
@@ -168,6 +176,9 @@ def clustering_analysis(file_path, method='kmeans', field_name='aspect_ratio', n
         plt.scatter(X_scaled, np.zeros_like(X_scaled), c=labels, cmap=plt.cm.Paired, s=50)
         if method == 'kmeans':
             plt.scatter(cluster_centers, np.zeros_like(cluster_centers), s=200, c='red', marker='X')
+            for i, center in enumerate(cluster_centers):
+                plt.text(center[0], 0, f'{i}', fontsize=12, fontweight='bold', ha='center', va='bottom')
+
         plt.title(f"{method.upper()} Clustering \n No of Clusters: {n_clusters}")
         plt.xlabel(f'{k.replace('_', ' ').capitalize()} (scaled)')
         plt.colorbar(label='Cluster Label')
