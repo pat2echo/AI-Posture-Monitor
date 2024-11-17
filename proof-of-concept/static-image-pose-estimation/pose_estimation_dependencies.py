@@ -836,3 +836,37 @@ def detect_pose_boundingbox(image_path, pose=None, show=False):
         'relative_width': relative_bbox_width,
         'relative_height': relative_bbox_height
     }
+
+def aspect_ratio_membership(aspect_ratio):
+    # Use of a linear function to assign probabilistic values for aspect ratio membership
+    divisor = 0.5
+
+    # When aspect_ratio is less than or equal to 0.35, the membership value is 1 (fully low).
+    threshold = 0.35
+    low = max(0, min(1, ( (threshold + divisor) - aspect_ratio) / divisor))
+
+    # Cluster 4 + (Cluster 8 - Cluster 4) / 2
+    # 0.853485 + ( 1.243108 - 0.853485) / 2 = 1.05
+    # 1.05 -/+ 0.5 = 0.55, 1.55
+    # low_medium = max(0, min( (aspect_ratio - 0.55) / 0.5, (1.55 - aspect_ratio) / 0.5))
+    threshold = 1.05
+    low_medium = max(0, min((aspect_ratio - (threshold - divisor) ) / divisor, ( (threshold + divisor) - aspect_ratio) / divisor))
+
+    threshold = 1.24
+    medium_low = max(0, min((aspect_ratio - (threshold - divisor) ) / divisor, ( (threshold + divisor) - aspect_ratio) / divisor))
+
+    threshold = 2.07
+    medium = max(0, min((aspect_ratio - (threshold - divisor) ) / divisor, ( (threshold + divisor) - aspect_ratio) / divisor))
+
+    threshold = 2.76
+    medium_high = max(0, min((aspect_ratio - (threshold - divisor) ) / divisor, ( (threshold + divisor) - aspect_ratio) / divisor))
+
+    # High Medium threshold is calculated as a soft margin between Clusters 3 and 5
+    # Cluster 3 + ( (Cluster 5 - Cluster 3) / 4 ) = 3.33
+    threshold = 3.33
+    high_medium = max(0, min((aspect_ratio - (threshold - divisor) ) / divisor, ( (threshold + divisor) - aspect_ratio) / divisor))
+
+    high_threshold = 4.99
+    high = max(0, min(1, (aspect_ratio - threshold) / (high_threshold - threshold)))
+
+    return low, low_medium, medium_low, medium, medium_high, high_medium, high
