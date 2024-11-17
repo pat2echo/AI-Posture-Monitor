@@ -43,6 +43,9 @@ python code/proof-of-concept/static-image-pose-estimation/get_features.py ./data
 Predict All Features
 ```aiignore
 python code/proof-of-concept/static-image-pose-estimation/predict.py ./dataset/pose/features_output.csv
+
+python code/proof-of-concept/static-image-pose-estimation/predict.py ./dataset/pose/features_output.csv relative_joints
+python code/proof-of-concept/static-image-pose-estimation/predict.py ./dataset/pose/static_pose_boundingbox_data.csv bounding_box_size
 ```
 
 Get Evaluation Metrics

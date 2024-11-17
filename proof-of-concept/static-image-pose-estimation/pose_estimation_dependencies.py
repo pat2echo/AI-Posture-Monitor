@@ -772,7 +772,6 @@ def predict_features(features=[], features_df=None):
 
     return label
 
-
 def detect_pose_boundingbox(image_path, pose=None, show=False):
     # Get Pose Landmarks
     results, img_rgb, df = detect_pose_landmarks(image_path=image_path, pose=pose, show=True)
@@ -869,4 +868,11 @@ def aspect_ratio_membership(aspect_ratio):
     high_threshold = 4.99
     high = max(0, min(1, (aspect_ratio - threshold) / (high_threshold - threshold)))
 
-    return low, low_medium, medium_low, medium, medium_high, high_medium, high
+    return [low, low_medium, medium_low, medium, medium_high, high_medium, high]
+
+def predict_bounding_box_size(features_df=None):
+    # Use bounding box shape to make prediction
+    label = None
+    if features_df is not None:
+        aspect_ratio = aspect_ratio_membership( features_df["aspect_ratio"] )
+        print(aspect_ratio)
