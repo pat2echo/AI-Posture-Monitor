@@ -873,6 +873,12 @@ def aspect_ratio_membership(aspect_ratio):
 def predict_bounding_box_size(features_df=None):
     # Use bounding box shape to make prediction
     label = None
+    posture = ['stand', 'stand', 'sit', 'sit', 'sit', 'lie', 'lie']
     if features_df is not None:
         aspect_ratio = aspect_ratio_membership( features_df["aspect_ratio"] )
-        print(aspect_ratio)
+        max_value = max(aspect_ratio)
+        max_index = aspect_ratio.index(max_value)
+        #print(max_index, max_value, posture[max_index])
+        label = posture[max_index]
+
+    return label

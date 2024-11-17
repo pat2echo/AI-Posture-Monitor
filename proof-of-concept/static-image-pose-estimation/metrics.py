@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import sys
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
-
+import numpy as np
 
 # Function to compute accuracy, sensitivity, specificity, precision, recall, and f1-score
 def calculate_metrics(df):
@@ -42,6 +42,9 @@ if len(sys.argv) > 1:
 
     if os.path.isfile(features_file) and features_file.endswith('.csv'):
         df = pd.read_csv(features_file)
+
+        df.replace(-1.0, np.nan, inplace=True)
+
         metrics = calculate_metrics(df.dropna(axis=0, how='any'))
         print(metrics)
 
