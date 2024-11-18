@@ -105,6 +105,17 @@ def display_pose_landmarks(image_path, manual_drawing=False):
 
     # Copy image
     img_copy = cv2.cvtColor(img_rgb.copy(), cv2.COLOR_RGB2BGR)
+    if results.segmentation_mask is not None:
+        print("segmented")
+        # Convert the segmentation mask to a binary mask
+        binary_mask = (results.segmentation_mask > 0.5).astype(np.uint8)
+
+        # Create a colored mask
+        colored_mask = np.zeros_like(img_copy, dtype=np.uint8)
+        colored_mask[:, :, 1] = binary_mask * 255  # Green color for the mask
+
+        # Blend the original image with the colored mask
+        img_copy = cv2.addWeighted(img_copy, 0.7, colored_mask, 0.3, 0)
 
     if results.pose_landmarks:
         img_height, img_width = img_copy.shape[:2]
@@ -154,7 +165,7 @@ def display_pose_landmarks(image_path, manual_drawing=False):
 def initialize_mediapipe ():
     # 2. Load MediaPipe Pose landmark estimation solution
     mp_pose = mp.solutions.pose
-    pose = mp_pose.Pose(static_image_mode=True, model_complexity=1, min_detection_confidence=0.7)
+    pose = mp_pose.Pose(static_image_mode=True, model_complexity=1, enable_segmentation=True, min_detection_confidence=0.7)
 
     # 3. Load MediaPipe Drawing Utilities
     mp_drawing = mp.solutions.drawing_utils

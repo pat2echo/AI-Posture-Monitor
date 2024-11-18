@@ -21,7 +21,7 @@ class PoseEstimation:
         #self.pose = self.mp_pose.Pose(static_image_mode=False, min_detection_confidence=0.5, min_tracking_confidence=0.5)
         #self.pose = self.mp_pose.Pose(static_image_mode=False, model_complexity=1, min_detection_confidence=0.7, min_tracking_confidence=0.7)
         #self.pose = self.mp_pose.Pose(static_image_mode=False, model_complexity=2, min_detection_confidence=0.7, min_tracking_confidence=0.7)
-        self.pose = self.mp_pose.Pose(static_image_mode=True, min_detection_confidence=0.5, model_complexity=1)
+        self.pose = self.mp_pose.Pose(static_image_mode=True, min_detection_confidence=0.7, model_complexity=1)
         #help(self.pose)
         #return None
 
@@ -159,7 +159,10 @@ class PoseEstimation:
                         predict_rect = [area_of_interest['rect']]
                     elif rectangles is not None and len(rectangles) > 0:
                         predict_rect = rectangles
-                    prediction, features, frame_label, _ = self.process_frame(frame_output=frame_output, use_bounding_box=use_bounding_box, rectangles=predict_rect)
+                    prediction, features, frame_label, _ = self.process_frame(frame_output=frame_output,
+                                                                              manual_landmark_drawing=False,
+                                                                              use_bounding_box=use_bounding_box,
+                                                                              rectangles=predict_rect)
 
             # Display the result
             frame_output = cv2.cvtColor(frame_output, cv2.COLOR_RGB2BGR)
@@ -205,7 +208,7 @@ class PoseEstimation:
         self.font_color = (0, 255, 0)  # Green color in BGR
         self.font_thickness = 2
 
-    def process_frame(self, frame_output, use_bounding_box=True, rectangles=None):
+    def process_frame(self, frame_output, use_bounding_box=True, rectangles=None, manual_landmark_drawing=False):
         features = []
         prediction = None
         aoi_for_pose = None
@@ -216,10 +219,16 @@ class PoseEstimation:
             # Get area of interest from the biggest frame
             for rect in rectangles:
                 (x, y, w, h) = rect
-                aoi_for_pose = frame_output[y:y + h, x:x + w]
+                # aoi_for_pose = frame_output[y:y + h, x:x + w]
+                expanded_w = w * 3
+                expanded_x_start = max(x - (expanded_w - w) // 2, 0)  # Ensure x doesn't go negative
+                expanded_w = min(expanded_w, frame_output.shape[1] - expanded_x_start)  # Ensure width doesn't exceed frame width
+                aoi_for_pose = frame_output[y:y + h, expanded_x_start:expanded_x_start + expanded_w]
                 break
         elif not use_bounding_box:
             aoi_for_pose = frame_output
+
+        #aoi_for_pose = frame_output.copy()
 
         if aoi_for_pose is not None and aoi_for_pose.size > 0:
             # aoi_for_pose = cv2.cvtColor(aoi_for_pose, cv2.COLOR_GRAY2RGB)
@@ -227,13 +236,18 @@ class PoseEstimation:
 
             if results.pose_landmarks:
                 # print(results.pose_landmarks)
-                self.mp_drawing.draw_landmarks(
-                    aoi_for_pose,
-                    results.pose_landmarks,
-                    self.mp_pose.POSE_CONNECTIONS,
-                    self.mp_drawing.DrawingSpec(color=(0, 117, 66), thickness=1, circle_radius=2),
-                    self.mp_drawing.DrawingSpec(color=(245, 66, 0), thickness=1, circle_radius=2)
-                )
+                if manual_landmark_drawing:
+                    self.manual_drwaing_of_landmark(frame=frame_output,
+                                                    pose_landmark=results.pose_landmarks,
+                                                    pose_connection=self.mp_pose.POSE_CONNECTIONS)
+                else:
+                    self.mp_drawing.draw_landmarks(
+                        frame_output,
+                        results.pose_landmarks,
+                        self.mp_pose.POSE_CONNECTIONS,
+                        self.mp_drawing.DrawingSpec(color=(0, 117, 66), thickness=1, circle_radius=2),
+                        self.mp_drawing.DrawingSpec(color=(245, 66, 0), thickness=1, circle_radius=2)
+                    )
 
                 # Get the frame dimensions and calculate the text position
                 timestamp_text, timestamp_secs = self.get_timestamp(frame_count=self.frame_count,
@@ -291,6 +305,43 @@ class PoseEstimation:
 
 
         return prediction, features, label, timestamp_secs
+
+    def manual_drwaing_of_landmark(self, frame=None, pose_landmark=None, pose_connection=None):
+        landmark_coords = {}
+        frame_width, frame_height = frame.shape[:2]
+
+        for idx, landmark in enumerate(pose_landmark.landmark):
+            # Convert normalized coordinates to pixel coordinates
+            x = int(landmark.x * frame_width)
+            y = int(landmark.y * frame_height)
+
+            # Boundary check: Ensure the coordinates stay within the image frame
+            x = min(max(x, 0), frame_width - 1)
+            y = min(max(y, 0), frame_height - 1)
+
+            # Store the coordinates for drawing connections later
+            landmark_coords[idx] = (x, y)
+
+            # Draw the landmark point
+            cv2.circle(frame, (x, y), 5, (0, 255, 0), -1)
+
+            # Add landmark index label
+            cv2.putText(frame, str(idx), (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX,
+                        0.5, (255, 0, 0), 1, cv2.LINE_AA)
+
+        # Manually draw the connections using POSE_CONNECTIONS
+        if pose_connection is not None:
+            for connection in pose_connection:
+                start_idx = connection[0]
+                end_idx = connection[1]
+
+                # Only draw connections if both landmarks are detected
+                if start_idx in landmark_coords and end_idx in landmark_coords:
+                    start_point = landmark_coords[start_idx]
+                    end_point = landmark_coords[end_idx]
+
+                    # Draw the connection line
+                    cv2.line(frame, start_point, end_point, (0, 255, 255), 2)
 
     def get_timestamp(self, frame_count=None, video_fps=None, export_fps=0):
         # Calculate timestamp in seconds (with fraction for frames_per_second)

@@ -36,6 +36,6 @@ if len (sys.argv) > 1:
 
     # 5. Detect landmarks in image
     #image_file = "woman_sitting.png"
-    display_pose_landmarks(image_file, manual_drawing=True)
+    display_pose_landmarks(image_file, manual_drawing=False)
 else:
     print("Specify input image file path")
