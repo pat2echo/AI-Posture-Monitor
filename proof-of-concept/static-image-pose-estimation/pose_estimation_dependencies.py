@@ -7,7 +7,6 @@ import os
 import pandas as pd
 
 import matplotlib
-from pyparsing import empty
 
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
@@ -100,7 +99,7 @@ def detect_pose_landmarks(image_path, pose=None, show=False):
 
     return results, img_rgb, df
 
-def display_pose_landmarks(image_path):
+def display_pose_landmarks(image_path, manual_drawing=False):
     pose, mp_drawing, mp_pose = initialize_mediapipe()
     results, img_rgb, df = detect_pose_landmarks(image_path, pose, show=True)
 
@@ -108,9 +107,44 @@ def display_pose_landmarks(image_path):
     img_copy = cv2.cvtColor(img_rgb.copy(), cv2.COLOR_RGB2BGR)
 
     if results.pose_landmarks:
-        # Ensure results.pose_landmarks is a list of NormalizedLandmarkList
-        mp_drawing.draw_landmarks(image=img_copy, landmark_list=results.pose_landmarks,
-                                      connections=mp_pose.POSE_CONNECTIONS)
+        img_height, img_width = img_copy.shape[:2]
+
+        if manual_drawing:
+            # Draw landmarks with index labels
+            landmark_coords = {}
+            for idx, landmark in enumerate(results.pose_landmarks.landmark):
+                # Convert normalized coordinates to pixel coordinates
+                x = int(landmark.x * img_width)
+                y = int(landmark.y * img_height)
+
+                # Boundary check: Ensure the coordinates stay within the image frame
+                x = min(max(x, 0), img_width - 1)
+                y = min(max(y, 0), img_height - 1)
+
+                # Store the coordinates for drawing connections later
+                landmark_coords[idx] = (x, y)
+
+                # Draw the landmark point
+                cv2.circle(img_copy, (x, y), 5, (0, 255, 0), -1)
+
+                # Add landmark index label
+                cv2.putText(img_copy, str(idx), (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX,
+                            0.5, (255, 0, 0), 1, cv2.LINE_AA)
+
+            # Manually draw the connections using POSE_CONNECTIONS
+            for connection in mp_pose.POSE_CONNECTIONS:
+                start_idx = connection[0]
+                end_idx = connection[1]
+
+                # Only draw connections if both landmarks are detected
+                if start_idx in landmark_coords and end_idx in landmark_coords:
+                    start_point = landmark_coords[start_idx]
+                    end_point = landmark_coords[end_idx]
+
+                    # Draw the connection line
+                    cv2.line(img_copy, start_point, end_point, (0, 255, 255), 2)
+        else:
+            mp_drawing.draw_landmarks(image=img_copy, landmark_list=results.pose_landmarks, connections=mp_pose.POSE_CONNECTIONS)
 
         cv2.imshow("Pose Landmarks", img_copy)
         # Wait for a key press and close the window
@@ -120,7 +154,7 @@ def display_pose_landmarks(image_path):
 def initialize_mediapipe ():
     # 2. Load MediaPipe Pose landmark estimation solution
     mp_pose = mp.solutions.pose
-    pose = mp_pose.Pose(static_image_mode=True, model_complexity=1, min_detection_confidence=0.5)
+    pose = mp_pose.Pose(static_image_mode=True, model_complexity=1, min_detection_confidence=0.7)
 
     # 3. Load MediaPipe Drawing Utilities
     mp_drawing = mp.solutions.drawing_utils

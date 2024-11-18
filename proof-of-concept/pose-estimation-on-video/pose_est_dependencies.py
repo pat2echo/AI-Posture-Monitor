@@ -18,7 +18,10 @@ class PoseEstimation:
         # Initialize MediaPipe Pose
         self.mp_pose = mp.solutions.pose
         self.mp_drawing = mp.solutions.drawing_utils
-        self.pose = self.mp_pose.Pose(static_image_mode=False, min_detection_confidence=0.5, min_tracking_confidence=0.5)
+        #self.pose = self.mp_pose.Pose(static_image_mode=False, min_detection_confidence=0.5, min_tracking_confidence=0.5)
+        #self.pose = self.mp_pose.Pose(static_image_mode=False, model_complexity=1, min_detection_confidence=0.7, min_tracking_confidence=0.7)
+        #self.pose = self.mp_pose.Pose(static_image_mode=False, model_complexity=2, min_detection_confidence=0.7, min_tracking_confidence=0.7)
+        self.pose = self.mp_pose.Pose(static_image_mode=True, min_detection_confidence=0.5, model_complexity=1)
         #help(self.pose)
         #return None
 
@@ -84,6 +87,9 @@ class PoseEstimation:
         self.my_frame_diff.output_folder = os.path.join(BASE_OUTPUT_DIR, "output_pose")
         self.my_frame_diff.empty_folder(self.my_frame_diff.output_folder)
 
+        self.my_frame_diff.output_folder2 = os.path.join(BASE_OUTPUT_DIR, "output_pose_o")
+        self.my_frame_diff.empty_folder(self.my_frame_diff.output_folder2)
+
         self.my_frame_diff.output_folder_aoi = os.path.join(BASE_OUTPUT_DIR, "output_aoi")
         self.my_frame_diff.empty_folder(self.my_frame_diff.output_folder_aoi)
 
@@ -145,7 +151,7 @@ class PoseEstimation:
 
                     if use_bounding_box and process_image:
                         rectangles, area_of_interest = self.my_frame_diff.get_bounding_box(diff_frame=diff_frame, frame_output=frame_output, intersect_rectangles=intersect_rectangles,
-                                 frame_count=self.frame_count, save_interval=self.save_interval, show_grid=False, snap_to_grid=True)
+                                 frame_count=self.frame_count, save_interval=self.save_interval, show_grid=False, snap_to_grid=True, show_rectangle=True)
 
                 if process_image:
                     predict_rect = None
@@ -166,6 +172,10 @@ class PoseEstimation:
                 #cv2.imwrite(output_path, frame)
                 cv2.imwrite(output_path, frame_output)
 
+
+                output_path2 = os.path.join(self.my_frame_diff.output_folder2, frame_title)
+                cv2.imwrite(output_path2, frame_color)
+
                 # Save max value of absolute difference to csv
                 #print(frame_title, max_value, process_image)
                 output_data.append([self.frame_count, max_value, process_image, frame_label, prediction, ', '.join(map(str, features))])
@@ -175,7 +185,7 @@ class PoseEstimation:
             #wait_time = int(1000 / fps)
             wait_time = 1   #fast play
             key = cv2.waitKey(wait_time)
-            if key == 27:  # ESC key
+            if key == 27 or self.frame_count > 250:  # ESC key
                 break
 
         # Save the NumPy array to CSV

@@ -229,7 +229,7 @@ class FrameDiff:
         os.makedirs(folder_path, exist_ok=True)  # Recreate the empty folder
 
     def get_bounding_box(self, diff_frame=None, frame_output=None, intersect_rectangles=True,
-                         frame_count=0, save_interval=0, show_grid=False, snap_to_grid=True):
+                         frame_count=0, save_interval=0, show_grid=False, snap_to_grid=True, show_rectangle=True):
         rectangles = []
         area_of_interest = {}
         if diff_frame is not None:
@@ -258,7 +258,7 @@ class FrameDiff:
                     rectangles.append(rect)
 
                     # Draw the contour onto the black-and-white image
-                    cv2.drawContours(bw_diff_image, [contour], -1, 255, -1)
+                    #cv2.drawContours(bw_diff_image, [contour], -1, 255, -1)
                     #cas.append(ca)
 
             #cv2.imshow('Differences Only', bw_diff_image)
@@ -293,12 +293,15 @@ class FrameDiff:
                 aoi_from_memory = area_of_interest['memory']
                 if aoi_from_memory:
                     aoi_color = (255, 255, 0)
-                cv2.rectangle(frame_output, (x, y), (x + w, y + h), aoi_color, 3)
+
+                if show_rectangle:
+                    cv2.rectangle(frame_output, (x, y), (x + w, y + h), aoi_color, 3)
 
             if aoi_from_memory == False and len(rectangles) > 0:
                 for rect in rectangles:
                     x, y, w, h = rect
-                    cv2.rectangle(frame_output, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                    if show_rectangle:
+                        cv2.rectangle(frame_output, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
                     # Display black and white
                     #cv2.rectangle(bw_diff_image, (x, y), (x + w, y + h), (0, 255, 0), 2)

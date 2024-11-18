@@ -17,8 +17,9 @@ import os
 Pose Estimation with MediaPipe
 ```angular2html
 python.exe .\get_pose_landmark.py .\woman_sitting.png
-
 # Arg 1: Image File
+
+python code/proof-of-concept/static-image-pose-estimation/get_pose_landmark.py ./output/output_frames/frame_0234.jpg
 ```
 
 Plot Pose

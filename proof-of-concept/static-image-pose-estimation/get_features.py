@@ -23,7 +23,7 @@ if len(sys.argv) > 1:
         if df is not None and not df.empty:
             landmarks_3d = df[['X', 'Y', 'Z']].values
             features = get_features(landmarks_3d=landmarks_3d, image_name=image_name.split(".")[0])
-            print(features, predict_features(features=features) )
+            print(features, predict_features(features=features), df.describe() )
         else:
             print(f"No landmarks detected in image: {image_name}")
 
