@@ -21,7 +21,7 @@ class PoseEstimation:
         #self.pose = self.mp_pose.Pose(static_image_mode=False, min_detection_confidence=0.5, min_tracking_confidence=0.5)
         #self.pose = self.mp_pose.Pose(static_image_mode=False, model_complexity=1, min_detection_confidence=0.7, min_tracking_confidence=0.7)
         #self.pose = self.mp_pose.Pose(static_image_mode=False, model_complexity=2, min_detection_confidence=0.7, min_tracking_confidence=0.7)
-        self.pose = self.mp_pose.Pose(static_image_mode=True, min_detection_confidence=0.7, model_complexity=1)
+        self.pose = self.mp_pose.Pose(static_image_mode=False, min_detection_confidence=0.7, model_complexity=1)
         #help(self.pose)
         #return None
 
@@ -188,7 +188,7 @@ class PoseEstimation:
             #wait_time = int(1000 / fps)
             wait_time = 1   #fast play
             key = cv2.waitKey(wait_time)
-            if key == 27 or self.frame_count > 250:  # ESC key
+            if key == 27:  # ESC key
                 break
 
         # Save the NumPy array to CSV
