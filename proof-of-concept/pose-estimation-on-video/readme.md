@@ -21,6 +21,11 @@ python code/proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/h
 python code/proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/hr_fall_detection_3.mp4
 ```
 
+Analyze Ground Truth
+```aiignore
+python code/proof-of-concept/pose-estimation-on-video/analyze_manual_label.py ./code/labels/hr_fall_detection_3.csv 1
+```
+
 # Color Codes
 Yellow: bounding box of the expanded area of interest from memory
 Blue: the bounding box by expanding the current area of interest to include the previous area of interest, creating a union of both if they intersect
