@@ -215,7 +215,7 @@ def calculate_percentage_difference(list1, list2, abs=True):
     else:
         return ((np.array(list1) - np.array(list2)) / np.array(list1)) * 100
 
-def get_features(landmarks_3d, image_name=None, model=2):
+def get_features(landmarks_3d, image_name=None, model=2, return_keypoints=None):
     landmark_dict = pose_landmarks()
     landmark_dict_flipped = {v: k for k, v in landmark_dict.items()}
     # print(landmark_dict_flipped)
@@ -613,4 +613,15 @@ def get_features(landmarks_3d, image_name=None, model=2):
     # print('sit', is_sit())
     # print('lie', is_lie())
     is_upright, percent_upright = is_upright_shoulder_gt_hip_plus()
-    return [image_name, is_upright, percent_upright] + list(is_stand_hip_height_gt_bone_length()) + list(is_sit()) + list(is_lie())
+    return_list = [image_name, is_upright, percent_upright] + list(is_stand_hip_height_gt_bone_length()) + list(is_sit()) + list(is_lie())
+
+    keypoint_focus = {}
+    if return_keypoints is not None:
+        #kof = [11, 12, 23, 24, 27, 28]
+        keypoint_focus = landmarks_3d[return_keypoints]
+        # for x in ['left', 'right']:
+        #     for keypoint in return_keypoints:
+        #         keypoint_focus[f'{x} {keypoint}'] = landmarks_3d[landmark_dict_flipped[f'{x} {keypoint}']]
+        return [return_list, keypoint_focus]
+    else:
+        return return_list

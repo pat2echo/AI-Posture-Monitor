@@ -99,6 +99,13 @@ class PoseEstimation:
         # Get font Attributes
         self.get_font_attributes()
 
+        # Sliding window for velocity calculation
+        self.window_start_time = 0
+        self.average_velocity = 0
+        self.window_size = 2
+        #self.overlap = int( 0.5 * self.window_size )
+        self.overlap = 1
+        self.velocity_windows = []
 
         while True:
             # Get the next frame
@@ -271,8 +278,12 @@ class PoseEstimation:
                     for i, landmark in enumerate(results.pose_landmarks.landmark):
                         landmarks_data.append([landmark.x, landmark.y, landmark.z])
 
-                    features = get_features(landmarks_3d=np.array(landmarks_data), image_name=None, model=self.model_number)
-                    prediction = predict_pose( features=features)
+                    all_features = get_features(landmarks_3d=np.array(landmarks_data), image_name=None,
+                                            model=self.model_number, return_keypoints=[11, 12, 23, 24, 27, 28])
+                    #return_keypoints=[11, 12, 23, 24, 27, 28]: shoulder, hip, ankle
+                    features = all_features[0]
+
+                    prediction = predict_pose(features=features)
                     #print(features, prediction)
                     font_color = (255,0,0)
                     pass_fail = 'FAIL'
@@ -282,9 +293,38 @@ class PoseEstimation:
                         pass_fail = 'PASS'
                     else:
                         self.fail_count += 1
-                    acc = (self.pass_count * 100) / (self.pass_count + self.fail_count)
 
-                    frame_text = f'{pass_fail} - Accuracy: {acc:.2f}'
+
+                    # get y-axis of keypoints and calculate velocity
+                    keypoints_for_velocity = all_features[1][:,1]
+
+                    self.velocity_windows.append(keypoints_for_velocity)
+                    #self.velocity_windows.append(self.frame_count)
+                    if len(self.velocity_windows) >= self.window_size + self.overlap:
+                        initial_window = self.velocity_windows[:self.window_size]
+                        current_window = self.velocity_windows[:self.overlap:]
+
+                        # 4, 5 - ankle
+                        # 0, 1 - shoulder
+                        # 2, 3 - hip
+                        index_pairs = [(4, 0), (5, 1), (4, 2), (5, 3)]
+
+                        initial_window_diff = np.mean(initial_window, axis=0)
+                        current_window_diff = np.mean(current_window, axis=0)
+                        i_results = [initial_window_diff[second] - initial_window_diff[first] for first, second in index_pairs]
+                        c_results = [current_window_diff[second] - current_window_diff[first] for first, second in index_pairs]
+
+                        change = np.array(c_results) - np.array(i_results)
+                        self.average_velocity = change[0]
+                        #print('initial_window', np.mean(initial_window, axis=0) )
+                        #print('current_window', np.mean(current_window, axis=0) )
+                        print(f'{self.frame_count:04d} change in y', change )
+
+                        self.velocity_windows = current_window
+
+
+                    acc = (self.pass_count * 100) / (self.pass_count + self.fail_count)
+                    frame_text = f'{pass_fail} - Accuracy: {acc:.2f}, avg. velocity: {self.average_velocity:.2f}'
                     (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale,
                                                                    self.font_thickness)
                     cv2.putText(frame_output, frame_text, (20, frame_height - text_height - 10), self.font, self.font_scale, font_color,

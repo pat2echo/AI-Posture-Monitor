@@ -24,6 +24,8 @@ python code/proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/h
 Analyze Ground Truth
 ```aiignore
 python code/proof-of-concept/pose-estimation-on-video/analyze_manual_label.py ./code/labels/hr_fall_detection_3.csv 1
+
+python code/proof-of-concept/pose-estimation-on-video/analyze_manual_label.py ./output/output_results/hr_fall_detection_3_results.csv 1 prediction
 ```
 
 # Color Codes
@@ -34,4 +36,9 @@ Green: bounding box around the moving object
 Evaluate Static Pose Prediction
 ```aiignore
 python code/proof-of-concept/pose-estimation-on-video/static_pose_eval.py ./output/output_results/_results.csv
+```
+
+Track and Plot Velocity of Keypoints
+```aiignore
+
 ```

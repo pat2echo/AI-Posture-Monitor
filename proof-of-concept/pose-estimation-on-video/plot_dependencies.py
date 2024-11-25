@@ -46,12 +46,12 @@ def plot_histogram (x, y, title, xlabel, colours=["blue", "green", "red"]):
     # Show the result.
     plt.show()
 
-def plot_activity_fall(csv_file=None, plot_title=None, show_all_classes=False):
+def plot_activity_fall(csv_file=None, class_label='action', plot_title=None, show_all_classes=False):
     # Load data
     df = pd.read_csv(csv_file)
 
     # Replace NaN or None with "Inactivity"
-    df['action'] = df['action'].fillna("Inactivity")
+    df['action'] = df[ class_label ].fillna("Inactivity")
 
     # Adjust action column and priorities based on the `show_all_classes` flag
     if show_all_classes:
