@@ -102,10 +102,11 @@ class PoseEstimation:
         # Sliding window for velocity calculation
         self.window_start_time = 0
         self.average_velocity = 0
-        self.window_size = 2
+        self.window_size = 16
         #self.overlap = int( 0.5 * self.window_size )
-        self.overlap = 1
+        self.overlap = 8
         self.velocity_windows = []
+        self.tmp_data = []
 
         while True:
             # Get the next frame
@@ -202,6 +203,9 @@ class PoseEstimation:
         features_attr = get_attr_of_features()
         np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
                    header='file_name,max_value,process_image,label,prediction,' + ','.join(features_attr), comments='')
+
+        np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_velocity.csv'), np.array(self.tmp_data), fmt='%s', delimiter=',',
+                   header='frame,lshoulder,rshoulder,lhip,rhip,lankle,rankle,lsa,rsa,lha,rha', comments='')
 
         # Release resources
         cap.release()
@@ -302,26 +306,20 @@ class PoseEstimation:
                     #self.velocity_windows.append(self.frame_count)
                     if len(self.velocity_windows) >= self.window_size + self.overlap:
                         initial_window = self.velocity_windows[:self.window_size]
-                        current_window = self.velocity_windows[:self.overlap:]
-
-                        # 4, 5 - ankle
-                        # 0, 1 - shoulder
-                        # 2, 3 - hip
-                        index_pairs = [(4, 0), (5, 1), (4, 2), (5, 3)]
+                        current_window = self.velocity_windows[self.overlap:]
 
                         initial_window_diff = np.mean(initial_window, axis=0)
                         current_window_diff = np.mean(current_window, axis=0)
-                        i_results = [initial_window_diff[second] - initial_window_diff[first] for first, second in index_pairs]
-                        c_results = [current_window_diff[second] - current_window_diff[first] for first, second in index_pairs]
 
-                        change = np.array(c_results) - np.array(i_results)
+                        change = np.array(current_window_diff) - np.array(initial_window_diff)
                         self.average_velocity = change[0]
                         #print('initial_window', np.mean(initial_window, axis=0) )
                         #print('current_window', np.mean(current_window, axis=0) )
                         print(f'{self.frame_count:04d} change in y', change )
 
-                        self.velocity_windows = current_window
+                        self.tmp_data.append([self.frame_count] + list(change))
 
+                        self.velocity_windows = current_window
 
                     acc = (self.pass_count * 100) / (self.pass_count + self.fail_count)
                     frame_text = f'{pass_fail} - Accuracy: {acc:.2f}, avg. velocity: {self.average_velocity:.2f}'

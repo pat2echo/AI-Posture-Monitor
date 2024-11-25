@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import matplotlib
+from scipy.signal import windows
+
 
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
@@ -148,3 +150,34 @@ def plot_activity_fall(csv_file=None, class_label='action', plot_title=None, sho
     plt.savefig(f"output/plot/{plot_title}.png", dpi=300)
     plt.show()
     plt.close(fig)  # Close the figure to free memory
+
+def basic_line(csv_file=None):
+    df = pd.read_csv(csv_file)
+
+    #fill missing frames
+    print(df.shape, df['frame'].max())
+    #new_df = pd.DataFrame({'frame': range(0, int(df['frame'].max())) })
+    #df = pd.merge(new_df, df, on='frame', how='left').fillna(0)
+
+    # Apply a Hamming window to the 'l' and 'r' columns
+    #window = windows.blackman(len(df))
+    df['lshoulder'] = df['lshoulder']**3
+    #df['lshoulder'] *= window
+
+    # Create the plot
+    plt.figure(figsize=(10, 6))
+    plt.plot(df['frame'], (df['lshoulder']), label='lshoulder')
+    #plt.plot(df['frame'], np.abs(df['lshoulder']), label='abs_lshoulder')
+    #plt.plot(df['frame'], df['lsa'], label='lsa')
+
+
+
+    # Customize the plot
+    plt.xlabel('Frame')
+    plt.ylabel('Y displacement')
+    plt.title('Line Plot of lshoulder and lsa vs Frame')
+    plt.legend()
+    plt.grid(True)
+
+    # Show the plot
+    plt.show()

@@ -165,7 +165,7 @@ def display_pose_landmarks(image_path, manual_drawing=False):
 def initialize_mediapipe ():
     # 2. Load MediaPipe Pose landmark estimation solution
     mp_pose = mp.solutions.pose
-    pose = mp_pose.Pose(static_image_mode=True, model_complexity=1, enable_segmentation=True, min_detection_confidence=0.7)
+    pose = mp_pose.Pose(static_image_mode=True, model_complexity=1, enable_segmentation=True, min_detection_confidence=0.5)
 
     # 3. Load MediaPipe Drawing Utilities
     mp_drawing = mp.solutions.drawing_utils

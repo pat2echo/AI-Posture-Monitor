@@ -36,8 +36,9 @@ else:
 
 if df is not None:
     print(df[['X','Y','Z']].values.shape)
-    print(df.head())
-    print(df[['X', 'Y', 'Z']].head())
+    #print(df.head())
+    print(df[df.index.isin([11, 12, 23, 24, 27, 28])])
+    #print(df[['X', 'Y', 'Z']].head())
     landmarks_3d = df[['X','Y','Z']].values
 
     if save_path is not None:
