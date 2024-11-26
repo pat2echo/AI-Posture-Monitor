@@ -302,13 +302,14 @@ class PoseEstimation:
                     keypoints_for_velocity = all_features[1][:,1]
 
                     self.velocity_windows.append(keypoints_for_velocity)
+                    #self.tmp_data.append([self.frame_count] + list(keypoints_for_velocity))
                     #self.velocity_windows.append(self.frame_count)
                     if len(self.velocity_windows) >= self.window_size + self.overlap:
                         initial_window = self.velocity_windows[:self.window_size]
                         current_window = self.velocity_windows[self.overlap:]
 
-                        initial_window_diff = np.mean(initial_window, axis=0)
-                        current_window_diff = np.mean(current_window, axis=0)
+                        initial_window_diff = np.max(initial_window, axis=0)
+                        current_window_diff = np.max(current_window, axis=0)
 
                         change = np.array(current_window_diff) - np.array(initial_window_diff)
                         self.average_velocity = change[0]

@@ -156,16 +156,21 @@ def basic_line(csv_file=None):
 
     #fill missing frames
     print(df.shape, df['frame'].max())
+    #print( len(np.ones(49)))
     #new_df = pd.DataFrame({'frame': range(0, int(df['frame'].max())) })
     #df = pd.merge(new_df, df, on='frame', how='left').fillna(0)
 
     # Apply a Hamming window to the 'l' and 'r' columns
-    window = windows.hamming(len(df))
-    #df['lshoulder'] = df['lshoulder']**2
-    df['lshoulder'] *= window
+    #window = windows.hamming(len(df))
+    #df['lshoulder'] = df['lshoulder']**3
+    #df['lshoulder'] *= window
+    #print(df['frame'][(df['frame'] > 600) & (df['frame'] < 650)])
 
     # Create the plot
     plt.figure(figsize=(10, 6))
+    #plt.plot(df['frame'][(df['frame'] > 600) & (df['frame'] < 650)], (df['lshoulder'][(df['frame'] > 600) & (df['frame'] < 650)]), label='lshoulder')
+    #plt.plot(df['frame'][(df['frame'] > 600) & (df['frame'] < 650)], list((np.ones(16)*0.55))+list(np.ones(49-16)*.5), label='initial_window')
+    #plt.plot(df['frame'][(df['frame'] > 600) & (df['frame'] < 650)], list(np.ones(8)*.5)+list((np.ones(16)*0.58))+list(np.ones(49-(16+8))*.5), label='next_window')
     plt.plot(df['frame'], (df['lshoulder']), label='lshoulder')
     #plt.plot(df['frame'], np.abs(df['lshoulder']), label='abs_lshoulder')
     #plt.plot(df['frame'], df['lsa'], label='lsa')
@@ -173,7 +178,7 @@ def basic_line(csv_file=None):
     # Customize the plot
     plt.xlabel('Frame')
     plt.ylabel('Y displacement')
-    plt.title('Line Plot of Downward Velocity of Left Shoulder Y Co-ordinate\nCubed Transformation + Initial Results')
+    plt.title('Line Plot of Downward Velocity of Left Shoulder Y Co-ordinate\nInitial Results')
     plt.legend()
     plt.grid(True)
 
