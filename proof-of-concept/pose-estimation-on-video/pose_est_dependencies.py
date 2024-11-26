@@ -102,11 +102,14 @@ class PoseEstimation:
         # Sliding window for velocity calculation
         self.window_start_time = 0
         self.average_velocity = 0
+        self.average_acceleration = 0
         self.window_size = 16
         #self.overlap = int( 0.5 * self.window_size )
         self.overlap = 8
         self.velocity_windows = []
         self.tmp_data = []
+        self.acceleration_windows = []
+        self.velocity_sequence = []
 
         while True:
             # Get the next frame
@@ -311,18 +314,60 @@ class PoseEstimation:
                         initial_window_diff = np.max(initial_window, axis=0)
                         current_window_diff = np.max(current_window, axis=0)
 
-                        change = np.array(current_window_diff) - np.array(initial_window_diff)
-                        self.average_velocity = change[0]
+                        velocity = np.array(current_window_diff) - np.array(initial_window_diff)
+
+                        # smooth velocity ensuring sequence of last 3 values has not crossed zero
+                        self.velocity_sequence.append(velocity)
+                        if len(self.velocity_sequence) > 3:
+                            self.velocity_sequence.pop(0)
+                        if len(self.velocity_sequence) == 3:
+                            #print('self.velocity_sequence')
+                            #print(self.velocity_sequence)
+                            # Check each column
+                            columns = np.array(self.velocity_sequence).T
+                            results = [
+                                True if np.all(col > 0) else True if np.all(col < 0) else False
+                                for i, col in enumerate(columns)
+                            ]
+
+                            # Print results
+                            print('smooth velocity', results)
+
+                            if results.count(True) >= 2:
+                                valid = np.zeros_like(velocity)
+                                for i, v in enumerate(results):
+                                    valid[i] = velocity[i] if v else 0
+                                velocity = valid
+                                print('smooth velocity', velocity)
+                            else:
+                                velocity = np.zeros_like(velocity)
+                        else:
+                            velocity = np.zeros_like(velocity)
+
+                        self.average_velocity = velocity[0]
                         #print('initial_window', np.mean(initial_window, axis=0) )
                         #print('current_window', np.mean(current_window, axis=0) )
-                        print(f'{self.frame_count:04d} change in y', change )
+                        print(f'{self.frame_count:04d} velocity in y-axis', velocity )
 
-                        self.tmp_data.append([self.frame_count] + list(change))
+                        self.acceleration_windows.append(velocity)
+                        if len(self.acceleration_windows) >= (self.window_size + self.overlap) // 2:
+                            a_initial_window = self.acceleration_windows[:(self.window_size//2)]
+                            a_current_window = self.acceleration_windows[(self.overlap//2):]
+
+                            a_initial_window_diff = np.max(a_initial_window, axis=0)
+                            a_current_window_diff = np.max(a_current_window, axis=0)
+
+                            acceleration = np.array(a_current_window_diff) - np.array(a_initial_window_diff)
+                            self.average_acceleration = acceleration[0]
+
+                            #self.tmp_data.append([self.frame_count] + list(acceleration))
+                            self.acceleration_windows = a_current_window
+                        self.tmp_data.append([self.frame_count] + list(velocity))
 
                         self.velocity_windows = current_window
 
                     acc = (self.pass_count * 100) / (self.pass_count + self.fail_count)
-                    frame_text = f'{pass_fail} - Accuracy: {acc:.2f}, avg. velocity: {self.average_velocity:.2f}'
+                    frame_text = f'{pass_fail} - Accuracy: {acc:.2f}, avg. velocity: {self.average_velocity:.2f}, avg. acc: {self.average_acceleration:.2f}'
                     (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale,
                                                                    self.font_thickness)
                     cv2.putText(frame_output, frame_text, (20, frame_height - text_height - 10), self.font, self.font_scale, font_color,
