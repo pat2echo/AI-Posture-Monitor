@@ -160,9 +160,9 @@ def basic_line(csv_file=None):
     #df = pd.merge(new_df, df, on='frame', how='left').fillna(0)
 
     # Apply a Hamming window to the 'l' and 'r' columns
-    #window = windows.blackman(len(df))
-    df['lshoulder'] = df['lshoulder']**3
-    #df['lshoulder'] *= window
+    window = windows.hamming(len(df))
+    #df['lshoulder'] = df['lshoulder']**2
+    df['lshoulder'] *= window
 
     # Create the plot
     plt.figure(figsize=(10, 6))
@@ -170,12 +170,10 @@ def basic_line(csv_file=None):
     #plt.plot(df['frame'], np.abs(df['lshoulder']), label='abs_lshoulder')
     #plt.plot(df['frame'], df['lsa'], label='lsa')
 
-
-
     # Customize the plot
     plt.xlabel('Frame')
     plt.ylabel('Y displacement')
-    plt.title('Line Plot of lshoulder and lsa vs Frame')
+    plt.title('Line Plot of Downward Velocity of Left Shoulder Y Co-ordinate\nCubed Transformation + Initial Results')
     plt.legend()
     plt.grid(True)
 

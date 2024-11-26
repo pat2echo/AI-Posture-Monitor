@@ -283,7 +283,7 @@ class PoseEstimation:
                         landmarks_data.append([landmark.x, landmark.y, landmark.z])
 
                     all_features = get_features(landmarks_3d=np.array(landmarks_data), image_name=None,
-                                            model=self.model_number, return_keypoints=[11, 12, 23, 24, 27, 28])
+                                            model=self.model_number, return_keypoints=[11, 12, 23, 24])
                     #return_keypoints=[11, 12, 23, 24, 27, 28]: shoulder, hip, ankle
                     features = all_features[0]
 
@@ -297,7 +297,6 @@ class PoseEstimation:
                         pass_fail = 'PASS'
                     else:
                         self.fail_count += 1
-
 
                     # get y-axis of keypoints and calculate velocity
                     keypoints_for_velocity = all_features[1][:,1]
