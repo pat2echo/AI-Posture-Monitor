@@ -297,10 +297,13 @@ class FrameDiff:
                 if show_rectangle:
                     cv2.rectangle(frame_output, (x, y), (x + w, y + h), aoi_color, 3)
 
+            area_of_interest['bbox_aspect_ratio'] = 0
             if aoi_from_memory == False and len(rectangles) > 0:
                 for rect in rectangles:
                     x, y, w, h = rect
+                    area_of_interest['bbox_aspect_ratio'] = w / h if h != 0 else 0
                     if show_rectangle:
+                        # Green: bounding box around moving object
                         cv2.rectangle(frame_output, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
                     # Display black and white
@@ -342,7 +345,7 @@ class FrameDiff:
                 cv2.line(frame, (x, 0), (x, height), color, thickness)
 
         quadrant = []
-        area_of_interest = []
+        area_of_interest = {}
         rectangles = []
         if rect is not None and len(rect) > 0:
             biggest = True

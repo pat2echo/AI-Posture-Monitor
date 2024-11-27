@@ -7,6 +7,7 @@ from sklearn.preprocessing import StandardScaler
 import numpy as np
 import matplotlib.pyplot as plt
 from pose_estimation_dependencies import get_groundtruth_from_image_name
+import seaborn as sns
 
 
 def kmeans(file_path, n_clusters=3):
@@ -89,17 +90,6 @@ def clustering_analysis(file_path, method='kmeans', field_name='aspect_ratio', n
     df.replace(1.0, np.nan, inplace=True)
     df = df.dropna(axis=0, how='any')
 
-    k = field_name
-
-    # Select features for clustering
-    features = ['aspect_ratio', 'relative_height', 'relative_width']
-    features = [k]
-    X = df[features].values.reshape(-1, 1)
-
-    # Standardize features for better performance of clustering algorithms
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-
     # Initialize labels
     labels = None
 
@@ -108,64 +98,89 @@ def clustering_analysis(file_path, method='kmeans', field_name='aspect_ratio', n
         df['label'] = df.apply(lambda row: get_groundtruth_from_image_name(image_name=row["image_name"]), axis=1)
         print(df['label'].value_counts())
 
-        grouped = df.groupby("label")[["aspect_ratio", "relative_width", "relative_height"]].agg(['min', 'max', 'mean', 'median'])
+        #grouped = df.groupby("label")[["aspect_ratio", "relative_width", "relative_height"]].agg(['min', 'max', 'mean', 'median'])
+        grouped = df.groupby("label")[["aspect_ratio", "relative_width", "relative_height"]].agg(['mean'])
         print(grouped)
+
+        correlation_matrix = grouped.corr()
+
+        # Display the correlation matrix
+        print("Correlation Matrix:\n", correlation_matrix)
+
+        # Visualize with a heatmap
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', center=0)
+        plt.title('Correlation Matrix of Aspect Ratio, Relative Width, and Relative Height')
+        plt.show()
+
         save_path = os.path.join( os.path.dirname(file_path), 'grouped_static_pose_boundingbox_data.csv')
         grouped.to_csv(save_path, index=False)
-    elif method == 'kmeans':
-        kmeans = KMeans(n_clusters=n_clusters, random_state=42)
-        labels = kmeans.fit_predict(X_scaled)
-        df['cluster'] = labels
-        cluster_centers = kmeans.cluster_centers_
-        print(f"K-means Cluster Centers:\n{cluster_centers}")
+    else:
+        k = field_name
 
-        print(df['cluster'].value_counts())
+        # Select features for clustering
+        features = ['aspect_ratio', 'relative_height', 'relative_width']
+        features = [k]
+        X = df[features].values.reshape(-1, 1)
 
-        grouped = df.groupby("cluster")[["aspect_ratio"]].agg(
-            ['min', 'max', 'mean', 'count'])
-        print(grouped)
-        save_path = os.path.join(os.path.dirname(file_path), 'grouped_kmeans_static_pose_boundingbox_data.csv')
-        grouped.to_csv(save_path, index=False)
+        # Standardize features for better performance of clustering algorithms
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
 
-    # Apply DBSCAN Clustering
-    elif method == 'dbscan':
-        dbscan = DBSCAN(eps=eps, min_samples=min_samples)
-        labels = dbscan.fit_predict(X_scaled)
-        df['cluster'] = labels
-        n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
-        print(f"DBSCAN detected {n_clusters} clusters")
-    elif method == 'histogram':
-        # Convert the aspect ratios to a numpy array (optional, if not already)
-        aspect_ratios = df[features].values
+        if method == 'kmeans':
+            kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+            labels = kmeans.fit_predict(X_scaled)
+            df['cluster'] = labels
+            cluster_centers = kmeans.cluster_centers_
+            print(f"K-means Cluster Centers:\n{cluster_centers}")
 
-        bins = n_clusters
+            print(df['cluster'].value_counts())
 
-        if bin_rule == 'sturges':
-            # Sturges Rule to get no of bins
-            n = len(aspect_ratios)
-            bins = int(np.ceil(np.log2(n) + 1))
-        elif bin_rule == 'freedman-diaconis':
-            # Freedman-Diaconis Rule
-            iqr = np.percentile(aspect_ratios, 75) - np.percentile(aspect_ratios, 25)
-            bin_width = 2 * iqr / len(aspect_ratios) ** (1 / 3)
-            bins = int(np.ceil((max(aspect_ratios) - min(aspect_ratios)) / bin_width))
-        elif bin_rule == 'scott':
-            # Scott Rule
-            bin_width = 3.5 * np.std(aspect_ratios) / len(aspect_ratios) ** (1 / 3)
-            bins = int(np.ceil((max(aspect_ratios) - min(aspect_ratios)) / bin_width))
+            grouped = df.groupby("cluster")[["aspect_ratio"]].agg(
+                ['min', 'max', 'mean', 'count'])
+            print(grouped)
+            save_path = os.path.join(os.path.dirname(file_path), 'grouped_kmeans_static_pose_boundingbox_data.csv')
+            grouped.to_csv(save_path, index=False)
+
+        # Apply DBSCAN Clustering
+        elif method == 'dbscan':
+            dbscan = DBSCAN(eps=eps, min_samples=min_samples)
+            labels = dbscan.fit_predict(X_scaled)
+            df['cluster'] = labels
+            n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
+            print(f"DBSCAN detected {n_clusters} clusters")
+        elif method == 'histogram':
+            # Convert the aspect ratios to a numpy array (optional, if not already)
+            aspect_ratios = df[features].values
+
+            bins = n_clusters
+
+            if bin_rule == 'sturges':
+                # Sturges Rule to get no of bins
+                n = len(aspect_ratios)
+                bins = int(np.ceil(np.log2(n) + 1))
+            elif bin_rule == 'freedman-diaconis':
+                # Freedman-Diaconis Rule
+                iqr = np.percentile(aspect_ratios, 75) - np.percentile(aspect_ratios, 25)
+                bin_width = 2 * iqr / len(aspect_ratios) ** (1 / 3)
+                bins = int(np.ceil((max(aspect_ratios) - min(aspect_ratios)) / bin_width))
+            elif bin_rule == 'scott':
+                # Scott Rule
+                bin_width = 3.5 * np.std(aspect_ratios) / len(aspect_ratios) ** (1 / 3)
+                bins = int(np.ceil((max(aspect_ratios) - min(aspect_ratios)) / bin_width))
 
 
-        # Plot histogram to visualize the distribution of aspect ratios
-        plt.figure(figsize=(10, 6))
-        if bins == 0:
-            plt.hist(aspect_ratios, color='orange', edgecolor='black', alpha=0.7)
-            plt.title(f'Histogram of {k.replace('_', ' ').capitalize()}')
-        else:
-            plt.hist(aspect_ratios, bins=bins, color='skyblue', edgecolor='black', alpha=0.7)
-            plt.title(f'Histogram of {k.replace('_', ' ').capitalize()} \nNo of Bins: {bins} rule {bin_rule}')
-        plt.xlabel(f'{k.replace('_', ' ').capitalize()}')
-        plt.ylabel('Frequency')
-        plt.show()
+            # Plot histogram to visualize the distribution of aspect ratios
+            plt.figure(figsize=(10, 6))
+            if bins == 0:
+                plt.hist(aspect_ratios, color='orange', edgecolor='black', alpha=0.7)
+                plt.title(f'Histogram of {k.replace('_', ' ').capitalize()}')
+            else:
+                plt.hist(aspect_ratios, bins=bins, color='skyblue', edgecolor='black', alpha=0.7)
+                plt.title(f'Histogram of {k.replace('_', ' ').capitalize()} \nNo of Bins: {bins} rule {bin_rule}')
+            plt.xlabel(f'{k.replace('_', ' ').capitalize()}')
+            plt.ylabel('Frequency')
+            plt.show()
 
     if labels is not None:
         # Display the resulting clusters

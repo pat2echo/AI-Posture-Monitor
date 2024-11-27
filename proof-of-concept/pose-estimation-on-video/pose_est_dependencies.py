@@ -101,8 +101,8 @@ class PoseEstimation:
 
         # Sliding window for velocity calculation
         self.window_start_time = 0
-        self.average_velocity = 0
-        self.average_acceleration = 0
+        self.max_velocity = 0
+        self.max_acceleration = 0
         self.window_size = 16
         #self.overlap = int( 0.5 * self.window_size )
         self.overlap = 8
@@ -144,6 +144,11 @@ class PoseEstimation:
 
             features = []
             prediction = None
+            velocity = []
+            acceleration = []
+            aoi_from_memory = False
+            bbox_aspect_ratio = 0
+            is_motion = False
 
             if process_image:
                 rectangles = None
@@ -160,20 +165,28 @@ class PoseEstimation:
                         if max_abs_threshold and max_value < max_abs_threshold:
                             process_image = False
 
+                    is_motion = process_image
                     if use_bounding_box and process_image:
                         rectangles, area_of_interest = self.my_frame_diff.get_bounding_box(diff_frame=diff_frame, frame_output=frame_output, intersect_rectangles=intersect_rectangles,
                                  frame_count=self.frame_count, save_interval=self.save_interval, show_grid=False, snap_to_grid=True, show_rectangle=True)
 
                 if process_image:
+                    if 'memory' in area_of_interest:
+                        aoi_from_memory = area_of_interest['memory']
+
+                    if 'bbox_aspect_ratio' in area_of_interest:
+                        bbox_aspect_ratio = area_of_interest['bbox_aspect_ratio']
+
                     predict_rect = None
                     if 'rect' in area_of_interest:
                         predict_rect = [area_of_interest['rect']]
                     elif rectangles is not None and len(rectangles) > 0:
                         predict_rect = rectangles
-                    prediction, features, frame_label, _ = self.process_frame(frame_output=frame_output,
-                                                                              manual_landmark_drawing=False,
-                                                                              use_bounding_box=use_bounding_box,
-                                                                              rectangles=predict_rect)
+                    prediction, features, frame_label, _, velocity, acceleration = self.process_frame(frame_output=frame_output,
+                                                                                                      manual_landmark_drawing=False,
+                                                                                                      bbox_aspect_ratio=bbox_aspect_ratio,
+                                                                                                      use_bounding_box=use_bounding_box,
+                                                                                                      bounding_boxes=predict_rect)
 
             # Display the result
             frame_output = cv2.cvtColor(frame_output, cv2.COLOR_RGB2BGR)
@@ -192,7 +205,7 @@ class PoseEstimation:
 
                 # Save max value of absolute difference to csv
                 #print(frame_title, max_value, process_image)
-                output_data.append([self.frame_count, max_value, process_image, frame_label, prediction, ', '.join(map(str, features))])
+                output_data.append([self.frame_count, frame_label, prediction, aoi_from_memory, bbox_aspect_ratio, max_value, is_motion, ', '.join(map(str, list(velocity))), ', '.join(map(str, list(acceleration))), ', '.join(map(str, features)), ])
 
             # Check for the ESC key press
 
@@ -205,10 +218,10 @@ class PoseEstimation:
         # Save the NumPy array to CSV
         features_attr = get_attr_of_features()
         np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
-                   header='file_name,max_value,process_image,label,prediction,' + ','.join(features_attr), comments='')
+                   header='file_name,label,prediction,aoi_from_memory,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) + ','.join(['a_lshoulder','a_rshoulder','a_lhip','a_rhip']) + ','.join(features_attr), comments='')
 
-        np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_velocity.csv'), np.array(self.tmp_data), fmt='%s', delimiter=',',
-                   header='frame,lshoulder,rshoulder,lhip,rhip,lankle,rankle,lsa,rsa,lha,rha', comments='')
+        #np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_velocity.csv'), np.array(self.tmp_data), fmt='%s', delimiter=',',
+        #           header='frame,lshoulder,rshoulder,lhip,rhip,lankle,rankle,lsa,rsa,lha,rha', comments='')
 
         # Release resources
         cap.release()
@@ -222,16 +235,22 @@ class PoseEstimation:
         self.font_color = (0, 255, 0)  # Green color in BGR
         self.font_thickness = 2
 
-    def process_frame(self, frame_output, use_bounding_box=True, rectangles=None, manual_landmark_drawing=False):
+    def process_frame(self, frame_output, use_bounding_box=True, bounding_boxes=None, bbox_aspect_ratio=0, manual_landmark_drawing=False):
         features = []
         prediction = None
         aoi_for_pose = None
         timestamp_secs = 0
         label = None
 
-        if use_bounding_box and rectangles is not None and len(rectangles) > 0:
+        #keypoints_of_focus=[11, 12, 23, 24, 27, 28]: shoulder, hip, ankle
+        keypoints_of_focus = [11, 12, 23, 24]
+
+        velocity = np.zeros_like(keypoints_of_focus)
+        acceleration = np.zeros_like(keypoints_of_focus)
+
+        if use_bounding_box and bounding_boxes is not None and len(bounding_boxes) > 0:
             # Get area of interest from the biggest frame
-            for rect in rectangles:
+            for rect in bounding_boxes:
                 (x, y, w, h) = rect
                 # aoi_for_pose = frame_output[y:y + h, x:x + w]
                 expanded_w = w * 3
@@ -286,8 +305,7 @@ class PoseEstimation:
                         landmarks_data.append([landmark.x, landmark.y, landmark.z])
 
                     all_features = get_features(landmarks_3d=np.array(landmarks_data), image_name=None,
-                                            model=self.model_number, return_keypoints=[11, 12, 23, 24])
-                    #return_keypoints=[11, 12, 23, 24, 27, 28]: shoulder, hip, ankle
+                                            model=self.model_number, return_keypoints=keypoints_of_focus)
                     features = all_features[0]
 
                     prediction = predict_pose(features=features)
@@ -307,6 +325,7 @@ class PoseEstimation:
                     self.velocity_windows.append(keypoints_for_velocity)
                     #self.tmp_data.append([self.frame_count] + list(keypoints_for_velocity))
                     #self.velocity_windows.append(self.frame_count)
+
                     if len(self.velocity_windows) >= self.window_size + self.overlap:
                         initial_window = self.velocity_windows[:self.window_size]
                         current_window = self.velocity_windows[self.overlap:]
@@ -331,23 +350,23 @@ class PoseEstimation:
                             ]
 
                             # Print results
-                            print('smooth velocity', results)
+                            #print('smooth velocity', results)
 
                             if results.count(True) >= 2:
                                 valid = np.zeros_like(velocity)
                                 for i, v in enumerate(results):
                                     valid[i] = velocity[i] if v else 0
                                 velocity = valid
-                                print('smooth velocity', velocity)
+                                #print('smooth velocity', velocity)
                             else:
                                 velocity = np.zeros_like(velocity)
                         else:
                             velocity = np.zeros_like(velocity)
 
-                        self.average_velocity = velocity[0]
+                        self.max_velocity = np.max(velocity)
                         #print('initial_window', np.mean(initial_window, axis=0) )
                         #print('current_window', np.mean(current_window, axis=0) )
-                        print(f'{self.frame_count:04d} velocity in y-axis', velocity )
+                        #print(f'{self.frame_count:04d} velocity in y-axis', velocity )
 
                         self.acceleration_windows.append(velocity)
                         if len(self.acceleration_windows) >= (self.window_size + self.overlap) // 2:
@@ -358,16 +377,14 @@ class PoseEstimation:
                             a_current_window_diff = np.max(a_current_window, axis=0)
 
                             acceleration = np.array(a_current_window_diff) - np.array(a_initial_window_diff)
-                            self.average_acceleration = acceleration[0]
+                            self.max_acceleration = np.max(acceleration)
 
-                            #self.tmp_data.append([self.frame_count] + list(acceleration))
                             self.acceleration_windows = a_current_window
-                        self.tmp_data.append([self.frame_count] + list(velocity))
 
                         self.velocity_windows = current_window
 
                     acc = (self.pass_count * 100) / (self.pass_count + self.fail_count)
-                    frame_text = f'{pass_fail} - Accuracy: {acc:.2f}, avg. velocity: {self.average_velocity:.2f}, avg. acc: {self.average_acceleration:.2f}'
+                    frame_text = f'{pass_fail} - Accuracy: {acc:.2f}, aspect ratio: {bbox_aspect_ratio:.3f}, max velocity: {self.max_velocity:.3f}, max acc: {self.max_acceleration:.3f}'
                     (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale,
                                                                    self.font_thickness)
                     cv2.putText(frame_output, frame_text, (20, frame_height - text_height - 10), self.font, self.font_scale, font_color,
@@ -386,8 +403,7 @@ class PoseEstimation:
                 self.my_frame_diff.save_image(aoi_for_pose, os.path.join(self.my_frame_diff.output_folder_aoi_pose, f"pose_{self.frame_count:04d}"))
                 pass
 
-
-        return prediction, features, label, timestamp_secs
+        return prediction, features, label, timestamp_secs, velocity, acceleration
 
     def manual_drwaing_of_landmark(self, frame=None, pose_landmark=None, pose_connection=None):
         landmark_coords = {}

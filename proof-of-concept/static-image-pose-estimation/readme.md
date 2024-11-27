@@ -74,4 +74,7 @@ Analysis to get thresholds for fuzzy sets
 python code/proof-of-concept/static-image-pose-estimation/clustering.py ./dataset/pose/static_pose_boundingbox_data.csv kmeans aspect_ratio 3
 
 python code/proof-of-concept/static-image-pose-estimation/clustering.py ./dataset/pose/static_pose_boundingbox_data.csv histogram aspect_ratio 30
+
+# Summary Stats for Correlation
+python code/proof-of-concept/static-image-pose-estimation/clustering.py ./dataset/pose/static_pose_boundingbox_data.csv stats aspect_ratio 30
 ```

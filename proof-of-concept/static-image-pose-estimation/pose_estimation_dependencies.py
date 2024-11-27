@@ -842,7 +842,7 @@ def detect_pose_boundingbox(image_path, pose=None, show=False):
     bbox_height = bbox['ymax'] - bbox['ymin']
     aspect_ratio = bbox_width / bbox_height if bbox_height != 0 else 0
 
-    # Calculate relative width and height of bounding box
+    # Get relative width and height of bounding box
     relative_bbox_width = bbox_width
     relative_bbox_height = bbox_height
 
