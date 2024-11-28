@@ -99,6 +99,9 @@ class PoseEstimation:
         # Get font Attributes
         self.get_font_attributes()
 
+        #keypoints_for_velocity=[11, 12, 23, 24, 27, 28]: shoulder, hip, ankle
+        keypoints_for_velocity = [11, 12, 23, 24]
+
         # Sliding window for velocity calculation
         self.window_start_time = 0
         self.max_velocity = 0
@@ -110,6 +113,15 @@ class PoseEstimation:
         self.tmp_data = []
         self.acceleration_windows = []
         self.velocity_sequence = []
+
+        features_attr = get_attr_of_features()
+
+        # Memory used to smooth predictions and ignore anomalies
+        self.prediction_memory = []
+        self.prediction_memory_length = 3
+        self.prediction_memory_velocity = []
+        self.prediction_memory_length_velocity = 16
+        self.previous_prediction = None
 
         while True:
             # Get the next frame
@@ -142,10 +154,13 @@ class PoseEstimation:
             #frame_gray = cv2.cvtColor(frame.copy(), cv2.COLOR_GRAY2RGB)
             frame_output = cv2.cvtColor(frame_color.copy(), cv2.COLOR_BGR2RGB)
 
-            features = []
+            features = np.full(len(features_attr), np.nan)
             prediction = None
-            velocity = []
-            acceleration = []
+            initial_prediction = None
+            aspect_ratio_prediction = None
+            bbox_aspect_ratio_of_pose = 0
+            velocity = np.full(len(keypoints_for_velocity), np.nan)
+            acceleration = velocity
             aoi_from_memory = False
             bbox_aspect_ratio = 0
             is_motion = False
@@ -182,11 +197,13 @@ class PoseEstimation:
                         predict_rect = [area_of_interest['rect']]
                     elif rectangles is not None and len(rectangles) > 0:
                         predict_rect = rectangles
-                    prediction, features, frame_label, _, velocity, acceleration = self.process_frame(frame_output=frame_output,
+                    initial_prediction, prediction, aspect_ratio_prediction, bbox_aspect_ratio_of_pose, features, frame_label, _, velocity, acceleration = self.process_frame(frame_output=frame_output,
                                                                                                       manual_landmark_drawing=False,
                                                                                                       bbox_aspect_ratio=bbox_aspect_ratio,
+                                                                                                      keypoints_of_focus=keypoints_for_velocity,
                                                                                                       use_bounding_box=use_bounding_box,
                                                                                                       bounding_boxes=predict_rect)
+
 
             # Display the result
             frame_output = cv2.cvtColor(frame_output, cv2.COLOR_RGB2BGR)
@@ -205,7 +222,7 @@ class PoseEstimation:
 
                 # Save max value of absolute difference to csv
                 #print(frame_title, max_value, process_image)
-                output_data.append([self.frame_count, frame_label, prediction, aoi_from_memory, bbox_aspect_ratio, max_value, is_motion, ', '.join(map(str, list(velocity))), ', '.join(map(str, list(acceleration))), ', '.join(map(str, features)), ])
+                output_data.append([self.frame_count, frame_label, initial_prediction, prediction, aspect_ratio_prediction, aoi_from_memory, bbox_aspect_ratio_of_pose, bbox_aspect_ratio, max_value, is_motion, ', '.join(map(str, list(velocity))), ', '.join(map(str, list(acceleration))), ', '.join(map(str, features)), ])
 
             # Check for the ESC key press
 
@@ -216,9 +233,8 @@ class PoseEstimation:
                 break
 
         # Save the NumPy array to CSV
-        features_attr = get_attr_of_features()
         np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
-                   header='file_name,label,prediction,aoi_from_memory,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) + ','.join(['a_lshoulder','a_rshoulder','a_lhip','a_rhip']) + ','.join(features_attr), comments='')
+                   header='file_name,label,prediction,smooth_prediction,aspect_ratio_prediction,aoi_from_memory,bbox_aspect_ratio_of_pose,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) + ','.join(['a_lshoulder','a_rshoulder','a_lhip','a_rhip']) + ','.join(features_attr), comments='')
 
         #np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_velocity.csv'), np.array(self.tmp_data), fmt='%s', delimiter=',',
         #           header='frame,lshoulder,rshoulder,lhip,rhip,lankle,rankle,lsa,rsa,lha,rha', comments='')
@@ -235,15 +251,46 @@ class PoseEstimation:
         self.font_color = (0, 255, 0)  # Green color in BGR
         self.font_thickness = 2
 
-    def process_frame(self, frame_output, use_bounding_box=True, bounding_boxes=None, bbox_aspect_ratio=0, manual_landmark_drawing=False):
+    def denoise_prediction(self, initial_prediction=None, aspect_ratio_prediction=None, bbox_aspect_ratio=0, velocity=[]):
+        # Keep track of last consecutive predictions and only accept new state when it persists over a number of frames
+        self.prediction_memory.append(initial_prediction)
+        if len(self.prediction_memory) >= (self.prediction_memory_length + 1):
+            self.prediction_memory.pop(0)
+
+        # Keep track of last consecutive joint downward velocity
+        self.prediction_memory_velocity.append(velocity)
+        if len(self.prediction_memory_velocity) >= (self.prediction_memory_length_velocity + 1):
+            self.prediction_memory_velocity.pop(0)
+
+        array = np.array(self.prediction_memory)
+        if np.all(array == array[0]):
+            # test if both shoulders velocity has changed
+            arr = np.array(self.prediction_memory_velocity)
+            if len( arr[(arr[:, 0] != 0) & (arr[:, 1] != 0)] ) > 0 or self.previous_prediction is None:
+                smooth_prediction = initial_prediction
+                self.previous_prediction = initial_prediction
+            else:
+                if len(arr[(arr[:, 0] != 0) | (arr[:, 1] != 0)]) > 0 and ( (initial_prediction == aspect_ratio_prediction) or (initial_prediction != self.previous_prediction != aspect_ratio_prediction) ):
+                    smooth_prediction = initial_prediction
+                    self.previous_prediction = initial_prediction
+                else:
+                    smooth_prediction = self.previous_prediction
+        else:
+            smooth_prediction = self.previous_prediction
+
+        return smooth_prediction
+
+    def process_frame(self, frame_output, use_bounding_box=True, bounding_boxes=None, keypoints_of_focus=None, bbox_aspect_ratio=0, manual_landmark_drawing=False):
         features = []
         prediction = None
+        initial_prediction = None
+        aspect_ratio_prediction = None
+        bbox_aspect_ratio_of_pose = 0
         aoi_for_pose = None
         timestamp_secs = 0
         label = None
 
         #keypoints_of_focus=[11, 12, 23, 24, 27, 28]: shoulder, hip, ankle
-        keypoints_of_focus = [11, 12, 23, 24]
 
         velocity = np.zeros_like(keypoints_of_focus)
         acceleration = np.zeros_like(keypoints_of_focus)
@@ -308,16 +355,8 @@ class PoseEstimation:
                                             model=self.model_number, return_keypoints=keypoints_of_focus)
                     features = all_features[0]
 
-                    prediction = predict_pose(features=features)
-                    #print(features, prediction)
-                    font_color = (255,0,0)
-                    pass_fail = 'FAIL'
-                    if (label is None and prediction is None) or (label is not None and prediction in label):
-                        self.pass_count += 1
-                        font_color = (0,0,255)
-                        pass_fail = 'PASS'
-                    else:
-                        self.fail_count += 1
+                    # get aspect ratio of bounding box surrounding the landmark
+                    bbox_aspect_ratio_of_pose = self.get_bounding_box_of_detected_pose(frame=frame_output, pose_landmark=np.array(landmarks_data))
 
                     # get y-axis of keypoints and calculate velocity
                     keypoints_for_velocity = all_features[1][:,1]
@@ -383,8 +422,24 @@ class PoseEstimation:
 
                         self.velocity_windows = current_window
 
+
+                    initial_prediction = predict_pose(features=features)
+                    aspect_ratio_prediction = self.predict_posture_from_aspect_ratio(aspect_ratio=bbox_aspect_ratio_of_pose)
+                    prediction = self.denoise_prediction(initial_prediction=initial_prediction, bbox_aspect_ratio=bbox_aspect_ratio, velocity=velocity, aspect_ratio_prediction=aspect_ratio_prediction)
+
+                    #print(features, prediction)
+                    font_color = (255,0,0)
+                    pass_fail = 'FAIL'
+                    if (label is None and prediction is None) or (label is not None and prediction is not None and prediction in label):
+                        self.pass_count += 1
+                        font_color = (0,0,255)
+                        pass_fail = 'PASS'
+                    else:
+                        self.fail_count += 1
+
+
                     acc = (self.pass_count * 100) / (self.pass_count + self.fail_count)
-                    frame_text = f'{pass_fail} - Accuracy: {acc:.2f}, aspect ratio: {bbox_aspect_ratio:.3f}, max velocity: {self.max_velocity:.3f}, max acc: {self.max_acceleration:.3f}'
+                    frame_text = f'{pass_fail} - Accuracy: {acc:.2f}, aspect ratio: {bbox_aspect_ratio_of_pose:.3f}, max velocity: {self.max_velocity:.3f}, max acc: {self.max_acceleration:.3f}'
                     (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale,
                                                                    self.font_thickness)
                     cv2.putText(frame_output, frame_text, (20, frame_height - text_height - 10), self.font, self.font_scale, font_color,
@@ -403,7 +458,46 @@ class PoseEstimation:
                 self.my_frame_diff.save_image(aoi_for_pose, os.path.join(self.my_frame_diff.output_folder_aoi_pose, f"pose_{self.frame_count:04d}"))
                 pass
 
-        return prediction, features, label, timestamp_secs, velocity, acceleration
+        return initial_prediction, prediction, aspect_ratio_prediction, bbox_aspect_ratio_of_pose, features, label, timestamp_secs, velocity, acceleration
+
+    def get_bounding_box_of_detected_pose(self, frame=None, pose_landmark=None, show=True):
+        frame_height, frame_width = frame.shape[:2]
+        kof = [11, 12, 23, 24, 25, 26, 27, 28]  # shoulder to ankle only
+        #print(kof, pose_landmark, 'xas \n', pose_landmark[kof])
+
+        # Initialize bounding box
+        bbox = {'xmin': 1, 'ymin': 1, 'xmax': 0, 'ymax': 0}
+
+        # Update bounding box dimensions
+        if pose_landmark is not None:
+            key_landmark = pose_landmark[kof]
+            bbox['xmin'] = min(bbox['xmin'], key_landmark[:,0].min())
+            bbox['ymin'] = min(bbox['ymin'], key_landmark[:,1].min())
+            bbox['xmax'] = max(bbox['xmax'], key_landmark[:,0].max())
+            bbox['ymax'] = max(bbox['ymax'], key_landmark[:,1].max())
+
+        # Calculate bounding box parameters
+        bbox_width = bbox['xmax'] - bbox['xmin']
+        bbox_height = bbox['ymax'] - bbox['ymin']
+        aspect_ratio = bbox_width / bbox_height if bbox_height != 0 else 0
+
+        if show:
+            # Convert bounding box coordinates to pixel values
+            bbox_pixel = {
+                'xmin': int(bbox['xmin'] * frame_width),
+                'ymin': int(bbox['ymin'] * frame_height),
+                'xmax': int(bbox['xmax'] * frame_width),
+                'ymax': int(bbox['ymax'] * frame_height)
+            }
+            # Pink rectangle
+            cv2.rectangle(
+                frame,
+                (bbox_pixel['xmin'], bbox_pixel['ymin']),
+                (bbox_pixel['xmax'], bbox_pixel['ymax']),
+                (255, 0, 255), 2
+            )
+
+        return aspect_ratio
 
     def manual_drwaing_of_landmark(self, frame=None, pose_landmark=None, pose_connection=None):
         landmark_coords = {}
@@ -497,5 +591,62 @@ class PoseEstimation:
         cap.release()
         print("Done saving frames.")
 
+    def aspect_ratio_membership(self, aspect_ratio):
+        # Use of a linear function to assign probabilistic values for aspect ratio membership
+        divisor = 0.5
+
+        # When aspect_ratio is less than or equal to 0.35, the membership value is 1 (fully low).
+        threshold = 0.35
+        threshold = 0.18
+        low = max(0, min(1, ((threshold + divisor) - aspect_ratio) / divisor))
+
+        # Cluster 4 + (Cluster 8 - Cluster 4) / 2
+        # 0.853485 + ( 1.243108 - 0.853485) / 2 = 1.05
+        # 1.05 -/+ 0.5 = 0.55, 1.55
+        # low_medium = max(0, min( (aspect_ratio - 0.55) / 0.5, (1.55 - aspect_ratio) / 0.5))
+        threshold = 1.05
+        threshold = 0.22
+        low_medium = max(0, min((aspect_ratio - (threshold - divisor)) / divisor,
+                                ((threshold + divisor) - aspect_ratio) / divisor))
+
+        threshold = 1.24
+        threshold = 0.25
+        medium_low = max(0, min((aspect_ratio - (threshold - divisor)) / divisor,
+                                ((threshold + divisor) - aspect_ratio) / divisor))
+
+        threshold = 2.07
+        threshold = 0.35
+        medium = max(0, min((aspect_ratio - (threshold - divisor)) / divisor,
+                            ((threshold + divisor) - aspect_ratio) / divisor))
+
+        threshold = 2.76
+        threshold = 0.76
+        medium_high = max(0, min((aspect_ratio - (threshold - divisor)) / divisor,
+                                 ((threshold + divisor) - aspect_ratio) / divisor))
+
+        # High Medium threshold is calculated as a soft margin between Clusters 3 and 5
+        # Cluster 3 + ( (Cluster 5 - Cluster 3) / 4 ) = 3.33
+        threshold = 3.33
+        threshold = 1.33
+        high_medium = max(0, min((aspect_ratio - (threshold - divisor)) / divisor,
+                                 ((threshold + divisor) - aspect_ratio) / divisor))
+
+        high_threshold = 4.99
+        high = max(0, min(1, (aspect_ratio - threshold) / (high_threshold - threshold)))
+
+        return [low, low_medium, medium_low, medium, medium_high, high_medium, high]
+
+    def predict_posture_from_aspect_ratio(self, aspect_ratio=None):
+        # Use bounding box shape to make prediction
+        label = None
+        posture = ['stand', 'uncertain_stand', 'uncertain_sit', 'sit', 'uncertain_sit', 'lie', 'lie']
+        if aspect_ratio is not None:
+            aspect_ratio = self.aspect_ratio_membership(aspect_ratio)
+            max_value = max(aspect_ratio)
+            max_index = aspect_ratio.index(max_value)
+            # print(max_index, max_value, posture[max_index])
+            label = posture[max_index]
+
+        return label
 
 

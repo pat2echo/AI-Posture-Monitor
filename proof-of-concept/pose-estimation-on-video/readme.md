@@ -32,6 +32,7 @@ python code/proof-of-concept/pose-estimation-on-video/analyze_manual_label.py ./
 Yellow: bounding box of the expanded area of interest from memory
 Blue: the bounding box by expanding the current area of interest to include the previous area of interest, creating a union of both if they intersect
 Green: bounding box around the moving object
+Pink: bounding box around the detected pose
 
 Evaluate Static Pose Prediction
 ```aiignore

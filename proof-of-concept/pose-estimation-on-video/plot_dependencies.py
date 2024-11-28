@@ -184,3 +184,112 @@ def basic_line(csv_file=None):
 
     # Show the plot
     plt.show()
+
+def plot_label_vs_prediction(csv_file=None, class_label='label', prediction_label='prediction', smooth_prediction_label='smooth_prediction', plot_title=None, show_all_classes=False):
+    # Load data
+    df = pd.read_csv(csv_file)
+    # Replace NaN or None with "Inactivity"
+    df['action'] = df[ class_label ].fillna("Inactivity")
+    df['pred'] = df[ prediction_label ].fillna("Inactivity")
+    df['smooth'] = df[ smooth_prediction_label ].fillna("Inactivity")
+
+    # Adjust action column and priorities based on the `show_all_classes` flag
+    if show_all_classes:
+        action_priority = {
+            "stand": 30,
+            "stand-Sit": 28,
+            "stand-Lie": 26,
+            "sit": 20,
+            "sit-Stand": 18,
+            "sit-Lie": 16,
+            "lie": 10,
+            "lie-Stand": 8,
+            "lie-Sit": 6,
+            "lie-Fall": 4,
+            "Inactivity": 1
+        }
+    else:
+        df['action1'] = df['action'].str.split('-').str[1]
+        df['action'] = df['action'].str.split('-').str[0]
+        df['pred'] = df['pred'].str.split('-').str[0]
+        df['smooth'] = df['smooth'].str.split('-').str[0]
+        action_priority = {
+            "stand": 30,
+            "sit": 20,
+            "lie": 10,
+            "Inactivity": 1
+        }
+
+    # Assign y-values based on action priority
+    df['y1'] = df['action1'].map(action_priority)
+    df['y'] = df['action'].map(action_priority)
+    df['z'] = df['pred'].map(action_priority)
+    df['s'] = df['smooth'].map(action_priority)
+    #print( np.unique(df['y'], return_counts=True))
+
+    # Prepare the step plot data
+    times = []
+    values = []
+    values_z = []
+    marker_times = []
+    marker_values = []
+    marker_times_s = []
+    marker_values_s = []
+    start = 0
+    for _, row in df.iterrows():
+        end = row['file_name']
+        failed_prediction = row['z']
+        if row['z'] == row['y'] or row['z'] == row['y1']:
+            failed_prediction = 0
+
+        failed_sprediction = row['s']
+        if row['s'] == row['y'] or row['s'] == row['y1']:
+            failed_sprediction = 0
+
+        times.append(start)  # Start time
+        values.append(row['y'])         # Current priority value
+        values_z.append(row['z']*1.2)         # Current priority value
+        times.append(end)   # End time
+        values.append(row['y'])         # Maintain value until the end time
+        values_z.append(row['z']*1.2)         # Current priority value
+
+        # Record marker positions for false predictions
+        if failed_prediction != 0:
+            marker_times.append((start + end) / 2)  # Use the midpoint of start and end
+            marker_values.append(row['z'])  # Corresponding prediction value
+
+        # Record marker positions for false predictions
+        if failed_sprediction != 0:
+            marker_times_s.append((start + end) / 2)  # Use the midpoint of start and end
+            marker_values_s.append(row['s']*.9)  # Corresponding prediction value
+
+        start = end
+        if start > 1500:
+            break
+
+    # Plotting
+    fig, ax = plt.subplots(figsize=(15, 5))
+    activity_ax = ax
+
+    # Step plot for actions
+    activity_ax.step(times, values, where='post', label='Label', color='blue', linewidth=2)
+    #activity_ax.step(times, values_z, where='post', label='Prediction', color='green', linewidth=2)
+    activity_ax.scatter(marker_times, marker_values, color='red', label='False Prediction', zorder=5)
+    activity_ax.scatter(marker_times_s, marker_values_s, color='yellow', label='False S.Prediction', zorder=5)
+
+    # Customize the activity plot
+    y_ticks = list(action_priority.values())
+    y_labels = list(action_priority.keys())
+    activity_ax.set_yticks(y_ticks)
+    activity_ax.set_yticklabels(y_labels)
+    activity_ax.set_xlabel('Time', fontsize=14)
+    activity_ax.set_title(f'{plot_title}: Activity Prediction', fontsize=16)
+    activity_ax.axhline(-1, color='black', linestyle='--', linewidth=0.5)  # Baseline for falls
+    activity_ax.grid(True, linestyle='--', alpha=0.6)
+    activity_ax.legend(loc='lower left', fontsize=10)
+
+    # Show plots
+    plt.tight_layout()
+    plt.savefig(f"output/plot/{plot_title}.png", dpi=300)
+    plt.show()
+    plt.close(fig)  # Close the figure to free memory
