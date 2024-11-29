@@ -41,5 +41,10 @@ python code/proof-of-concept/pose-estimation-on-video/static_pose_eval.py ./outp
 
 Track and Plot Velocity of Keypoints
 ```aiignore
+python code/proof-of-concept/pose-estimation-on-video/plot_activity_prediction.py ./output/output_results/hr_fall_detection_1_results.csv
+```
 
+Plot Activity Recognition
+```aiignore
+python code/proof-of-concept/pose-estimation-on-video/transition_plot.py ./output/output_results/hr_fall_detection_3_results.csv
 ```

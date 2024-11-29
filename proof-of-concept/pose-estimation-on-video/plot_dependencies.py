@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import matplotlib
-from scipy.signal import windows
 
 
 matplotlib.use('TkAgg')
@@ -231,6 +230,7 @@ def plot_label_vs_prediction(csv_file=None, class_label='label', prediction_labe
     times = []
     values = []
     values_z = []
+    values_zb = []
     marker_times = []
     marker_values = []
     marker_times_s = []
@@ -238,23 +238,30 @@ def plot_label_vs_prediction(csv_file=None, class_label='label', prediction_labe
     start = 0
     for _, row in df.iterrows():
         end = row['file_name']
+
         failed_prediction = row['z']
+        pred_b = row['z']
         if row['z'] == row['y'] or row['z'] == row['y1']:
+            pred_b = row['y']
             failed_prediction = 0
 
+        pred = row['s']
         failed_sprediction = row['s']
         if row['s'] == row['y'] or row['s'] == row['y1']:
+            pred = row['y']
             failed_sprediction = 0
 
         times.append(start)  # Start time
         values.append(row['y'])         # Current priority value
-        values_z.append(row['z']*1.2)         # Current priority value
+        values_z.append(pred*0.6)         # Current priority value
+        values_zb.append(pred_b*0.8)         # Current priority value
         times.append(end)   # End time
         values.append(row['y'])         # Maintain value until the end time
-        values_z.append(row['z']*1.2)         # Current priority value
+        values_z.append(pred*0.6)         # Current priority value
+        values_zb.append(pred*0.8)         # Current priority value
 
         # Record marker positions for false predictions
-        if failed_prediction != 0:
+        if failed_prediction != 0 and row['z'] != row['s']:
             marker_times.append((start + end) / 2)  # Use the midpoint of start and end
             marker_values.append(row['z'])  # Corresponding prediction value
 
@@ -265,17 +272,18 @@ def plot_label_vs_prediction(csv_file=None, class_label='label', prediction_labe
 
         start = end
         if start > 1500:
-            break
+            pass
 
     # Plotting
     fig, ax = plt.subplots(figsize=(15, 5))
     activity_ax = ax
 
     # Step plot for actions
+    activity_ax.step(times, values_zb, where='post', label='Prediction Before Smoothing', color='red', linewidth=1, linestyle='--')
     activity_ax.step(times, values, where='post', label='Label', color='blue', linewidth=2)
-    #activity_ax.step(times, values_z, where='post', label='Prediction', color='green', linewidth=2)
-    activity_ax.scatter(marker_times, marker_values, color='red', label='False Prediction', zorder=5)
-    activity_ax.scatter(marker_times_s, marker_values_s, color='yellow', label='False S.Prediction', zorder=5)
+    activity_ax.step(times, values_z, where='post', label='Prediction', color='green', linewidth=2)
+    activity_ax.scatter(marker_times, marker_values, color='red', label='False Eliminated By Smoothing', zorder=5)
+    #activity_ax.scatter(marker_times_s, marker_values_s, color='yellow', label='False S.Prediction', zorder=5)
 
     # Customize the activity plot
     y_ticks = list(action_priority.values())
@@ -293,3 +301,182 @@ def plot_label_vs_prediction(csv_file=None, class_label='label', prediction_labe
     plt.savefig(f"output/plot/{plot_title}.png", dpi=300)
     plt.show()
     plt.close(fig)  # Close the figure to free memory
+
+
+def plot_transitions(csv_file=None, class_label='label', prediction_label='smooth_prediction', plot_title=None):
+    # Load data
+    df = pd.read_csv(csv_file)
+    # Replace NaN or None with "Inactivity"
+    df['action'] = df[ class_label ].fillna("Inactivity")
+    df['pred'] = df[ prediction_label ].fillna("Inactivity")
+
+    states = {
+        "State Change": 3,
+        "Stationary": 2,
+        "Present": 1,
+        "Absent": 0
+    }
+
+    start = 0
+    times = []
+    values = []
+    pred_values = []
+    tran_values = []
+    previous_activity = 'Absent'
+    prev_state = None
+
+    pred_previous_activity = 'Absent'
+    pred_prev_state = None
+    annotations = []
+
+    marker_times = []
+    marker_values = []
+    vmarker_times = []
+    vmarker_values = []
+
+    p_pred = 0
+    f_pred = 0
+
+    tp_pred = 0
+    tf_pred = 0
+
+    result = {'label':[], 'predicted_label':[]}
+
+    for _, row in df.iterrows():
+        end = row['file_name']
+
+        current_state = row['action']
+        transition, current_activity = get_transition(prev_state=prev_state, current_state=current_state, previous_activity=previous_activity)
+
+        t_value = states[current_activity]
+        t_value = 1 if transition else 0
+        result['label'].append(t_value)
+        times.append(start)  # Start time
+        values.append(t_value)
+        times.append(end)  # End time
+        values.append(t_value)  # Maintain value until the end time
+
+        prev_state = current_state
+        previous_activity = current_activity
+
+        current_state = row['pred']
+        transition, current_activity = get_transition(prev_state=pred_prev_state, current_state=current_state,
+                                                      previous_activity=pred_previous_activity)
+
+        pred_t_value = states[current_activity]
+        pred_t_value = 1 if transition else 0
+        result['predicted_label'].append(pred_t_value)
+        pred_values.append(pred_t_value*-1)
+        pred_values.append(pred_t_value*-1)  # Maintain value until the end time
+
+        # tran_t_value = 1 if row['is_transition'] else 0
+        # tran_values.append(tran_t_value*-0.5)
+        # tran_values.append(tran_t_value*-0.5)
+        #
+        # if t_value == tran_t_value:
+        #     tp_pred += 1
+        # else:
+        #     tf_pred += 1
+
+        if pred_t_value != t_value:
+            marker_times.append((start + end) / 2)  # Use the midpoint of start and end
+            marker_values.append(0.5)  # Corresponding prediction value
+            f_pred += 1
+        else:
+            p_pred += 1
+
+        pred_prev_state = current_state
+        pred_previous_activity = current_activity
+
+        # if t_value and transition and previous_activity != current_activity:
+        #     annotations.append((start, t_value, current_state))
+
+        start = end
+
+        ar = np.abs(row[['v_lshoulder','v_rshoulder','v_lhip','v_rhip']].values)
+        if np.all(ar) != 0:
+            #print('found')
+            vmarker_times.append((start + end) / 2)  # Use the midpoint of start and end
+            vmarker_values.append( np.max(np.abs(ar)) )  # Corresponding prediction value
+
+        if start > 1000:
+            break
+
+    print(df["action"].value_counts())
+    print('accuracy', p_pred/(p_pred+f_pred))
+    #print('accuracy t', tp_pred/(tp_pred+tf_pred))
+    #print(np.unique( np.array(values), return_counts=True))
+
+    # Plotting
+    fig, ax = plt.subplots(figsize=(15, 5))
+    activity_ax = ax
+
+    # Step plot for actions
+    activity_ax.step(times, values, where='post', label='Label', color='blue', linewidth=2)
+    activity_ax.step(times, pred_values, where='post', label='Predicted State Change', color='green', linewidth=2)
+    #activity_ax.step(times, tran_values, where='post', label='Transition', color='yellow', linewidth=1)
+
+    #activity_ax.scatter(marker_times, marker_values, color='red', label='False Prediction of State Change', zorder=5)
+    #activity_ax.scatter(vmarker_times, vmarker_values, color='purple', label='Velocity', zorder=5)
+    # j = 0
+    # y_offset = -0.6
+    # for time, value, label in annotations:
+    #     if j > 0 and j % 3 == 0:
+    #         y_offset = -0.6
+    #         j = 0
+    #     j = j + 1
+    #     y_offset += 0.2
+    #
+    #     activity_ax.annotate(
+    #         label,  # The text to display
+    #         xy=(time, value),  # Position of the annotation
+    #         xytext=(time - 100, value + y_offset),  # Slightly offset to avoid overlap
+    #         textcoords='data',
+    #         fontsize=8,
+    #         ha='left',  # Horizontally center the text
+    #         arrowprops=dict(arrowstyle='->', color='gray', lw=0.5)  # Optional arrow
+    #     )
+    # Customize the activity plot
+    y_ticks = list(states.values())
+    y_labels = list(states.keys())
+    #activity_ax.set_yticks(y_ticks)
+    #activity_ax.set_yticklabels(y_labels)
+
+    activity_ax.set_xlabel('Time', fontsize=14)
+    activity_ax.set_title(f'{plot_title}: Recognize Transition', fontsize=16)
+    activity_ax.axhline(-1, color='black', linestyle='--', linewidth=0.5)  # Baseline for falls
+    activity_ax.grid(True, linestyle='--', alpha=0.6)
+    activity_ax.legend(loc='lower left', fontsize=10)
+
+    # Show plots
+    plt.tight_layout()
+    plt.savefig(f"output/plot/{plot_title}.png", dpi=300)
+    plt.show()
+    plt.close(fig)  # Close the figure to free memory
+
+    return pd.DataFrame(result)
+
+def get_transition(prev_state, current_state, previous_activity):
+    transition = False
+    if '-' in current_state:
+        # test for transition label
+        transition = True
+    elif prev_state is not None and current_state != prev_state and ('-' not in prev_state or '-' not in current_state):
+        # test for transition label
+        transition = True
+
+    current_activity = previous_activity
+    if transition:
+        if prev_state == 'Inactivity':
+            current_activity = 'Present'
+        elif current_state == 'Inactivity':
+            current_activity = 'Absent'
+        else:
+            # print(start, prev_state, current_state)
+            if '-' in prev_state and '-' not in current_state:
+                current_activity = 'Stationary'
+            else:
+                current_activity = 'State Change'
+
+    return transition, current_activity
+
