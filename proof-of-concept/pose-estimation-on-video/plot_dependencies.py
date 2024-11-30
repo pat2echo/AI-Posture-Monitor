@@ -399,7 +399,7 @@ def plot_transitions(csv_file=None, class_label='label', prediction_label='smoot
             vmarker_times.append((start + end) / 2)  # Use the midpoint of start and end
             vmarker_values.append( np.max(np.abs(ar)) )  # Corresponding prediction value
 
-        if start > 1000:
+        if start > 1600:
             break
 
     print(df["action"].value_counts())
@@ -418,6 +418,8 @@ def plot_transitions(csv_file=None, class_label='label', prediction_label='smoot
 
     #activity_ax.scatter(marker_times, marker_values, color='red', label='False Prediction of State Change', zorder=5)
     #activity_ax.scatter(vmarker_times, vmarker_values, color='purple', label='Velocity', zorder=5)
+    #activity_ax.plot(df['file_name'][:1000], (df['bbox_aspect_ratio_of_pose'][:1000]), label='bbox_aspect_ratio_of_pose', color='orange')
+    #activity_ax.plot(df['file_name'][:1000], (df['bbox_aspect_ratio'][:1000]), label='bbox_aspect_ratio', color='orange')
     # j = 0
     # y_offset = -0.6
     # for time, value, label in annotations:

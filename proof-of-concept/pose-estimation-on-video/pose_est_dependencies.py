@@ -1,3 +1,5 @@
+from audioop import reverse
+
 import mediapipe as mp
 import cv2
 import numpy as np
@@ -122,6 +124,18 @@ class PoseEstimation:
         self.prediction_memory_velocity = []
         self.prediction_memory_length_velocity = 16
         self.previous_prediction = None
+        self.previous_prediction_bbox = None
+        self.use_bbox_prediction_model = False
+
+        # Monitor transitions over 40 frames
+        self.state_transition_window = 40
+        self.state_transition_memory = []
+
+        # Memory used to track aspect ratio moving average
+        self.aspect_ratio_window = 4
+        self.aspect_ratio_memory = []
+        self.aspect_ratio_lie_threshold_short = 1.5
+        self.aspect_ratio_lie_threshold_long = 1.2
 
         while True:
             # Get the next frame
@@ -165,6 +179,7 @@ class PoseEstimation:
             bbox_aspect_ratio = 0
             is_motion = False
             is_transition = False
+            aspect_ratio_movement = 0
 
             if process_image:
                 rectangles = None
@@ -198,7 +213,7 @@ class PoseEstimation:
                         predict_rect = [area_of_interest['rect']]
                     elif rectangles is not None and len(rectangles) > 0:
                         predict_rect = rectangles
-                    is_transition, initial_prediction, prediction, aspect_ratio_prediction, bbox_aspect_ratio_of_pose, features, frame_label, _, velocity, acceleration = self.process_frame(frame_output=frame_output,
+                    is_transition, initial_prediction, prediction, aspect_ratio_prediction, bbox_aspect_ratio_of_pose, aspect_ratio_movement, features, frame_label, _, velocity = self.process_frame(frame_output=frame_output,
                                                                                                       manual_landmark_drawing=False,
                                                                                                       bbox_aspect_ratio=bbox_aspect_ratio,
                                                                                                       keypoints_of_focus=keypoints_for_velocity,
@@ -223,7 +238,7 @@ class PoseEstimation:
 
                 # Save max value of absolute difference to csv
                 #print(frame_title, max_value, process_image)
-                output_data.append([self.frame_count, frame_label, initial_prediction, prediction, aspect_ratio_prediction, is_transition, aoi_from_memory, bbox_aspect_ratio_of_pose, bbox_aspect_ratio, max_value, is_motion, ', '.join(map(str, list(velocity))), ', '.join(map(str, list(acceleration))), ', '.join(map(str, features)) ])
+                output_data.append([self.frame_count, frame_label, initial_prediction, prediction, aspect_ratio_prediction, is_transition, aoi_from_memory, bbox_aspect_ratio_of_pose, aspect_ratio_movement, bbox_aspect_ratio, max_value, is_motion, ', '.join(map(str, list(velocity))), ', '.join(map(str, features)) ])
 
             # Check for the ESC key press
 
@@ -235,7 +250,7 @@ class PoseEstimation:
 
         # Save the NumPy array to CSV
         np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
-                   header='file_name,label,prediction,smooth_prediction,aspect_ratio_prediction,is_transition,aoi_from_memory,bbox_aspect_ratio_of_pose,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) +','+ ','.join(['a_lshoulder','a_rshoulder','a_lhip','a_rhip']) + ','+ ','.join(features_attr), comments='')
+                   header='file_name,label,prediction,smooth_prediction,aspect_ratio_prediction,is_transition,aoi_from_memory,bbox_aspect_ratio_of_pose,aspect_ratio_movement,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) +','+ ','.join(features_attr), comments='')
 
         #np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_velocity.csv'), np.array(self.tmp_data), fmt='%s', delimiter=',',
         #           header='frame,lshoulder,rshoulder,lhip,rhip,lankle,rankle,lsa,rsa,lha,rha', comments='')
@@ -252,24 +267,42 @@ class PoseEstimation:
         self.font_color = (0, 255, 0)  # Green color in BGR
         self.font_thickness = 2
 
-    def denoise_prediction(self, initial_prediction=None, aspect_ratio_prediction=None, bbox_aspect_ratio=0):
+    def denoise_prediction(self, initial_prediction=None, aspect_ratio_prediction=None, bbox_aspect_ratio_of_pose=0, aspect_ratio_movement=0):
         # Keep track of last consecutive predictions and only accept new state when it persists over a number of frames
         self.prediction_memory.append(initial_prediction)
         if len(self.prediction_memory) >= (self.prediction_memory_length + 1):
             self.prediction_memory.pop(0)
 
         has_prediction_changed = False
+        state_has_transitioned = False
 
         array = np.array(self.prediction_memory)
         if np.all(array == array[0]):
             # test if both shoulders velocity has changed
+            state_has_transitioned = self.detect_transition_from_prev_state(prev_state=self.previous_prediction, current_state=initial_prediction)
             smooth_prediction = initial_prediction
             self.previous_prediction = initial_prediction
             has_prediction_changed = True
         else:
             smooth_prediction = self.previous_prediction
 
-        return smooth_prediction, has_prediction_changed
+        # Use bounding box prediction to validate sit
+        if self.use_bbox_prediction_model:
+            if bbox_aspect_ratio_of_pose != self.previous_prediction_bbox or initial_prediction == bbox_aspect_ratio_of_pose:
+                self.use_bbox_prediction_model = False
+            else:
+                smooth_prediction = aspect_ratio_prediction
+                self.previous_prediction_bbox = smooth_prediction
+                self.previous_prediction = smooth_prediction
+        elif smooth_prediction == 'sit' and bbox_aspect_ratio_of_pose >= aspect_ratio_movement:
+            smooth_prediction = aspect_ratio_prediction
+            self.use_bbox_prediction_model = True
+            self.previous_prediction_bbox = smooth_prediction
+            self.previous_prediction = smooth_prediction
+
+
+
+        return smooth_prediction, has_prediction_changed, state_has_transitioned
 
     def detect_transition(self, initial_prediction=None, velocity=[], has_prediction_changed=False, aspect_ratio_prediction=None, bbox_aspect_ratio=0):
         # Keep track of last consecutive joint downward velocity
@@ -289,6 +322,18 @@ class PoseEstimation:
 
         return is_transition
 
+    def detect_transition_from_prev_state(self, prev_state=None, current_state=None):
+        transition = False
+        if '-' in current_state:
+            # test for transition label
+            transition = True
+        elif prev_state is not None and current_state != prev_state and (
+                '-' not in prev_state or '-' not in current_state):
+            # test for transition label
+            transition = True
+
+        return transition
+
     def process_frame(self, frame_output, use_bounding_box=True, bounding_boxes=None, keypoints_of_focus=None, bbox_aspect_ratio=0, manual_landmark_drawing=False):
         features = []
         prediction = None
@@ -299,6 +344,7 @@ class PoseEstimation:
         timestamp_secs = 0
         label = None
         is_transition = False
+        aspect_ratio_movement = 0
 
         #keypoints_of_focus=[11, 12, 23, 24, 27, 28]: shoulder, hip, ankle
 
@@ -435,8 +481,9 @@ class PoseEstimation:
 
                     initial_prediction = predict_pose(features=features)
                     aspect_ratio_prediction = self.predict_posture_from_aspect_ratio(aspect_ratio=bbox_aspect_ratio_of_pose)
-                    prediction, has_changed = self.denoise_prediction(initial_prediction=initial_prediction, bbox_aspect_ratio=bbox_aspect_ratio, aspect_ratio_prediction=aspect_ratio_prediction)
-                    is_transition = self.detect_transition(initial_prediction=initial_prediction, has_prediction_changed=has_changed, bbox_aspect_ratio=bbox_aspect_ratio, velocity=velocity, aspect_ratio_prediction=aspect_ratio_prediction)
+                    aspect_ratio_movement = self.track_aspect_ratio_movement(aspect_ratio=bbox_aspect_ratio_of_pose)
+                    prediction, has_changed, is_transition = self.denoise_prediction(initial_prediction=initial_prediction, bbox_aspect_ratio_of_pose=bbox_aspect_ratio_of_pose, aspect_ratio_movement=aspect_ratio_movement, aspect_ratio_prediction=aspect_ratio_prediction)
+                    #is_transition = self.detect_transition(initial_prediction=initial_prediction, has_prediction_changed=has_changed, bbox_aspect_ratio=bbox_aspect_ratio, velocity=velocity, aspect_ratio_prediction=aspect_ratio_prediction)
 
                     #print(features, prediction)
                     font_color = (255,0,0)
@@ -450,7 +497,7 @@ class PoseEstimation:
 
 
                     acc = (self.pass_count * 100) / (self.pass_count + self.fail_count)
-                    frame_text = f'{pass_fail} - Accuracy: {acc:.2f}, aspect ratio: {bbox_aspect_ratio_of_pose:.3f}, max velocity: {self.max_velocity:.3f}, max acc: {self.max_acceleration:.3f}'
+                    frame_text = f'{pass_fail} - Accuracy: {acc:.2f}, aspect ratio: {bbox_aspect_ratio_of_pose:.3f}/{aspect_ratio_movement}, max velocity: {self.max_velocity:.3f}'
                     (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale,
                                                                    self.font_thickness)
                     cv2.putText(frame_output, frame_text, (20, frame_height - text_height - 10), self.font, self.font_scale, font_color,
@@ -471,11 +518,53 @@ class PoseEstimation:
                 self.my_frame_diff.save_image(aoi_for_pose, os.path.join(self.my_frame_diff.output_folder_aoi_pose, f"pose_{self.frame_count:04d}"))
                 pass
 
-        return is_transition, initial_prediction, prediction, aspect_ratio_prediction, bbox_aspect_ratio_of_pose, features, label, timestamp_secs, velocity, acceleration
+        return is_transition, initial_prediction, prediction, aspect_ratio_prediction, bbox_aspect_ratio_of_pose, aspect_ratio_movement, features, label, timestamp_secs, velocity
+
+    def track_aspect_ratio_movement(self, aspect_ratio=0):
+        self.aspect_ratio_lie_threshold_short = 1.5
+        self.aspect_ratio_lie_threshold_long = 1.2
+
+        self.aspect_ratio_memory.append(aspect_ratio)
+        if len(self.aspect_ratio_memory) >= ((self.aspect_ratio_window * 5) + 1):
+            self.aspect_ratio_memory.pop(0)
+
+        reversed_list = list(self.aspect_ratio_memory)[::-1]
+
+        moving_average = []
+        overlap = self.aspect_ratio_window  // 2
+        for x in range(6):
+            if len(reversed_list) >= ((x*overlap) + self.aspect_ratio_window):
+                arr = self.aspect_ratio_memory
+                #print('avg', x, np.mean(arr[(x*overlap):((x*overlap) + self.aspect_ratio_window)][arr != 0]), arr[(x*overlap):((x*overlap) + self.aspect_ratio_window)])
+                moving_average.append( np.mean(arr[(x*overlap):((x*overlap) + self.aspect_ratio_window)][arr != 0]) )
+
+        cur = 0
+        increase = []
+        for x in moving_average:
+            if cur == 0:
+                cur = x
+            else:
+                if cur > x:
+                    increase.append(True)
+                else:
+                    increase.append(False)
+                cur = x
+
+        threshold = 0
+        if np.all(np.array(increase)):
+            threshold = self.aspect_ratio_lie_threshold_long
+        elif np.all(np.array(increase[:3])) or np.sum(np.array(increase) == True) > len(increase) - 2:
+            threshold = self.aspect_ratio_lie_threshold_short
+
+        #print(reversed_list)
+        #print('mv', moving_average, increase, threshold)
+
+        return threshold
 
     def get_bounding_box_of_detected_pose(self, frame=None, pose_landmark=None, show=True):
         frame_height, frame_width = frame.shape[:2]
-        kof = [11, 12, 23, 24, 25, 26, 27, 28]  # shoulder to ankle only
+        #kof = [11, 12, 23, 24, 25, 26, 27, 28]  # shoulder to ankle only
+        kof = [11, 12, 23, 24, 27, 28]  # shoulder to ankle only excluding the knees
         #print(kof, pose_landmark, 'xas \n', pose_landmark[kof])
 
         # Initialize bounding box
