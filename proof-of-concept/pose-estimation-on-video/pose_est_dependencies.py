@@ -141,6 +141,12 @@ class PoseEstimation:
         self.previous_label_fall = None
         self.state_transition_sequence = []
         self.state_transition_window = 45
+        self.fall_label_sequence = []
+        self.fall_label_window = 30
+        self.fall_watch_prediction = False
+        self.fall_watch = False
+        self.fall_count = 0
+        self.fall_pass = 0
 
         while True:
             # Get the next frame
@@ -496,11 +502,41 @@ class PoseEstimation:
                     state_transition_prediction = self.adjustment_for_sit_in_activity_recognition(initial_prediction=initial_prediction, smooth_prediction=prediction, aspect_ratio_prediction=aspect_ratio_prediction, bbox_aspect_ratio_of_pose=bbox_aspect_ratio_of_pose, aspect_ratio_movement=aspect_ratio_movement)
                     #is_transition = self.detect_transition(initial_prediction=initial_prediction, has_prediction_changed=has_changed, bbox_aspect_ratio=bbox_aspect_ratio, velocity=velocity, aspect_ratio_prediction=aspect_ratio_prediction)
 
+                    self.fall_label_sequence.append(label_fall)
+                    if len(self.fall_label_sequence) >= self.fall_label_window:
+                        self.fall_label_sequence.pop(0)
+
                     self.state_transition_sequence.append(state_transition_prediction)
                     if len(self.state_transition_sequence) >= self.state_transition_window:
                         self.state_transition_sequence.pop(0)
                     #print('sequence', self.state_transition_sequence)
+
+                    fall_non_fall = 'Non-fall'
+                    fall_font_color = (255,0,0)
                     fall_prediction = self.get_fall_prediction(np.array(self.state_transition_sequence))
+
+                    arr = np.array(self.fall_label_sequence)
+                    if arr[arr == True].size > 0:
+                        # watch fall window
+                        self.fall_watch = True
+
+                    if self.fall_watch:
+                        fall_non_fall = 'Fall'
+
+                    if 'fall' in fall_prediction and fall_prediction['fall'] > 0:
+                        fall_non_fall += '/Fall'
+                        if arr[arr == True].size > 0:
+                            self.fall_watch_prediction = True
+                            fall_font_color = (0,0,255)
+
+                    if self.fall_watch and arr[arr == True].size == 0:
+                        self.fall_count += 1
+                        if self.fall_watch_prediction:
+                            self.fall_pass += 1
+                        # End of fall watch
+                        self.fall_watch = False
+                        self.fall_watch_prediction = False
+
 
 
                     #print(features, prediction)
@@ -519,11 +555,12 @@ class PoseEstimation:
                     (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale, self.font_thickness)
                     cv2.putText(frame_output, frame_text, (20, frame_height - text_height - 10), self.font, self.font_scale, font_color, self.font_thickness)
 
-                    frame_text = f'Fall Label: {label_fall} {str(fall_prediction)}'
+                    acc = (self.fall_pass * 100) / (self.fall_count)
+                    frame_text = f'{fall_non_fall} - Accuracy: {acc}, Label: {label_fall} {str(fall_prediction)}'
                     prev_text_height = text_height
                     (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale,
                                                                    self.font_thickness)
-                    cv2.putText(frame_output, frame_text, (20, frame_height - text_height - prev_text_height - 20), self.font, self.font_scale, font_color, self.font_thickness)
+                    cv2.putText(frame_output, frame_text, (20, frame_height - (text_height + prev_text_height + 20) ), self.font, self.font_scale, fall_font_color, self.font_thickness)
 
                 state_text = 'Transition ' if is_transition else ''
 
