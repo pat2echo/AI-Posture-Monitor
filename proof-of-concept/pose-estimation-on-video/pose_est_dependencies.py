@@ -570,9 +570,12 @@ class PoseEstimation:
         if len(data_array) > 1:
             first = self.first_non_none(data_array)
             first_state = data_array[data_array == first[0]]
-            current_state = data_array[(data_array != first[0]) & (data_array != None)][-1]
-            mid_state = data_array[(data_array != first[0]) & (data_array != None)][:-1]
+            current_state = None
+            t_state = data_array[(data_array != first[0]) & (data_array != None)]
+            if len(t_state) > 1:
+                current_state = t_state[-1]
 
+            mid_state = data_array[(data_array != first[0]) & (data_array != None)]
             # Exclude mid-state if less than 20% of non None window values
             # print(data_array[data_array != mid_state[0]])
             # print(first, '\n',first_state, len(first_state),'\n', mid_state, len(mid_state))
@@ -582,7 +585,7 @@ class PoseEstimation:
             percent_dist[first_state[0]] = np.round(len(first_state) * 100 / size, 0)
 
             if len(mid_state) > 0:
-                if first_state[0] == mid_state[0]:
+                if first_state[0] == mid_state[0] or current_state == mid_state[0]:
                     sequence = f'{first_state[0]}-{current_state}'
                 else:
                     sequence = f'{first_state[0]}-{mid_state[0]}-{current_state}'
