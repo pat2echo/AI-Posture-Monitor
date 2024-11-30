@@ -287,20 +287,20 @@ class PoseEstimation:
             smooth_prediction = self.previous_prediction
 
         # Use bounding box prediction to improve lie prediction when sit is predicted
-        if self.use_bbox_prediction_model:
-            if aspect_ratio_prediction != self.previous_prediction_bbox or initial_prediction == bbox_aspect_ratio_of_pose:
-                self.use_bbox_prediction_model = False
-            else:
-                smooth_prediction = aspect_ratio_prediction
-                self.previous_prediction_bbox = smooth_prediction
-                self.previous_prediction = smooth_prediction
-        elif smooth_prediction == 'sit' and aspect_ratio_prediction == 'lie' and bbox_aspect_ratio_of_pose >= aspect_ratio_movement:
-            smooth_prediction = aspect_ratio_prediction
-            self.use_bbox_prediction_model = True
-            self.previous_prediction_bbox = smooth_prediction
-            self.previous_prediction = smooth_prediction
-
-
+        # if self.use_bbox_prediction_model:
+        #     if aspect_ratio_prediction != self.previous_prediction_bbox or initial_prediction == bbox_aspect_ratio_of_pose:
+        #         self.use_bbox_prediction_model = False
+        #     else:
+        #         smooth_prediction = aspect_ratio_prediction
+        #         self.previous_prediction_bbox = smooth_prediction
+        #         self.previous_prediction = smooth_prediction
+        # elif smooth_prediction == 'sit' and aspect_ratio_prediction == 'lie' and bbox_aspect_ratio_of_pose >= aspect_ratio_movement:
+        #     smooth_prediction = aspect_ratio_prediction
+        #     has_prediction_changed = True
+        #     state_has_transitioned = self.detect_transition_from_prev_state(prev_state=self.previous_prediction, current_state=aspect_ratio_prediction)
+        #     self.use_bbox_prediction_model = True
+        #     self.previous_prediction_bbox = smooth_prediction
+        #     self.previous_prediction = smooth_prediction
 
         return smooth_prediction, has_prediction_changed, state_has_transitioned
 
@@ -313,7 +313,6 @@ class PoseEstimation:
         is_transition = False
         if has_prediction_changed:
             # test if both shoulders velocity has changed
-
             arr = np.array(self.prediction_memory_velocity)
             if len( arr[(arr[:, 0] != 0) & (arr[:, 1] != 0)] ) > 0 or self.previous_prediction is None:
                 is_transition = True
