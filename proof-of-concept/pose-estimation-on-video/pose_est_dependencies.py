@@ -584,20 +584,21 @@ class PoseEstimation:
             percent_dist = {}
             percent_dist[first_state[0]] = np.round(len(first_state) * 100 / size, 0)
 
+            sequence = None
             if len(mid_state) > 0:
                 if first_state[0] == mid_state[0] or current_state == mid_state[0]:
                     sequence = f'{first_state[0]}-{current_state}'
                 else:
                     sequence = f'{first_state[0]}-{mid_state[0]}-{current_state}'
                     percent_dist[mid_state[0]] = np.round(len(mid_state) * 100 / size, 0)
-            else:
+            elif current_state is not None:
                 sequence = f'{first_state[0]}-{current_state}'
 
             finite_states = self.get_finite_states()
             if sequence in finite_states:
                 dict_prediction = finite_states[sequence]
-            dict_prediction['sequence'] = sequence
-            dict_prediction['percent'] = percent_dist
+            dict_prediction['seq'] = sequence
+            dict_prediction['per'] = percent_dist
 
         return dict_prediction
 
