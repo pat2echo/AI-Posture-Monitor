@@ -286,15 +286,15 @@ class PoseEstimation:
         else:
             smooth_prediction = self.previous_prediction
 
-        # Use bounding box prediction to validate sit
+        # Use bounding box prediction to improve lie prediction when sit is predicted
         if self.use_bbox_prediction_model:
-            if bbox_aspect_ratio_of_pose != self.previous_prediction_bbox or initial_prediction == bbox_aspect_ratio_of_pose:
+            if aspect_ratio_prediction != self.previous_prediction_bbox or initial_prediction == bbox_aspect_ratio_of_pose:
                 self.use_bbox_prediction_model = False
             else:
                 smooth_prediction = aspect_ratio_prediction
                 self.previous_prediction_bbox = smooth_prediction
                 self.previous_prediction = smooth_prediction
-        elif smooth_prediction == 'sit' and bbox_aspect_ratio_of_pose >= aspect_ratio_movement:
+        elif smooth_prediction == 'sit' and aspect_ratio_prediction == 'lie' and bbox_aspect_ratio_of_pose >= aspect_ratio_movement:
             smooth_prediction = aspect_ratio_prediction
             self.use_bbox_prediction_model = True
             self.previous_prediction_bbox = smooth_prediction
