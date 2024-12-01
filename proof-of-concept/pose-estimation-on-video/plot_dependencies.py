@@ -96,7 +96,7 @@ def plot_activity_fall(csv_file=None, class_label='action', plot_title=None, sho
         fall_times.extend([(t, fall_value) for t in range(start, end + 1)])
 
     # Plotting
-    fig, ax = plt.subplots(2, 1, figsize=(15, 12), gridspec_kw={'height_ratios': [3, 1]})
+    fig, ax = plt.subplots(2, 1, figsize=(15, 8), gridspec_kw={'height_ratios': [3, 1]})
     activity_ax, bar_ax = ax
 
     # Step plot for actions
