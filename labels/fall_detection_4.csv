@@ -1,7 +1,9 @@
 start_time,end_time,action,is_fall
-0,10,None,False
-11,32,Stand,False
-33,41,Stand,False
+0,11,None,False
+12,24,Stand,False
+25,27,None,False
+28,32,Stand,False
+33,41,None,False
 42,91,Stand,False
 92,93,Stand,False
 94,95,Stand-Lie,True

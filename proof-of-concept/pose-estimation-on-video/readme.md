@@ -52,6 +52,9 @@ Plot Activity Recognition
 python code/proof-of-concept/pose-estimation-on-video/transition_plot.py ./output/output_results/hr_fall_detection_3_results.csv
 ```
 
+## Define Fall
+When the subject remains in the fallen state for at least 1 second excluding transition to the fallen state
+
 ## How to Prepare New Dataset
 1. Extract keyframes from the video at a rate of one frame per second to represent the temporal evolution of the activity
 ```aiignore

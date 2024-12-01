@@ -31,3 +31,5 @@ print('video_file', video_file, 'label_file', label_file, 'is_predict_pose', pre
 
 pe = PoseEstimation()
 pe.process_video(video_file=video_file, label_file=label_file, is_predict_pose=predict, model_number=2, use_frame_diff=True, use_bounding_box=True, scaling_factor=scaling_factor, BASE_OUTPUT_DIR=BASE_OUTPUT_DIR)
+
+#print(pe.get_fall_prediction(data_array=data))

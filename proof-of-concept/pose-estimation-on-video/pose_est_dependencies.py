@@ -147,6 +147,8 @@ class PoseEstimation:
         self.fall_watch = False
         self.fall_count = 0
         self.fall_pass = 0
+        self.fall_fail = 0
+        self.previous_fall_prediction_states = {}
 
         while True:
             # Get the next frame
@@ -192,6 +194,7 @@ class PoseEstimation:
             is_motion = False
             is_transition = False
             aspect_ratio_movement = 0
+            state_sequence = None
 
             if process_image:
                 rectangles = None
@@ -225,13 +228,14 @@ class PoseEstimation:
                         predict_rect = [area_of_interest['rect']]
                     elif rectangles is not None and len(rectangles) > 0:
                         predict_rect = rectangles
-                    is_transition, initial_prediction, prediction, state_transition_prediction, aspect_ratio_prediction, bbox_aspect_ratio_of_pose, aspect_ratio_movement, features, frame_label, _, velocity = self.process_frame(frame_output=frame_output,
+                    is_transition, initial_prediction, prediction, state_transition_prediction, state_sequence, aspect_ratio_prediction, bbox_aspect_ratio_of_pose, aspect_ratio_movement, features, frame_label, _, velocity = self.process_frame(frame_output=frame_output,
                                                                                                       manual_landmark_drawing=False,
                                                                                                       bbox_aspect_ratio=bbox_aspect_ratio,
                                                                                                       keypoints_of_focus=keypoints_for_velocity,
                                                                                                       use_bounding_box=use_bounding_box,
                                                                                                       bounding_boxes=predict_rect)
-
+                else:
+                    self.update_tranistion_sequence(state=None)
 
             # Display the result
             frame_output = cv2.cvtColor(frame_output, cv2.COLOR_RGB2BGR)
@@ -250,7 +254,7 @@ class PoseEstimation:
 
                 # Save max value of absolute difference to csv
                 #print(frame_title, max_value, process_image)
-                output_data.append([self.frame_count, frame_label, initial_prediction, prediction, state_transition_prediction, self.fall_watch, self.fall_watch_prediction, aspect_ratio_prediction, is_transition, aoi_from_memory, bbox_aspect_ratio_of_pose, aspect_ratio_movement, bbox_aspect_ratio, max_value, is_motion, ', '.join(map(str, list(velocity))), ', '.join(map(str, features)) ])
+                output_data.append([self.frame_count, frame_label, initial_prediction, prediction, state_transition_prediction, state_sequence, self.fall_watch, self.fall_watch_prediction, aspect_ratio_prediction, is_transition, aoi_from_memory, bbox_aspect_ratio_of_pose, aspect_ratio_movement, bbox_aspect_ratio, max_value, is_motion, ', '.join(map(str, list(velocity))), ', '.join(map(str, features)) ])
 
             # Check for the ESC key press
 
@@ -262,7 +266,7 @@ class PoseEstimation:
 
         # Save the NumPy array to CSV
         np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
-                   header='file_name,label,prediction,smooth_prediction,state_transition_prediction,fall_watch,fall_watch_prediction,aspect_ratio_prediction,is_transition,aoi_from_memory,bbox_aspect_ratio_of_pose,aspect_ratio_movement,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) +','+ ','.join(features_attr), comments='')
+                   header='file_name,label,prediction,smooth_prediction,state_transition_prediction,state_sequence,fall_watch,fall_watch_prediction,aspect_ratio_prediction,is_transition,aoi_from_memory,bbox_aspect_ratio_of_pose,aspect_ratio_movement,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) +','+ ','.join(features_attr), comments='')
 
         #np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_velocity.csv'), np.array(self.tmp_data), fmt='%s', delimiter=',',
         #           header='frame,lshoulder,rshoulder,lhip,rhip,lankle,rankle,lsa,rsa,lha,rha', comments='')
@@ -361,6 +365,7 @@ class PoseEstimation:
         label_fall = None
         is_transition = False
         aspect_ratio_movement = 0
+        state_sequence = None
 
         #keypoints_of_focus=[11, 12, 23, 24, 27, 28]: shoulder, hip, ankle
 
@@ -505,9 +510,7 @@ class PoseEstimation:
                     state_transition_prediction = self.adjustment_for_sit_in_activity_recognition(initial_prediction=initial_prediction, smooth_prediction=prediction, aspect_ratio_prediction=aspect_ratio_prediction, bbox_aspect_ratio_of_pose=bbox_aspect_ratio_of_pose, aspect_ratio_movement=aspect_ratio_movement)
                     #is_transition = self.detect_transition(initial_prediction=initial_prediction, has_prediction_changed=has_changed, bbox_aspect_ratio=bbox_aspect_ratio, velocity=velocity, aspect_ratio_prediction=aspect_ratio_prediction)
 
-                    self.state_transition_sequence.append(state_transition_prediction)
-                    if len(self.state_transition_sequence) >= self.state_transition_window:
-                        self.state_transition_sequence.pop(0)
+                    self.update_tranistion_sequence(state=state_transition_prediction)
                     #print('sequence', self.state_transition_sequence)
 
                     self.fall_label_sequence.append(label_fall)
@@ -517,6 +520,7 @@ class PoseEstimation:
                     fall_non_fall = '-'
                     fall_font_color = (255,0,0)
                     fall_prediction = self.get_fall_prediction(np.array(self.state_transition_sequence))
+                    state_sequence = fall_prediction['seq']
 
                     arr = np.array(self.fall_label_sequence)
                     if arr[arr == True].size > 0:
@@ -528,14 +532,26 @@ class PoseEstimation:
 
                     if 'fall' in fall_prediction and fall_prediction['fall'] > 0:
                         fall_non_fall = f'{fall_non_fall}+Fall'
+                        fall_font_color = (255, 255, 0)
                         if arr[arr == True].size > 0:
                             self.fall_watch_prediction = True
                             fall_font_color = (0,0,255)
+                    elif not self.fall_watch and self.previous_fall_prediction_states is not None and \
+                            'fall' in self.previous_fall_prediction_states and self.previous_fall_prediction_states['fall'] > 0 and \
+                            fall_prediction['seq'] != self.previous_fall_prediction_states['seq']:
+                        # When Current Label is not Fall and Previous Prediction was Fall Sequence and Prediction has Changed
+                        self.fall_watch = True
+                        if arr[arr == True].size > 0:
+                            fall_font_color = (0,0,255)
+
+                    self.previous_fall_prediction_states = fall_prediction
 
                     if self.fall_watch and arr[arr == True].size == 0:
                         self.fall_count += 1
                         if self.fall_watch_prediction:
                             self.fall_pass += 1
+                        else:
+                            self.fall_fail += 1
                         # End of fall watch
                         self.fall_watch = False
                         self.fall_watch_prediction = False
@@ -564,6 +580,9 @@ class PoseEstimation:
                     (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale,
                                                                    self.font_thickness)
                     cv2.putText(frame_output, frame_text, (20, frame_height - (text_height + prev_text_height + 20) ), self.font, self.font_scale, fall_font_color, self.font_thickness)
+                else:
+                    self.update_tranistion_sequence(state=None)
+
 
                 state_text = 'Transition ' if is_transition else ''
 
@@ -580,7 +599,7 @@ class PoseEstimation:
                 self.my_frame_diff.save_image(aoi_for_pose, os.path.join(self.my_frame_diff.output_folder_aoi_pose, f"pose_{self.frame_count:04d}"))
                 pass
 
-        return is_transition, initial_prediction, prediction, state_transition_prediction, aspect_ratio_prediction, bbox_aspect_ratio_of_pose, aspect_ratio_movement, features, label, timestamp_secs, velocity
+        return is_transition, initial_prediction, prediction, state_transition_prediction, state_sequence, aspect_ratio_prediction, bbox_aspect_ratio_of_pose, aspect_ratio_movement, features, label, timestamp_secs, velocity
 
     def get_finite_states(self):
         # State transitions and fall/no fall
@@ -599,6 +618,11 @@ class PoseEstimation:
             'lie-lie': {'fall': 1, 'end_episode': 0},  # leave out of scope, check for downward velocity
         }
 
+    def update_tranistion_sequence(self, state):
+        self.state_transition_sequence.append(state)
+        if len(self.state_transition_sequence) >= self.state_transition_window:
+            self.state_transition_sequence.pop(0)
+
     def first_non_none(self, data_array):
         for i, x in enumerate(data_array):
             if x is not None:
@@ -606,19 +630,25 @@ class PoseEstimation:
         return None, -1
 
     def get_fall_prediction(self, data_array):
-        dict_prediction = {}
+        data_array = np.array(data_array)
+        dict_prediction = {'seq':None}
         if len(data_array) > 1:
+
             first = self.first_non_none(data_array)
             first_state = data_array[data_array == first[0]]
             current_state = None
-            t_state = data_array[(data_array != first[0]) & (data_array != None)]
+            t_state = data_array[(data_array != None)]
             if len(t_state) > 1:
                 current_state = t_state[-1]
+
+           #if self.frame_count > 1330:
+           #    print(self.frame_count, data_array)
 
             mid_state = data_array[(data_array != first[0]) & (data_array != None)]
             # Exclude mid-state if less than 20% of non None window values
             # print(data_array[data_array != mid_state[0]])
-            # print(first, '\n',first_state, len(first_state),'\n', mid_state, len(mid_state))
+            #print('current_state', current_state)
+            #print(first, '\n',first_state, len(first_state),'\n', mid_state, len(mid_state))
 
             size = len(data_array) - 1
             percent_dist = {}
