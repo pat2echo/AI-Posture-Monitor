@@ -536,13 +536,13 @@ class PoseEstimation:
                         if arr[arr == True].size > 0:
                             self.fall_watch_prediction = True
                             fall_font_color = (0,0,255)
-                    elif not self.fall_watch and self.previous_fall_prediction_states is not None and \
-                            'fall' in self.previous_fall_prediction_states and self.previous_fall_prediction_states['fall'] > 0 and \
-                            fall_prediction['seq'] != self.previous_fall_prediction_states['seq']:
-                        # When Current Label is not Fall and Previous Prediction was Fall Sequence and Prediction has Changed
-                        self.fall_watch = True
-                        if arr[arr == True].size > 0:
-                            fall_font_color = (0,0,255)
+                    # elif not self.fall_watch and self.previous_fall_prediction_states is not None and \
+                    #         'fall' in self.previous_fall_prediction_states and self.previous_fall_prediction_states['fall'] > 0 and \
+                    #         fall_prediction['seq'] != self.previous_fall_prediction_states['seq']:
+                    #     # When Current Label is not Fall and Previous Prediction was Fall Sequence and Prediction has Changed
+                    #     self.fall_watch = True
+                    #     if arr[arr == True].size > 0:
+                    #         fall_font_color = (0,0,255)
 
                     self.previous_fall_prediction_states = fall_prediction
 
