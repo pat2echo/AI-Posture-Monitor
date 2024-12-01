@@ -250,7 +250,7 @@ class PoseEstimation:
 
                 # Save max value of absolute difference to csv
                 #print(frame_title, max_value, process_image)
-                output_data.append([self.frame_count, frame_label, initial_prediction, prediction, state_transition_prediction, aspect_ratio_prediction, is_transition, aoi_from_memory, bbox_aspect_ratio_of_pose, aspect_ratio_movement, bbox_aspect_ratio, max_value, is_motion, ', '.join(map(str, list(velocity))), ', '.join(map(str, features)) ])
+                output_data.append([self.frame_count, frame_label, initial_prediction, prediction, state_transition_prediction, self.fall_watch, self.fall_watch_prediction, aspect_ratio_prediction, is_transition, aoi_from_memory, bbox_aspect_ratio_of_pose, aspect_ratio_movement, bbox_aspect_ratio, max_value, is_motion, ', '.join(map(str, list(velocity))), ', '.join(map(str, features)) ])
 
             # Check for the ESC key press
 
@@ -262,7 +262,7 @@ class PoseEstimation:
 
         # Save the NumPy array to CSV
         np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
-                   header='file_name,label,prediction,smooth_prediction,state_transition_prediction,aspect_ratio_prediction,is_transition,aoi_from_memory,bbox_aspect_ratio_of_pose,aspect_ratio_movement,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) +','+ ','.join(features_attr), comments='')
+                   header='file_name,label,prediction,smooth_prediction,state_transition_prediction,fall_watch,fall_watch_prediction,aspect_ratio_prediction,is_transition,aoi_from_memory,bbox_aspect_ratio_of_pose,aspect_ratio_movement,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) +','+ ','.join(features_attr), comments='')
 
         #np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_velocity.csv'), np.array(self.tmp_data), fmt='%s', delimiter=',',
         #           header='frame,lshoulder,rshoulder,lhip,rhip,lankle,rankle,lsa,rsa,lha,rha', comments='')
@@ -312,6 +312,9 @@ class PoseEstimation:
         elif smooth_prediction == 'sit' and aspect_ratio_prediction == 'lie' and bbox_aspect_ratio_of_pose >= aspect_ratio_movement:
             smooth_prediction = aspect_ratio_prediction
             self.use_bbox_prediction_model = True
+            self.previous_prediction_bbox = smooth_prediction
+        elif smooth_prediction == 'sit' and initial_prediction == 'lie' and aspect_ratio_prediction == 'sit':
+            smooth_prediction = initial_prediction
             self.previous_prediction_bbox = smooth_prediction
 
         return smooth_prediction
@@ -502,16 +505,16 @@ class PoseEstimation:
                     state_transition_prediction = self.adjustment_for_sit_in_activity_recognition(initial_prediction=initial_prediction, smooth_prediction=prediction, aspect_ratio_prediction=aspect_ratio_prediction, bbox_aspect_ratio_of_pose=bbox_aspect_ratio_of_pose, aspect_ratio_movement=aspect_ratio_movement)
                     #is_transition = self.detect_transition(initial_prediction=initial_prediction, has_prediction_changed=has_changed, bbox_aspect_ratio=bbox_aspect_ratio, velocity=velocity, aspect_ratio_prediction=aspect_ratio_prediction)
 
-                    self.fall_label_sequence.append(label_fall)
-                    if len(self.fall_label_sequence) >= self.fall_label_window:
-                        self.fall_label_sequence.pop(0)
-
                     self.state_transition_sequence.append(state_transition_prediction)
                     if len(self.state_transition_sequence) >= self.state_transition_window:
                         self.state_transition_sequence.pop(0)
                     #print('sequence', self.state_transition_sequence)
 
-                    fall_non_fall = 'Non-fall'
+                    self.fall_label_sequence.append(label_fall)
+                    if len(self.fall_label_sequence) >= self.fall_label_window:
+                        self.fall_label_sequence.pop(0)
+
+                    fall_non_fall = '-'
                     fall_font_color = (255,0,0)
                     fall_prediction = self.get_fall_prediction(np.array(self.state_transition_sequence))
 
@@ -524,7 +527,7 @@ class PoseEstimation:
                         fall_non_fall = 'Fall'
 
                     if 'fall' in fall_prediction and fall_prediction['fall'] > 0:
-                        fall_non_fall += '/Fall'
+                        fall_non_fall = f'{fall_non_fall}+Fall'
                         if arr[arr == True].size > 0:
                             self.fall_watch_prediction = True
                             fall_font_color = (0,0,255)
@@ -555,7 +558,7 @@ class PoseEstimation:
                     (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale, self.font_thickness)
                     cv2.putText(frame_output, frame_text, (20, frame_height - text_height - 10), self.font, self.font_scale, font_color, self.font_thickness)
 
-                    acc = (self.fall_pass * 100) / (self.fall_count)
+                    acc = (self.fall_pass * 100) / (self.fall_count) if self.fall_count > 0 else 0
                     frame_text = f'{fall_non_fall} - Accuracy: {acc}, Label: {label_fall} {str(fall_prediction)}'
                     prev_text_height = text_height
                     (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale,
@@ -764,17 +767,17 @@ class PoseEstimation:
         # Convert timestamp to format hh:mm:ss:ff (including frame fraction)
         hours = int(timestamp_sec // 3600)
         minutes = int((timestamp_sec % 3600) // 60)
-        seconds = int(timestamp_sec)
+        seconds = int(round(timestamp_sec))
         fraction = 0
         if export_fps > 0:
             fraction = int((timestamp_sec * export_fps) % export_fps)
 
-        timestamp_text = f"frame: {frame_count:04d} - {hours:02}:{minutes:02}:{seconds:02}.{fraction:01} - {timestamp_sec:.6f} - fps: {video_fps:.2f}"
+        timestamp_text = f"frame: {frame_count:04d} - {hours:02}:{minutes:02}:{seconds:02}.{fraction:01} - {round(timestamp_sec):.2f} - fps: {video_fps:.2f}"
         return timestamp_text, timestamp_sec
 
     def generate_frames_for_groundtruth(self, video_file=None, frames_per_second=1, BASE_OUTPUT_DIR=None):
         self.my_frame_diff = FrameDiff()
-        self.my_frame_diff.output_folder = os.path.join(BASE_OUTPUT_DIR, "output_frames")
+        self.my_frame_diff.output_folder = os.path.join(BASE_OUTPUT_DIR, "output_groundtruth")
         self.my_frame_diff.empty_folder(self.my_frame_diff.output_folder)
 
         cap = cv2.VideoCapture(video_file)

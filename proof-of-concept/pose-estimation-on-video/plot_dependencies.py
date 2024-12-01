@@ -482,3 +482,74 @@ def get_transition(prev_state, current_state, previous_activity):
 
     return transition, current_activity
 
+
+def plot_fall(csv_file=None, class_label='fall_watch', prediction_label='fall_watch_prediction', plot_title=None):
+    # Load data
+    df = pd.read_csv(csv_file)
+    # Replace NaN or None with "Inactivity"
+    df['action'] = df[ class_label ].fillna("Inactivity")
+    df['pred'] = df[ prediction_label ].fillna("Inactivity")
+
+    start = 0
+    times = []
+    values = []
+    pred_values = []
+    tran_values = []
+
+    marker_times = []
+    marker_values = []
+
+    p_pred = 0
+    f_pred = 0
+
+    result = {'label':[], 'predicted_label':[]}
+
+    for _, row in df.iterrows():
+        end = row['file_name']
+
+        label = row['action']
+        t_value = 1 if label else 0
+        result['label'].append(t_value)
+        times.append(start)  # Start time
+        values.append(t_value)
+        times.append(end)  # End time
+        values.append(t_value)  # Maintain value until the end time
+
+
+        pred = row['pred']
+        pred_t_value = 1 if pred else 0
+        result['predicted_label'].append(pred_t_value)
+        pred_values.append(pred_t_value*-1)
+        pred_values.append(pred_t_value*-1)  # Maintain value until the end time
+
+        start = end
+
+    print(df["action"].value_counts())
+    #print('accuracy t', tp_pred/(tp_pred+tf_pred))
+    #print(np.unique( np.array(values), return_counts=True))
+
+    # Plotting
+    fig, ax = plt.subplots(figsize=(15, 5))
+    activity_ax = ax
+
+    # Step plot for actions
+    activity_ax.step(times, values, where='post', label='Label', color='blue', linewidth=2)
+    activity_ax.step(times, pred_values, where='post', label='Predicted Fall', color='green', linewidth=2)
+
+    #activity_ax.scatter(marker_times, marker_values, color='red', label='False Prediction of State Change', zorder=5)
+    #activity_ax.scatter(vmarker_times, vmarker_values, color='purple', label='Velocity', zorder=5)
+
+    # Customize the activity plot
+    activity_ax.set_xlabel('Time', fontsize=14)
+    activity_ax.set_title(f'{plot_title}: Fall Detection', fontsize=16)
+    activity_ax.axhline(-1, color='black', linestyle='--', linewidth=0.5)  # Baseline for falls
+    activity_ax.grid(True, linestyle='--', alpha=0.6)
+    activity_ax.legend(loc='lower left', fontsize=10)
+
+    # Show plots
+    plt.tight_layout()
+    plt.savefig(f"output/plot/{plot_title}.png", dpi=300)
+    plt.show()
+    plt.close(fig)  # Close the figure to free memory
+
+    return pd.DataFrame(result)

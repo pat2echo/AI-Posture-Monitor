@@ -19,6 +19,8 @@ Get Ground Truth
 python code/proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/hr_fall_detection_1.mp4
 python code/proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/hr_fall_detection_2.mp4
 python code/proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/hr_fall_detection_3.mp4
+
+python code/proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/fall_detection_4.mp4
 ```
 
 Analyze Ground Truth

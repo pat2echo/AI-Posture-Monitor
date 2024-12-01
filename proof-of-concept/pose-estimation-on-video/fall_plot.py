@@ -1,0 +1,14 @@
+import sys
+import os
+from plot_dependencies import plot_fall
+from evaluation_dependencies import Evaluate
+
+if len(sys.argv) > 1:
+    print(sys.argv[1])
+    res = plot_fall(csv_file=sys.argv[1], plot_title='fall_'+os.path.basename(sys.argv[1]).split('.')[0])
+    eval = Evaluate()
+    print(eval.calculate_metrics(df=res))
+    #print(eval.calculate_metrics2(df=res))
+else:
+    print("Expecting csv file name of manual labels")
+    exit()

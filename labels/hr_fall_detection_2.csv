@@ -29,5 +29,5 @@ start_time,end_time,action,is_fall
 166,171,Stand,False
 172,182,Sit,False
 183,186,Stand,False
-187,187,Stand,True
+187,187,Stand,False
 188,206,Stand,False
