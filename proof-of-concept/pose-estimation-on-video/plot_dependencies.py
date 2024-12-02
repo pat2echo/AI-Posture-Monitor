@@ -494,15 +494,19 @@ def plot_fall(csv_file=None, class_label='fall_watch', prediction_label='fall_wa
     times = []
     values = []
     pred_values = []
-    tran_values = []
-
     marker_times = []
     marker_values = []
 
     p_pred = 0
     f_pred = 0
+    is_start_fall = False
+    is_start_pred_fall = False
+
+    is_start_non_fall = False
+    is_start_pred_non_fall = False
 
     result = {'label':[], 'predicted_label':[]}
+    result2 = {'label':[], 'predicted_label':[]}
 
     for _, row in df.iterrows():
         end = row['file_name']
@@ -515,14 +519,51 @@ def plot_fall(csv_file=None, class_label='fall_watch', prediction_label='fall_wa
         times.append(end)  # End time
         values.append(t_value)  # Maintain value until the end time
 
-
         pred = row['pred']
         pred_t_value = 1 if pred else 0
         result['predicted_label'].append(pred_t_value)
         pred_values.append(pred_t_value*-1)
         pred_values.append(pred_t_value*-1)  # Maintain value until the end time
 
+        if pred_t_value == 1 and not is_start_pred_fall:
+            is_start_pred_fall = True
+
+        if t_value == 1 and not is_start_fall:
+            is_start_fall = True
+
+        if pred_t_value == 0 and not is_start_pred_non_fall:
+            is_start_pred_non_fall = True
+
+        if t_value == 0 and not is_start_non_fall:
+            is_start_non_fall = True
+
+        if t_value == 0 and is_start_fall:
+            result2['label'].append(is_start_fall)
+            result2['predicted_label'].append(is_start_pred_fall)
+
+            # end of fall label
+            is_start_fall = False
+        elif t_value == 1 and is_start_non_fall:
+            result2['label'].append(not is_start_non_fall)
+            result2['predicted_label'].append(not is_start_pred_non_fall)
+            is_start_non_fall = False
+
+        if pred_t_value == 0 and is_start_pred_fall:
+            # end of fall prediction
+            is_start_pred_fall = False
+
+        if pred_t_value == 1 and is_start_pred_non_fall:
+            # end of fall prediction
+            is_start_pred_non_fall = False
+
         start = end
+
+    if is_start_fall:
+        result2['label'].append(is_start_fall)
+        result2['predicted_label'].append(is_start_pred_fall)
+    elif is_start_non_fall:
+        result2['label'].append(not is_start_non_fall)
+        result2['predicted_label'].append(not is_start_pred_non_fall)
 
     print(df["action"].value_counts())
     #print('accuracy t', tp_pred/(tp_pred+tf_pred))
@@ -552,4 +593,4 @@ def plot_fall(csv_file=None, class_label='fall_watch', prediction_label='fall_wa
     plt.show()
     plt.close(fig)  # Close the figure to free memory
 
-    return pd.DataFrame(result)
+    return pd.DataFrame(result), pd.DataFrame(result2)
