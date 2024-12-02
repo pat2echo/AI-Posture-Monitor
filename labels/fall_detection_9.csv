@@ -27,7 +27,7 @@ start_time,end_time,action,is_fall
 86,86,Sit,False
 87,88,Sit-Lie,False
 89,92,Lie,False
-83,93,Lie-Sit,False
+93,93,Lie-Sit,False
 94,94,Sit-Stand,False
 95,108,Stand,False
 109,113,None,False
