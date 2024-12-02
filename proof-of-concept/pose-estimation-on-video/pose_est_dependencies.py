@@ -830,7 +830,7 @@ class PoseEstimation:
                 timestamp_text, _ = self.get_timestamp(frame_count=frame_count, video_fps=fps, export_fps=frames_per_second)
 
                 # Put timestamp text on frame
-                cv2.putText(frame, timestamp_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
+                cv2.putText(frame, timestamp_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2,
                             cv2.LINE_AA)
 
                 # Save the frame with timestamp, including fraction for unique filename
