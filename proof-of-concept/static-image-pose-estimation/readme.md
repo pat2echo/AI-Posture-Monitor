@@ -49,6 +49,11 @@ python code/proof-of-concept/static-image-pose-estimation/predict.py ./dataset/p
 python code/proof-of-concept/static-image-pose-estimation/predict.py ./dataset/pose/static_pose_boundingbox_data.csv bounding_box_size
 ```
 
+Class balance
+```aiignore
+python code/proof-of-concept/static-image-pose-estimation/class_balance.py ./dataset/pose/features_output.csv
+```
+
 Get Evaluation Metrics
 ```aiignore
 python code/proof-of-concept/static-image-pose-estimation/metrics.py ./dataset/pose/features_output_predicted.csv

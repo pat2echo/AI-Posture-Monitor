@@ -11,6 +11,8 @@ if len(sys.argv) > 1:
         print(eval.calculate_metrics(df=res))
         print(res2)
         print(eval.calculate_metrics(df=res2))
+
+        print('class distribution', res2['label'].value_counts(normalize=True) * 100 )
         #print(eval.calculate_metrics2(df=res))
     else:
         print(f'File does not exist: {sys.argv[1]}')

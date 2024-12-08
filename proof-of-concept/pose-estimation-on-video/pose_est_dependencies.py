@@ -426,6 +426,22 @@ class PoseEstimation:
 
                 frame_height, frame_width = frame_output.shape[:2]
 
+                # update fall label sequence
+                self.fall_label_sequence.append(label_fall)
+                if len(self.fall_label_sequence) >= self.fall_label_window:
+                    self.fall_label_sequence.pop(0)
+
+                fall_non_fall = '-'
+                fall_font_color = (255, 0, 0)
+
+                arr = np.array(self.fall_label_sequence)
+                if arr[arr == True].size > 0:
+                    # watch fall window
+                    self.fall_watch = True
+
+                if self.fall_watch:
+                    fall_non_fall = 'Fall'
+
                 if self.is_predict_pose:
                     landmarks_data = []
                     for i, landmark in enumerate(results.pose_landmarks.landmark):
@@ -513,22 +529,8 @@ class PoseEstimation:
                     self.update_tranistion_sequence(state=state_transition_prediction)
                     #print('sequence', self.state_transition_sequence)
 
-                    self.fall_label_sequence.append(label_fall)
-                    if len(self.fall_label_sequence) >= self.fall_label_window:
-                        self.fall_label_sequence.pop(0)
-
-                    fall_non_fall = '-'
-                    fall_font_color = (255,0,0)
                     fall_prediction = self.get_fall_prediction(np.array(self.state_transition_sequence))
                     state_sequence = fall_prediction['seq']
-
-                    arr = np.array(self.fall_label_sequence)
-                    if arr[arr == True].size > 0:
-                        # watch fall window
-                        self.fall_watch = True
-
-                    if self.fall_watch:
-                        fall_non_fall = 'Fall'
 
                     if 'fall' in fall_prediction and fall_prediction['fall'] > 0:
                         fall_non_fall = f'{fall_non_fall}+Fall'
