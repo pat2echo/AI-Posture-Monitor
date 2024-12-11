@@ -183,7 +183,7 @@ This dataset, consisting of 113 static images and 9 video recordings, will be us
 * **Static Images:** 113 self-portraits capturing various static poses.
 * **Videos:** 9 recordings of myself performing daily activities relevant to the research.
 * **Storage Location:** University of Essex OneDrive
-* **Access Link:** (Replace with appropriate access control measures. Consider removing if not publicly accessible)
+* **Access Link:** https://essexuniversity-my.sharepoint.com/:f:/g/personal/po23102_essex_ac_uk/End63nA718NNjDdOPOjRaMABtli7MI-JnkAZwXesGFe2KA?e=Bmxtjf
 
 **Consent:**
 
@@ -198,6 +198,4 @@ By signing below, I acknowledge the following:
 **Signature:** Patrick O. Ogbuitepu
 
 **Date:** 11-Dec-2024
-
-**Note:** This is a modified version of the consent form. Sensitive information like the access link has been replaced with a placeholder. Consider consulting with the University of Essex regarding appropriate data storage and access control procedures.
 
