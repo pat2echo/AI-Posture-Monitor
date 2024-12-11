@@ -1,5 +1,3 @@
-from curses.textpad import rectangle
-
 import cv2
 import numpy as np
 import os
@@ -12,6 +10,7 @@ class FrameDiff:
         self.output_folder_aoi = None
         self.output_folder_aoi_pose = None
         self.previous_frame_diff = None
+        self.save_data = False
 
         self.quads = {}
         self.processed_frames = 0
@@ -515,7 +514,8 @@ class FrameDiff:
                 break
 
         # Save the NumPy array to CSV
-        np.savetxt(os.path.join(self.output_folder, 'frame_max_values.csv'), np.array(output_data), fmt='%s', delimiter=',',
+        if self.save_data:
+            np.savetxt(os.path.join(self.output_folder, 'frame_max_values.csv'), np.array(output_data), fmt='%s', delimiter=',',
                    header='file_name,max_value,sum_of_squares,process_image', comments='')
 
         # Save Quadrants to CSV

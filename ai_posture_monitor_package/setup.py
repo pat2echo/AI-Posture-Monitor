@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ai_posture_monitor',
-    version='0.0.6',
+    version='0.0.7',
     packages=find_packages(),
     description='A package designed to predict static pose and detect falls with 2D RGB Camera in well lit indoor environments.',
     long_description="""# AI Posture Monitor

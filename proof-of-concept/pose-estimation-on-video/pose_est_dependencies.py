@@ -10,8 +10,8 @@ from predict_dependencies import  predict_pose, get_attr_of_features
 from plot_dependencies import plot_fall_data, plot_label_vs_prediction_data
 
 class PoseEstimation:
-    def process_video(self, video_file=None, label_file=None, scaling_factor=0.5, use_bounding_box=True,
-                      model_number=1, is_predict_pose=False, use_frame_diff=True, BASE_OUTPUT_DIR=None, plot_results=False, predict_fall=True):
+    def process_video(self, video_file=None, label_file=None, scaling_factor=0.8, use_bounding_box=True,
+                      model_number=2, is_predict_pose=True, use_frame_diff=True, BASE_OUTPUT_DIR=None, plot_results=False, predict_fall=True):
         self.is_predict_pose = is_predict_pose
 
         self.model_number = model_number
@@ -81,21 +81,28 @@ class PoseEstimation:
         self.my_frame_diff = FrameDiff()
 
         # results folder
-        output_results = os.path.join(BASE_OUTPUT_DIR, "output_results")
-        os.makedirs(output_results, exist_ok=True)
+        if BASE_OUTPUT_DIR is not None:
+            output_results = os.path.join(BASE_OUTPUT_DIR, "output_results")
+            os.makedirs(output_results, exist_ok=True)
 
-        # Create a folder to save images
-        self.my_frame_diff.output_folder = os.path.join(BASE_OUTPUT_DIR, "output_pose")
-        self.my_frame_diff.empty_folder(self.my_frame_diff.output_folder)
+            # Create a folder to save images
+            self.my_frame_diff.output_folder = os.path.join(BASE_OUTPUT_DIR, "output_pose")
+            self.my_frame_diff.empty_folder(self.my_frame_diff.output_folder)
 
-        self.my_frame_diff.output_folder2 = os.path.join(BASE_OUTPUT_DIR, "output_pose_o")
-        self.my_frame_diff.empty_folder(self.my_frame_diff.output_folder2)
+            self.my_frame_diff.output_folder2 = os.path.join(BASE_OUTPUT_DIR, "output_pose_o")
+            self.my_frame_diff.empty_folder(self.my_frame_diff.output_folder2)
 
-        self.my_frame_diff.output_folder_aoi = os.path.join(BASE_OUTPUT_DIR, "output_aoi")
-        self.my_frame_diff.empty_folder(self.my_frame_diff.output_folder_aoi)
+            self.my_frame_diff.output_folder_aoi = os.path.join(BASE_OUTPUT_DIR, "output_aoi")
+            self.my_frame_diff.empty_folder(self.my_frame_diff.output_folder_aoi)
 
-        self.my_frame_diff.output_folder_aoi_pose = os.path.join(BASE_OUTPUT_DIR, "output_aoi_pose")
-        self.my_frame_diff.empty_folder(self.my_frame_diff.output_folder_aoi_pose)
+            self.my_frame_diff.output_folder_aoi_pose = os.path.join(BASE_OUTPUT_DIR, "output_aoi_pose")
+            self.my_frame_diff.empty_folder(self.my_frame_diff.output_folder_aoi_pose)
+
+            self.save_data = True
+            self.my_frame_diff.save_data = True
+        else:
+            self.my_frame_diff.save_data = False
+            self.save_data = False
 
         # Get font Attributes
         self.get_font_attributes()
@@ -247,14 +254,14 @@ class PoseEstimation:
 
             # Save frame at regular intervals
             if process_image and self.frame_count % self.save_interval == 0:
-                frame_title = f"frame_{self.frame_count:04d}.jpg"
-                output_path = os.path.join(self.my_frame_diff.output_folder, frame_title)
-                #cv2.imwrite(output_path, frame)
-                cv2.imwrite(output_path, frame_output)
+                if self.save_data:
+                    frame_title = f"frame_{self.frame_count:04d}.jpg"
+                    output_path = os.path.join(self.my_frame_diff.output_folder, frame_title)
+                    #cv2.imwrite(output_path, frame)
+                    cv2.imwrite(output_path, frame_output)
 
-
-                output_path2 = os.path.join(self.my_frame_diff.output_folder2, frame_title)
-                cv2.imwrite(output_path2, frame_color)
+                    output_path2 = os.path.join(self.my_frame_diff.output_folder2, frame_title)
+                    cv2.imwrite(output_path2, frame_color)
 
                 # Save max value of absolute difference to csv
                 #print(frame_title, max_value, process_image)
@@ -290,7 +297,8 @@ class PoseEstimation:
             else:
                 plot_label_vs_prediction_data(df=df_for_plot, plot_title=f'static_pose_{os.path.basename(video_file)}')
 
-        np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
+        if self.save_data:
+            np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
                    header='file_name,label,prediction,smooth_prediction,state_transition_prediction,state_sequence,fall_watch,fall_watch_prediction,aspect_ratio_prediction,is_transition,aoi_from_memory,bbox_aspect_ratio_of_pose,aspect_ratio_movement,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) +','+ ','.join(features_attr), comments='')
 
 
@@ -619,8 +627,8 @@ class PoseEstimation:
 
             # Save aoi for pose
             if self.frame_count % self.save_interval == 0:
-                self.my_frame_diff.save_image(aoi_for_pose, os.path.join(self.my_frame_diff.output_folder_aoi_pose, f"pose_{self.frame_count:04d}"))
-                pass
+                if self.save_data:
+                    self.my_frame_diff.save_image(aoi_for_pose, os.path.join(self.my_frame_diff.output_folder_aoi_pose, f"pose_{self.frame_count:04d}"))
 
         return is_transition, initial_prediction, prediction, state_transition_prediction, state_sequence, aspect_ratio_prediction, bbox_aspect_ratio_of_pose, aspect_ratio_movement, features, label, timestamp_secs, velocity
 

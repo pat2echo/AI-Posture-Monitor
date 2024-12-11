@@ -52,7 +52,7 @@ Plot Activity Recognition
 python code/proof-of-concept/pose-estimation-on-video/transition_plot.py ./output/output_results/hr_fall_detection_3_results.csv
 ```
 
-## Define Fall
+## Definition of Fall
 When the subject remains in the fallen state for at least 1 second excluding transition to the fallen state
 
 ## How to Prepare New Dataset

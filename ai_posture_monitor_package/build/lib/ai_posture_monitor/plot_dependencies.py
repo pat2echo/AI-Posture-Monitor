@@ -188,6 +188,10 @@ def basic_line(csv_file=None):
 def plot_label_vs_prediction(csv_file=None, class_label='label', prediction_label='prediction', smooth_prediction_label='smooth_prediction', plot_title=None, show_all_classes=False):
     # Load data
     df = pd.read_csv(csv_file)
+    return plot_label_vs_prediction_data(df=df, class_label=class_label, prediction_label=prediction_label, smooth_prediction_label=smooth_prediction_label,plot_title=plot_title, show_all_classes=show_all_classes)
+
+def plot_label_vs_prediction_data(df=None, class_label='label', prediction_label='prediction', smooth_prediction_label='smooth_prediction', plot_title=None, show_all_classes=False):
+    # Load data
     # Replace NaN or None with "Inactivity"
     df['action'] = df[ class_label ].fillna("Inactivity")
     df['pred'] = df[ prediction_label ].fillna("Inactivity")
@@ -280,10 +284,10 @@ def plot_label_vs_prediction(csv_file=None, class_label='label', prediction_labe
     activity_ax = ax
 
     # Step plot for actions
-    activity_ax.step(times, values_zb, where='post', label='Prediction Before Smoothing', color='red', linewidth=1, linestyle='--')
+    #activity_ax.step(times, values_zb, where='post', label='Prediction Before Smoothing', color='red', linewidth=1, linestyle='--')
     activity_ax.step(times, values, where='post', label='Label', color='blue', linewidth=2)
     activity_ax.step(times, values_z, where='post', label='Prediction', color='green', linewidth=2)
-    activity_ax.scatter(marker_times, marker_values, color='red', label='False Eliminated By Smoothing', zorder=5)
+    activity_ax.scatter(marker_times, marker_values, color='red', label='False Prediction Eliminated By Smoothing', zorder=5)
     #activity_ax.scatter(marker_times_s, marker_values_s, color='yellow', label='False S.Prediction', zorder=5)
 
     # Customize the activity plot
@@ -489,6 +493,9 @@ def get_transition(prev_state, current_state, previous_activity):
 def plot_fall(csv_file=None, class_label='fall_watch', prediction_label='fall_watch_prediction', plot_title=None):
     # Load data
     df = pd.read_csv(csv_file)
+    return plot_fall_data(df, class_label=class_label, prediction_label=prediction_label, plot_title=plot_title)
+
+def plot_fall_data(df=None, class_label='fall_watch', prediction_label='fall_watch_prediction', plot_title=None):
     # Replace NaN or None with "Inactivity"
     df['action'] = df[ class_label ].fillna("Inactivity")
     df['pred'] = df[ prediction_label ].fillna("Inactivity")
