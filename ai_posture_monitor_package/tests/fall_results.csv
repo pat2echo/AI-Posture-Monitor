@@ -1,0 +1,808 @@
+file_name,label,prediction,smooth_prediction,state_transition_prediction,state_sequence,fall_watch,fall_watch_prediction,aspect_ratio_prediction,is_transition,aoi_from_memory,bbox_aspect_ratio_of_pose,aspect_ratio_movement,bbox_aspect_ratio,max_value,is_motion,v_lshoulder,v_rshoulder,v_lhip,v_rhip,image_name,is_upright,percent_upright,stand_left,stand_right,percent_stand_left,percent_stand_right,sit_left,sit_right,percent_sit_left,percent_sit_right,lie_left,lie_right
+28,None,None,None,None,None,False,False,None,False,False,0,0,0,30,True,0, 0, 0, 0,
+54,None,None,None,None,None,False,False,None,False,False,0,0,0,31,True,0, 0, 0, 0,
+55,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,32,True,0, 0, 0, 0,
+110,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,26,True,0, 0, 0, 0,
+111,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,29,True,0, 0, 0, 0,
+129,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,80,True,0, 0, 0, 0,
+130,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,105,True,0, 0, 0, 0,
+131,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,116,True,0, 0, 0, 0,
+132,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,120,True,0, 0, 0, 0,
+133,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,116,True,0, 0, 0, 0,
+134,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,149,True,0, 0, 0, 0,
+135,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,148,True,0, 0, 0, 0,
+136,nan,stand,stand,stand,None,False,False,uncertain_stand,False,False,0.23139037825559333,1.2,0.562406015037594,154,True,0, 0, 0, 0,None, True, 61, standing, standing, 75, 70, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+137,nan,stand,stand,stand,stand-stand,False,False,sit,False,False,0.30984805292154033,1.2,0.562406015037594,152,True,0, 0, 0, 0,None, True, 73, standing, standing, 78, 80, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+138,nan,stand,stand,stand,stand-stand,False,False,sit,False,False,0.4189498315248289,1.2,0.562406015037594,162,True,0, 0, 0, 0,None, True, 74, standing, standing, 78, 81, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+139,nan,stand,stand,stand,stand-stand,False,False,sit,False,False,0.4160670124049654,1.2,0.562406015037594,174,True,0, 0, 0, 0,None, True, 75, standing, standing, 83, 79, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+140,nan,stand,stand,stand,stand-stand,False,False,sit,False,False,0.4943132683009321,1.2,0.562406015037594,176,True,0, 0, 0, 0,None, True, 73, standing, standing, 84, 71, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+141,nan,stand,stand,stand,stand-stand,False,False,stand,False,False,0.17066179133771786,1.5,0.562406015037594,178,True,0, 0, 0, 0,None, True, 74, standing, standing, 90, 75, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+142,nan,stand,stand,stand,stand-stand,False,False,stand,False,False,0.1419189588146207,1.5,0.562406015037594,178,True,0, 0, 0, 0,None, True, 68, standing, standing, 87, 76, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+143,nan,stand,stand,stand,stand-stand,False,False,stand,False,False,0.11247544970357881,1.5,0.6212624584717608,176,True,0, 0, 0, 0,None, True, 64, standing, standing, 85, 76, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+144,nan,stand,stand,stand,stand-stand,False,False,stand,False,False,0.08569008299569757,1.5,0.6453839516824849,180,True,0, 0, 0, 0,None, True, 67, standing, standing, 84, 79, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+145,nan,stand,stand,stand,stand-stand,False,False,stand,False,True,0.08322227827906102,1.5,0,178,True,0, 0, 0, 0,None, True, 69, standing, standing, 81, 73, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+146,nan,stand,stand,stand,stand-stand,False,False,stand,False,True,0.09194554275646669,1.5,0,172,True,0, 0, 0, 0,None, True, 69, standing, standing, 80, 74, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+147,nan,stand,stand,stand,stand-stand,False,False,stand,False,True,0.10663306511830133,1.5,0,168,True,0, 0, 0, 0,None, True, 72, standing, standing, 82, 76, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+148,nan,stand,stand,stand,stand-stand,False,False,stand,False,True,0.14187261191152242,1.5,0,166,True,0, 0, 0, 0,None, True, 73, standing, standing, 82, 75, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+149,nan,stand,stand,stand,stand-stand,False,False,stand,False,False,0.17794868597923283,0,0.6409597257926307,164,True,0, 0, 0, 0,None, True, 79, standing, standing, 84, 77, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+150,nan,stand,stand,stand,stand-stand,False,False,stand,False,False,0.13831666601573497,0,0.562406015037594,152,True,0, 0, 0, 0,None, True, 76, standing, standing, 80, 76, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+151,nan,stand,stand,stand,stand-stand,False,False,uncertain_stand,False,False,0.21303272755444527,0,0.562406015037594,156,True,0, 0, 0, 0,None, True, 77, standing, standing, 81, 75, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+152,nan,stand,stand,stand,stand-stand,False,False,sit,False,False,0.36880636861166904,0,0.562406015037594,154,True,0, 0, 0, 0,None, True, 76, standing, standing, 79, 76, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+153,nan,stand,stand,stand,stand-stand,False,False,sit,False,False,0.4323895630386673,0,0.562406015037594,160,True,0, 0, 0, 0,None, True, 76, standing, standing, 77, 76, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+154,nan,stand,stand,stand,stand-stand,False,False,sit,False,False,0.4536974405297939,0,0.5894405043341213,164,True,0, 0, 0, 0,None, True, 76, standing, standing, 77, 76, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+155,nan,stand,stand,stand,stand-stand,False,False,sit,False,False,0.5178486867088368,0,0.6470588235294118,160,True,0, 0, 0, 0,None, True, 74, standing, standing, 76, 75, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+156,nan,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.562148626324652,0,0.6532751091703056,167,True,0, 0, 0, 0,None, True, 77, standing, standing, 74, 73, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+157,nan,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.6341904178067317,1.5,0.6420600858369099,172,True,0, 0, 0, 0,None, True, 82, standing, standing, 71, 70, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+158,nan,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.5740531849233067,0,0.6567164179104478,176,True,0, 0, 0, 0,None, True, 80, standing, standing, 71, 71, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+159,nan,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.6401306807681891,0,0,176,True,0.0, 0.0, 0.0, 0.0,None, True, 75, standing, standing, 65, 72, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+160,nan,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.6192455145577751,0,0,172,True,0, 0, 0, 0,None, True, 75, standing, standing, 70, 74, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+161,nan,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.6060612047883086,0,0,171,True,0, 0, 0, 0,None, True, 76, standing, standing, 69, 74, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+162,nan,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.6486793984631574,0,0,169,True,0, 0, 0, 0,None, True, 77, uncertain_squat, uncertain_standing, 68, 72, uncertain_sitting, non_sitting, 15, 0, non_lying, non_lying
+163,nan,stand,stand,stand,stand-stand,False,False,sit,False,True,0.37936774785982436,0,0,146,True,0, 0, 0, 0,None, True, 80, standing, standing, 78, 75, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+164,nan,stand,stand,stand,stand-stand,False,False,sit,False,True,0.3852000942832339,0,0,134,True,0, 0, 0, 0,None, True, 85, squat, squat, 77, 70, sitting, uncertain_sitting, 23, 10, non_lying, non_lying
+165,nan,stand,stand,stand,stand-stand,False,False,sit,False,True,0.38485166635866075,0,0,135,True,0, 0, 0, 0,None, True, 81, squat, squat, 66, 59, uncertain_sitting, uncertain_sitting, 16, 16, non_lying, non_lying
+166,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,128,True,0, 0, 0, 0,
+167,None,None,None,None,None,False,False,None,False,False,0,0,0.582018927444795,96,True,0, 0, 0, 0,
+168,None,None,None,None,None,False,False,None,False,True,0,0,0,96,True,0, 0, 0, 0,
+169,None,None,None,None,None,False,False,None,False,True,0,0,0,96,True,0, 0, 0, 0,
+170,None,None,None,None,None,False,False,None,False,True,0,0,0,96,True,0, 0, 0, 0,
+171,None,None,None,None,None,False,False,None,False,True,0,0,0,96,True,0, 0, 0, 0,
+172,None,None,None,None,None,False,False,None,False,True,0,0,0,92,True,0, 0, 0, 0,
+173,None,None,None,None,None,False,False,None,False,True,0,0,0,92,True,0, 0, 0, 0,
+174,None,None,None,None,None,False,False,None,False,True,0,0,0,92,True,0, 0, 0, 0,
+175,None,None,None,None,None,False,False,None,False,True,0,0,0,89,True,0, 0, 0, 0,
+176,None,None,None,None,None,False,False,None,False,True,0,0,0,90,True,0, 0, 0, 0,
+192,None,None,None,None,None,False,False,None,False,True,0,0,0,29,True,0, 0, 0, 0,
+193,None,None,None,None,None,False,False,None,False,True,0,0,0,32,True,0, 0, 0, 0,
+228,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,28,True,0, 0, 0, 0,
+278,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,26,True,0, 0, 0, 0,
+293,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,88,True,0, 0, 0, 0,
+294,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,94,True,0, 0, 0, 0,
+295,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,114,True,0, 0, 0, 0,
+296,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,114,True,0, 0, 0, 0,
+297,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,124,True,0, 0, 0, 0,
+298,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,124,True,0, 0, 0, 0,
+299,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,144,True,0, 0, 0, 0,
+300,nan,sit,stand,stand,None,False,False,uncertain_sit,False,False,0.6186942887691386,0,0.562406015037594,134,True,0, 0, 0, 0,None, True, 79, non_standing, non_standing, 40, 36, sitting, sitting, 60, 60, non_lying, non_lying
+301,stand,sit,stand,stand,stand-stand,False,False,sit,False,False,0.42504479348546303,0,0.562406015037594,145,True,0.0, 0.0, 0.0, 0.0,None, True, 79, non_standing, non_standing, 49, 40, uncertain_sitting, uncertain_sitting, 15, 7, non_lying, non_lying
+302,stand,stand,stand,stand,stand-stand,False,False,stand,False,False,0.10495942401245671,0,0.5622154779969651,139,True,0, 0, 0, 0,None, True, 81, standing, standing, 82, 77, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+303,stand,stand,stand,stand,stand-stand,False,False,stand,False,False,0.17284124091234948,0,0.562406015037594,161,True,0, 0, 0, 0,None, True, 80, standing, standing, 93, 85, uncertain_sitting, uncertain_sitting, 2, 4, non_lying, non_lying
+304,stand,stand,stand,stand,stand-stand,False,False,stand,False,True,0.1818968713193472,0,0,161,True,0, 0, 0, 0,None, True, 79, standing, standing, 90, 84, uncertain_sitting, uncertain_sitting, 1, 3, non_lying, non_lying
+305,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.2649343733868927,0,0.5964912280701754,160,True,0, 0, 0, 0,None, True, 84, standing, standing, 88, 79, uncertain_sitting, uncertain_sitting, 2, 2, non_lying, non_lying
+306,stand,stand,stand,stand,stand-stand,False,False,stand,False,False,0.1989306988562659,0,0.562406015037594,160,True,0, 0, 0, 0,None, True, 85, standing, standing, 90, 85, uncertain_sitting, uncertain_sitting, 3, 0, non_lying, non_lying
+307,stand,stand,stand,stand,stand-stand,False,False,stand,False,False,0.19012525331299043,0,0.5556390977443609,151,True,0, 0, 0, 0,None, True, 86, standing, standing, 88, 83, uncertain_sitting, non_sitting, 3, 0, non_lying, non_lying
+308,stand,stand,stand,stand,stand-stand,False,False,stand,False,False,0.19405719616711645,0,0.5813040062843676,152,True,0, 0, 0, 0,None, True, 85, standing, standing, 96, 82, uncertain_sitting, non_sitting, 3, 0, non_lying, non_lying
+309,stand,stand,stand,stand,stand-stand,False,False,stand,False,True,0.18429006297796874,0,0,152,True,0.0, 0.0, 0.0, 0.0,None, True, 84, standing, standing, 99, 93, uncertain_sitting, uncertain_sitting, 3, 1, non_lying, non_lying
+310,stand,stand,stand,stand,stand-stand,False,False,stand,False,True,0.19209337080797956,0,0,144,True,0, 0, 0, 0,None, True, 85, standing, standing, 100, 95, uncertain_sitting, non_sitting, 1, 0, non_lying, non_lying
+311,stand,stand,stand,stand,stand-stand,False,False,stand,False,True,0.1949715041475931,0,0,135,True,0, 0, 0, 0,None, True, 87, standing, standing, 99, 91, uncertain_sitting, non_sitting, 0, 0, non_lying, non_lying
+312,stand,stand,stand,stand,stand-stand,False,False,stand,False,True,0.19180047466372274,0,0,144,True,0, 0, 0, 0,None, True, 86, standing, standing, 90, 88, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+313,stand,stand,stand,stand,stand-stand,False,False,stand,False,False,0.17209670445860134,0,0.562406015037594,144,True,0, 0, 0, 0,None, True, 87, standing, standing, 86, 92, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+314,stand,stand,stand,stand,stand-stand,False,False,stand,False,False,0.191482441542982,0,0.562406015037594,145,True,0, 0, 0, 0,None, True, 81, standing, standing, 87, 92, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+315,stand,stand,stand,stand,stand-stand,False,False,uncertain_stand,False,False,0.20866439622484967,0,0.562406015037594,160,True,0, 0, 0, 0,None, True, 76, standing, standing, 81, 88, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+316,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.2663087576669772,0,0.562406015037594,164,True,0, 0, 0, 0,None, True, 75, standing, standing, 83, 85, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+317,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.329369585679956,0,0.562406015037594,176,True,0.0, 0.0, 0.0, 0.0,None, True, 76, standing, standing, 82, 83, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+318,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.3989167846830913,0,0.562406015037594,182,True,0, 0, 0, 0,None, True, 75, standing, standing, 83, 76, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+319,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.4137325607001149,0,0.562406015037594,184,True,0, 0, 0, 0,None, True, 76, standing, standing, 80, 76, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+320,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.4259359470188189,0,0.562406015037594,192,True,0, 0, 0, 0,None, True, 79, standing, standing, 81, 77, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+321,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.419992737062995,0,0.5821011673151751,192,True,0, 0, 0, 0,None, True, 78, standing, standing, 69, 64, uncertain_sitting, uncertain_sitting, 10, 5, non_lying, non_lying
+322,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.48899522787266897,1.5,0.5692541856925418,196,True,0, 0, 0, 0,None, True, 79, standing, standing, 76, 66, uncertain_sitting, non_sitting, 7, 0, non_lying, non_lying
+323,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.510151434693884,0,0.562406015037594,197,True,0, 0, 0, 0,None, True, 79, standing, standing, 77, 67, uncertain_sitting, non_sitting, 7, 0, non_lying, non_lying
+324,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.5291378081337541,1.5,0.562406015037594,197,True,0, 0, 0, 0,None, True, 79, standing, standing, 82, 69, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+325,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.5083816697617701,0,0.562406015037594,158,True,0.0, 0.0, 0.0, 0.0,None, True, 83, standing, standing, 82, 71, uncertain_sitting, non_sitting, 3, 0, non_lying, non_lying
+326,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.4527780688129669,1.5,0.562406015037594,146,True,0, 0, 0, 0,None, True, 83, uncertain_squat, uncertain_standing, 52, 62, uncertain_sitting, uncertain_sitting, 16, 4, non_lying, non_lying
+327,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.4246566118979358,0,0,148,True,0, 0, 0, 0,None, True, 85, uncertain_squat, uncertain_standing, 54, 73, sitting, uncertain_sitting, 30, 2, non_lying, non_lying
+328,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.28251653825515566,0,0,148,True,0, 0, 0, 0,None, True, 90, standing, standing, 71, 90, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+329,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.36433970958357176,0,0,128,True,0, 0, 0, 0,None, True, 83, uncertain_squat, uncertain_standing, -207, 71, sitting, uncertain_sitting, 0, 10, non_lying, non_lying
+330,None,None,None,None,None,False,False,None,False,True,0,0,0,109,True,0, 0, 0, 0,
+331,None,None,None,None,None,False,False,None,False,True,0,0,0,110,True,0, 0, 0, 0,
+332,None,None,None,None,None,False,False,None,False,True,0,0,0,108,True,0, 0, 0, 0,
+333,None,None,None,None,None,False,False,None,False,True,0,0,0,110,True,0, 0, 0, 0,
+334,None,None,None,None,None,False,False,None,False,True,0,0,0,110,True,0, 0, 0, 0,
+335,None,None,None,None,None,False,False,None,False,True,0,0,0,106,True,0, 0, 0, 0,
+378,None,None,None,None,None,False,False,None,False,True,0,0,0,32,True,0, 0, 0, 0,
+379,None,None,None,None,None,False,False,None,False,True,0,0,0,31,True,0, 0, 0, 0,
+484,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,33,True,0, 0, 0, 0,
+485,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,38,True,0, 0, 0, 0,
+486,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,48,True,0, 0, 0, 0,
+487,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,53,True,0, 0, 0, 0,
+488,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,60,True,0, 0, 0, 0,
+489,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,64,True,0, 0, 0, 0,
+490,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,68,True,0, 0, 0, 0,
+491,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,76,True,0, 0, 0, 0,
+492,None,None,None,None,None,False,False,None,False,False,0,0,0.5541353383458647,80,True,0, 0, 0, 0,
+493,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,88,True,0, 0, 0, 0,
+494,None,None,None,None,None,False,False,None,False,True,0,0,0,89,True,0, 0, 0, 0,
+495,nan,stand,stand,stand,None,False,False,sit,False,False,0.4349963832262177,0,0.562406015037594,240,True,0, 0, 0, 0,None, True, 78, standing, standing, 83, 74, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+496,nan,stand,stand,stand,stand-stand,False,False,sit,False,False,0.3501692326242193,0,0.5571428571428572,243,True,0, 0, 0, 0,None, True, 86, standing, standing, 88, 93, uncertain_sitting, uncertain_sitting, 7, 2, non_lying, non_lying
+497,nan,stand,stand,stand,stand-stand,False,False,sit,False,False,0.3595570644372722,0,0.5571428571428572,243,True,0, 0, 0, 0,None, True, 86, standing, standing, 85, 84, uncertain_sitting, uncertain_sitting, 7, 3, non_lying, non_lying
+498,nan,stand,stand,stand,stand-stand,False,False,sit,False,False,0.38392763756873227,0,0.562406015037594,242,True,0.0, 0.0, 0.0, 0.0,None, True, 88, standing, standing, 82, 80, uncertain_sitting, uncertain_sitting, 6, 4, non_lying, non_lying
+499,nan,stand,stand,stand,stand-stand,False,False,sit,False,True,0.38773233832502946,0,0,194,True,0, 0, 0, 0,None, True, 91, standing, standing, 85, 83, uncertain_sitting, uncertain_sitting, 7, 6, non_lying, non_lying
+500,nan,stand,stand,stand,stand-stand,False,False,sit,False,True,0.3705306926868604,0,0,176,True,0, 0, 0, 0,None, True, 95, standing, standing, 87, 84, uncertain_sitting, uncertain_sitting, 7, 4, non_lying, non_lying
+501,nan,stand,stand,stand,stand-stand,False,False,sit,False,True,0.4111832026193262,0,0,171,True,0, 0, 0, 0,None, True, 97, standing, standing, 84, 81, uncertain_sitting, uncertain_sitting, 6, 1, non_lying, non_lying
+502,nan,stand,stand,stand,stand-stand,False,False,sit,False,True,0.36848801470677955,0,0,176,True,0, 0, 0, 0,None, True, 89, standing, standing, 84, 79, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+503,nan,stand,stand,stand,stand-stand,False,False,sit,False,True,0.4048847834671289,0,0,181,True,0, 0, 0, 0,None, True, 88, standing, standing, 82, 80, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+504,nan,stand,stand,stand,stand-stand,False,False,sit,False,True,0.44607628745716316,1.5,0,176,True,0, 0, 0, 0,None, True, 87, standing, standing, 81, 80, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+505,nan,stand,stand,stand,stand-stand,False,False,sit,False,True,0.4741265304503496,0,0,176,True,0, 0, 0, 0,None, True, 89, standing, standing, 77, 79, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+506,nan,stand,stand,stand,stand-stand,False,False,sit,False,False,0.4985828205763526,1.5,0.2671936758893281,177,True,0.0, 0.0, 0.0, 0.0,None, True, 85, standing, standing, 68, 73, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+507,nan,stand,stand,stand,stand-stand,False,False,sit,False,True,0.4969063179455041,0,0,179,True,0, 0, 0, 0,None, True, 74, standing, standing, 66, 74, uncertain_sitting, uncertain_sitting, 6, 1, non_lying, non_lying
+508,nan,stand,stand,stand,stand-stand,False,False,sit,False,True,0.47015204454480963,1.5,0,169,True,0, 0, 0, 0,None, True, 77, standing, standing, 65, 72, uncertain_sitting, uncertain_sitting, 7, 3, non_lying, non_lying
+509,nan,stand,stand,stand,stand-stand,False,False,sit,False,True,0.4404029632078243,0,0,176,True,0, 0, 0, 0,None, True, 76, standing, standing, 66, 71, uncertain_sitting, uncertain_sitting, 6, 1, non_lying, non_lying
+510,nan,stand,stand,stand,stand-stand,False,False,sit,False,False,0.4381649737472086,1.5,0.562406015037594,178,True,0, 0, 0, 0,None, True, 71, standing, standing, 69, 71, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+511,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.4724207157038796,0,0.562406015037594,192,True,0, 0, 0, 0,None, True, 63, standing, standing, 66, 67, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+512,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.4881584189656444,0,0,225,True,0, 0, 0, 0,None, True, 65, standing, standing, 63, 66, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+513,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.4703685134474777,0,0,224,True,0, 0, 0, 0,None, True, 68, standing, standing, 63, 66, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+514,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.46288972644759263,0,0,230,True,0.0, 0.0, 0.0, 0.0,None, True, 71, standing, standing, 58, 67, uncertain_sitting, non_sitting, 10, 0, non_lying, non_lying
+515,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.44765478515904,0,0,232,True,0, 0, 0, 0,None, True, 75, standing, standing, 63, 68, uncertain_sitting, uncertain_sitting, 7, 1, non_lying, non_lying
+516,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.4430339392608866,0,0,232,True,0, 0, 0, 0,None, True, 78, standing, standing, 66, 68, uncertain_sitting, uncertain_sitting, 10, 2, non_lying, non_lying
+517,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.44923782917769683,0,0,232,True,0, 0, 0, 0,None, True, 72, standing, standing, 67, 65, uncertain_sitting, non_sitting, 3, 0, non_lying, non_lying
+518,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.4373552354418799,0,0,218,True,0, 0, 0, 0,None, True, 72, standing, standing, 66, 66, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+519,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.4315825163566047,0,0,208,True,0, 0, 0, 0,None, True, 74, standing, standing, 66, 67, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+520,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.43679062163533866,0,0,216,True,0, 0, 0, 0,None, True, 77, standing, standing, 65, 66, uncertain_sitting, uncertain_sitting, 10, 4, non_lying, non_lying
+521,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.45314260378288546,0,0,216,True,0, 0, 0, 0,None, True, 89, standing, standing, 62, 62, uncertain_sitting, uncertain_sitting, 10, 7, non_lying, non_lying
+522,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.45144114472278896,0,0,227,True,0.0, 0.0, 0.0, 0.0,None, True, 86, standing, standing, 61, 61, uncertain_sitting, uncertain_sitting, 10, 7, non_lying, non_lying
+523,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.4863402307849261,0,0,226,True,0, 0, 0, 0,None, True, 86, standing, standing, 60, 62, uncertain_sitting, uncertain_sitting, 10, 10, non_lying, non_lying
+524,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.5376480972124846,1.5,0,208,True,0, 0, 0, 0,None, True, 84, standing, standing, 66, 66, uncertain_sitting, uncertain_sitting, 6, 5, non_lying, non_lying
+525,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.5645829633387245,0,0,208,True,0, 0, 0, 0,None, True, 86, standing, standing, 67, 66, uncertain_sitting, uncertain_sitting, 6, 4, non_lying, non_lying
+526,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.586635467811495,1.5,0,214,True,0, 0, 0, 0,None, True, 84, standing, standing, 69, 68, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+527,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.5097801053030374,0,0.43759398496240604,212,True,0, 0, 0, 0,None, True, 91, standing, standing, 70, 70, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+528,None,None,None,None,None,False,False,None,False,True,0,0,0,212,True,0, 0, 0, 0,
+529,None,None,None,None,None,False,False,None,False,True,0,0,0,216,True,0, 0, 0, 0,
+530,None,None,None,None,None,False,False,None,False,True,0,0,0,217,True,0, 0, 0, 0,
+531,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,218,True,0, 0, 0, 0,
+532,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,217,True,0, 0, 0, 0,
+533,None,None,None,None,None,False,False,None,False,True,0,0,0,216,True,0, 0, 0, 0,
+534,stand,stand,stand,stand,stand-stand,False,False,stand,False,True,0.1912454538811348,1.5,0,216,True,0, 0, 0, 0,None, True, 91, standing, standing, 79, 79, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+535,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.26989995460823935,0,0,212,True,0, 0, 0, 0,None, True, 83, standing, standing, 74, 72, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+536,stand,sit,stand,stand,stand-stand,False,False,sit,False,True,0.4025346410223526,1.5,0,212,True,0.0, 0.0, 0.0, 0.0,None, True, 78, uncertain_standing, non_standing, -256, -195, sitting, sitting, 0, 0, non_lying, non_lying
+537,stand,sit,stand,stand,stand-stand,False,False,sit,False,True,0.4378817540456603,0,0,209,True,0, 0, 0, 0,None, True, 76, uncertain_standing, non_standing, -292, -216, sitting, sitting, 0, 0, non_lying, non_lying
+538,stand,sit,stand,stand,stand-stand,False,False,sit,False,True,0.4902728344723429,1.5,0,212,True,0, 0, 0, 0,None, True, 76, uncertain_squat, non_standing, -150, -89, sitting, sitting, 0, 10, non_lying, non_lying
+539,stand,sit,stand,stand,stand-stand,False,False,sit,False,True,0.3643959355586734,0,0,220,True,0, 0, 0, 0,None, True, 65, non_standing, non_standing, -115, -125, sitting, sitting, 0, 0, non_lying, non_lying
+540,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,True,True,0.6209341713830693,0,0,224,True,0, 0, 0, 0,None, True, 69, non_standing, non_standing, -111, -104, sitting, sitting, 0, 0, non_lying, non_lying
+541,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.6888952463797934,0,0.562406015037594,225,True,0, 0, 0, 0,None, True, 65, non_standing, non_standing, -121, -97, sitting, sitting, 0, 10, non_lying, non_lying
+542,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.8366039455503552,0,0.562406015037594,225,True,0, 0, 0, 0,None, True, 39, non_standing, non_standing, -331, -73, sitting, sitting, 0, 50, non_lying, non_lying
+543,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.764862142319215,0,0.562406015037594,225,True,0, 0, 0, 0,None, True, 41, non_standing, non_standing, -365, -106, sitting, sitting, 10, 10, non_lying, non_lying
+544,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.7761327901473358,0,0.562406015037594,224,True,0.0, 0.0, 0.05190616846084595, 0.05058181285858154,None, True, 26, non_standing, non_standing, -79, -99, sitting, sitting, 0, 20, non_lying, non_lying
+545,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.869515892818299,0,0.562406015037594,228,True,0, 0, 0, 0,None, True, 34, uncertain_squat, non_standing, -80, -77, sitting, sitting, 0, 0, non_lying, non_lying
+546,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.8385493808792123,0,0.562406015037594,233,True,0, 0, 0, 0,None, True, 40, uncertain_standing, uncertain_standing, -26, -24, sitting, sitting, 0, 10, non_lying, non_lying
+547,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.6835853884347971,0,0.562406015037594,236,True,0, 0, 0, 0,None, True, 51, uncertain_squat, uncertain_standing, -47, -36, sitting, sitting, 0, 0, non_lying, non_lying
+548,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.6939117400815914,0,0.562406015037594,236,True,0, 0, 0, 0,None, True, 55, non_standing, uncertain_standing, -88, -49, sitting, sitting, 10, 0, non_lying, non_lying
+549,stand,sit,sit,sit,stand-sit,False,False,sit,False,False,0.5490561993244463,0,0.562406015037594,232,True,0, 0, 0, 0,None, True, 58, non_standing, uncertain_standing, -124, -90, sitting, sitting, 10, 0, non_lying, non_lying
+550,stand,sit,sit,sit,stand-sit,False,False,sit,False,False,0.5149464660187972,0,0.562406015037594,232,True,0, 0, 0, 0,None, True, 53, non_standing, uncertain_squat, -80, -85, sitting, sitting, 10, 0, non_lying, non_lying
+551,stand,sit,sit,sit,stand-sit,False,False,sit,False,False,0.5248836961110419,0,0.562406015037594,230,True,0, 0, 0, 0,None, True, 58, non_standing, uncertain_squat, -95, -243, sitting, sitting, 10, 0, non_lying, non_lying
+552,stand,sit,sit,sit,stand-sit,False,False,sit,False,False,0.5305197122389941,0,0.562406015037594,228,True,0.044151484966278076, 0.0, 0.0714673399925232, 0.06716108322143555,None, True, 52, non_standing, uncertain_standing, -81, -180, sitting, sitting, 20, 0, non_lying, non_lying
+553,stand,stand,sit,sit,stand-sit,False,False,sit,False,False,0.5195215668322883,0,0.562406015037594,228,True,0, 0, 0, 0,None, True, 59, non_standing, standing, -138, 66, sitting, non_sitting, 20, 0, non_lying, non_lying
+554,stand,sit,sit,sit,stand-sit,False,False,sit,False,False,0.5191115629567951,0,0.562406015037594,223,True,0, 0, 0, 0,None, True, 65, non_standing, uncertain_standing, -207, -120, sitting, sitting, 10, 0, non_lying, non_lying
+555,stand,sit,sit,sit,stand-sit,False,False,sit,False,False,0.5265403263118962,0,0.562406015037594,224,True,0, 0, 0, 0,None, True, 64, non_standing, uncertain_standing, -181, -58, sitting, sitting, 20, 0, non_lying, non_lying
+556,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.5635396529560577,0,0.562406015037594,223,True,0, 0, 0, 0,None, True, 51, non_standing, uncertain_standing, -88, -40, sitting, sitting, 10, 0, non_lying, non_lying
+557,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.5552823779088341,0,0.562406015037594,194,True,0, 0, 0, 0,None, True, 53, non_standing, uncertain_standing, -73, -47, sitting, sitting, 0, 0, non_lying, non_lying
+558,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.5876803148933291,0,0.562406015037594,186,True,0, 0, 0, 0,None, True, 53, uncertain_squat, uncertain_standing, -57, -53, sitting, sitting, 10, 0, non_lying, non_lying
+559,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.6780021217287907,0,0.562406015037594,161,True,0, 0, 0, 0,None, True, 48, uncertain_squat, uncertain_standing, -37, -31, sitting, sitting, 0, 0, non_lying, non_lying
+560,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.7905530060138938,0,0.562406015037594,169,True,0.0, 0.0, 0.006327033042907715, 0.007373213768005371,None, True, 49, non_standing, uncertain_squat, -48, -24, sitting, sitting, 10, 20, non_lying, non_lying
+561,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.6936065063755605,1.5,0.562406015037594,176,True,0, 0, 0, 0,None, True, 51, non_standing, uncertain_standing, -41, -17, sitting, sitting, 0, 10, non_lying, non_lying
+562,stand,sit,sit,sit,stand-sit,False,False,sit,False,False,0.5348030308089183,0,0.562406015037594,164,True,0, 0, 0, 0,None, True, 58, uncertain_squat, uncertain_standing, -49, -50, sitting, sitting, 0, 0, non_lying, non_lying
+563,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.674916882435036,1.5,0.562406015037594,163,True,0, 0, 0, 0,None, True, 62, uncertain_standing, uncertain_standing, -44, -41, sitting, sitting, 0, 0, non_lying, non_lying
+564,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.6451111057937337,0,0.562406015037594,169,True,0, 0, 0, 0,None, True, 48, uncertain_squat, uncertain_standing, -41, -36, sitting, sitting, 0, 0, non_lying, non_lying
+565,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.6200815888743785,1.5,0.562406015037594,190,True,0, 0, 0, 0,None, True, 48, uncertain_squat, uncertain_standing, -44, -50, sitting, sitting, 0, 0, non_lying, non_lying
+566,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.7030691483224368,0,0.562406015037594,196,True,0, 0, 0, 0,None, True, 43, uncertain_standing, uncertain_standing, -42, -54, sitting, sitting, 0, 0, non_lying, non_lying
+567,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.7220500666498778,0,0.562406015037594,196,True,0, 0, 0, 0,None, True, 38, uncertain_standing, uncertain_standing, -40, -45, sitting, sitting, 0, 0, non_lying, non_lying
+568,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.7172209205524632,0,0.562406015037594,202,True,0.0, 0.0, 0.0, 0.0,None, True, 65, uncertain_squat, uncertain_standing, -49, -62, sitting, sitting, 0, 0, non_lying, non_lying
+569,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.882485556444135,0,0.562406015037594,208,True,0, 0, 0, 0,None, True, 44, uncertain_squat, uncertain_standing, -37, -24, sitting, sitting, 0, 0, non_lying, non_lying
+570,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.8232401151662788,0,0.562406015037594,208,True,0, 0, 0, 0,None, True, 45, uncertain_standing, uncertain_squat, -19, -35, sitting, sitting, 10, 0, non_lying, non_lying
+571,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.8302666102100893,0,0.562406015037594,204,True,0, 0, 0, 0,None, True, 50, uncertain_standing, non_standing, -19, -43, sitting, sitting, 0, 20, non_lying, non_lying
+572,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.8692198971539616,0,0.562406015037594,203,True,0, 0, 0, 0,None, True, 57, uncertain_squat, non_standing, -27, -49, sitting, sitting, 20, 10, non_lying, non_lying
+573,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9820033941195792,0,0.562406015037594,218,True,0, 0, 0, 0,None, True, 73, non_standing, non_standing, -90, -112, sitting, sitting, 110, 110, non_lying, non_lying
+574,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9379957115388504,0,0.562406015037594,228,True,0, 0, 0, 0,None, True, 51, non_standing, non_standing, -63, -75, sitting, sitting, 110, 110, non_lying, non_lying
+575,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,228,True,0, 0, 0, 0,
+576,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,227,True,0, 0, 0, 0,
+577,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,227,True,0, 0, 0, 0,
+578,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,227,True,0, 0, 0, 0,
+579,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,225,True,0, 0, 0, 0,
+580,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,216,True,0, 0, 0, 0,
+581,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,147,True,0, 0, 0, 0,
+582,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,136,True,0, 0, 0, 0,
+583,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,133,True,0, 0, 0, 0,
+584,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,140,True,0, 0, 0, 0,
+585,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,132,True,0, 0, 0, 0,
+586,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,115,True,0, 0, 0, 0,
+587,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,117,True,0, 0, 0, 0,
+588,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,114,True,0, 0, 0, 0,
+589,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,113,True,0, 0, 0, 0,
+590,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,115,True,0, 0, 0, 0,
+591,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,112,True,0, 0, 0, 0,
+592,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,112,True,0, 0, 0, 0,
+593,None,None,None,None,None,False,False,None,False,True,0,0,0,112,True,0, 0, 0, 0,
+594,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,109,True,0, 0, 0, 0,
+595,None,None,None,None,None,False,False,None,False,True,0,0,0,108,True,0, 0, 0, 0,
+842,None,None,None,None,None,False,False,None,False,True,0,0,0,36,True,0, 0, 0, 0,
+843,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,36,True,0, 0, 0, 0,
+844,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,40,True,0, 0, 0, 0,
+845,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,41,True,0, 0, 0, 0,
+846,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,42,True,0, 0, 0, 0,
+847,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,49,True,0, 0, 0, 0,
+848,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,50,True,0, 0, 0, 0,
+849,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,49,True,0, 0, 0, 0,
+850,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,52,True,0, 0, 0, 0,
+851,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,57,True,0, 0, 0, 0,
+852,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,56,True,0, 0, 0, 0,
+853,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,50,True,0, 0, 0, 0,
+854,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,72,True,0, 0, 0, 0,
+855,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,104,True,0, 0, 0, 0,
+856,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,104,True,0, 0, 0, 0,
+857,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,94,True,0, 0, 0, 0,
+858,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,88,True,0, 0, 0, 0,
+859,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,90,True,0, 0, 0, 0,
+860,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,92,True,0, 0, 0, 0,
+861,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,92,True,0, 0, 0, 0,
+862,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,94,True,0, 0, 0, 0,
+863,None,None,None,None,None,False,False,None,False,False,0,0,0.7083333333333334,96,True,0, 0, 0, 0,
+864,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,97,True,0, 0, 0, 0,
+865,None,None,None,None,None,False,False,None,False,False,0,0,0.7389558232931727,97,True,0, 0, 0, 0,
+866,None,None,None,None,None,False,False,None,False,False,0,0,1.1873015873015873,96,True,0, 0, 0, 0,
+867,None,None,None,None,None,False,False,None,False,True,0,0,0,96,True,0, 0, 0, 0,
+868,None,None,None,None,None,False,False,None,False,True,0,0,0,100,True,0, 0, 0, 0,
+869,None,None,None,None,None,False,False,None,False,True,0,0,0,98,True,0, 0, 0, 0,
+870,None,None,None,None,None,False,False,None,False,True,0,0,0,96,True,0, 0, 0, 0,
+871,None,None,None,None,None,False,False,None,False,False,0,0,0.5677966101694916,98,True,0, 0, 0, 0,
+872,None,None,None,None,None,False,False,None,False,False,0,0,0.8004291845493562,98,True,0, 0, 0, 0,
+873,None,None,None,None,None,False,False,None,False,True,0,0,0,98,True,0, 0, 0, 0,
+874,None,None,None,None,None,False,False,None,False,True,0,0,0,111,True,0, 0, 0, 0,
+875,None,None,None,None,None,False,False,None,False,True,0,0,0,112,True,0, 0, 0, 0,
+876,None,None,None,None,None,False,False,None,False,True,0,0,0,102,True,0, 0, 0, 0,
+877,None,None,None,None,None,False,False,None,False,True,0,0,0,130,True,0, 0, 0, 0,
+878,None,None,None,None,None,False,False,None,False,True,0,0,0,130,True,0, 0, 0, 0,
+879,None,None,None,None,None,False,False,None,False,True,0,0,0,128,True,0, 0, 0, 0,
+880,None,None,None,None,None,False,False,None,False,True,0,0,0,129,True,0, 0, 0, 0,
+881,None,None,None,None,None,False,False,None,False,True,0,0,0,135,True,0, 0, 0, 0,
+882,None,None,None,None,None,False,False,None,False,True,0,0,0,136,True,0, 0, 0, 0,
+883,None,None,None,None,None,False,False,None,False,True,0,0,0,129,True,0, 0, 0, 0,
+884,None,None,None,None,None,False,False,None,False,True,0,0,0,128,True,0, 0, 0, 0,
+885,None,None,None,None,None,False,False,None,False,True,0,0,0,98,True,0, 0, 0, 0,
+886,None,None,None,None,None,False,False,None,False,True,0,0,0,120,True,0, 0, 0, 0,
+887,None,None,None,None,None,False,False,None,False,True,0,0,0,146,True,0, 0, 0, 0,
+888,None,None,None,None,None,False,False,None,False,True,0,0,0,154,True,0, 0, 0, 0,
+889,None,None,None,None,None,False,False,None,False,True,0,0,0,154,True,0, 0, 0, 0,
+890,None,None,None,None,None,False,False,None,False,True,0,0,0,164,True,0, 0, 0, 0,
+891,None,None,None,None,None,False,False,None,False,True,0,0,0,178,True,0, 0, 0, 0,
+892,None,None,None,None,None,False,False,None,False,True,0,0,0,177,True,0, 0, 0, 0,
+893,None,None,None,None,None,False,False,None,False,True,0,0,0,176,True,0, 0, 0, 0,
+894,None,None,None,None,None,False,False,None,False,True,0,0,0,170,True,0, 0, 0, 0,
+895,None,None,None,None,None,False,False,None,False,True,0,0,0,169,True,0, 0, 0, 0,
+896,None,None,None,None,None,False,False,None,False,True,0,0,0,162,True,0, 0, 0, 0,
+897,nan,stand,sit,sit,None,False,False,stand,False,True,0.12267061047483682,0,0,171,True,0, 0, 0, 0,None, True, 74, standing, standing, 72, 80, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+898,nan,stand,sit,sit,sit-sit,False,False,stand,False,False,0.09683170341576988,0,0.2883986928104575,170,True,0.0, 0.0, 0.0, 0.0,None, True, 78, standing, standing, 77, 81, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+899,nan,stand,sit,sit,sit-sit,False,False,stand,False,True,0.11529070058077309,0,0,166,True,0, 0, 0, 0,None, True, 79, standing, standing, 76, 78, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+900,nan,stand,sit,sit,sit-sit,False,False,stand,False,False,0.16082977960176503,0,0.27602523659305994,176,True,0, 0, 0, 0,None, True, 83, standing, standing, 79, 83, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+901,stand,stand,stand,stand,sit-stand,False,False,uncertain_stand,True,False,0.2057309382156628,0,0.2788844621513944,175,True,0, 0, 0, 0,None, True, 83, standing, standing, 77, 82, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+902,stand,stand,stand,stand,sit-stand,False,False,uncertain_stand,False,True,0.21559820344044478,0,0,178,True,0, 0, 0, 0,None, True, 82, standing, standing, 70, 79, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+903,stand,stand,stand,stand,sit-stand,False,False,uncertain_stand,False,True,0.2075323763301491,0,0,186,True,0, 0, 0, 0,None, True, 86, standing, standing, 68, 77, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+904,stand,stand,stand,stand,sit-stand,False,False,stand,False,True,0.19313061334858833,0,0,187,True,0, 0, 0, 0,None, True, 86, standing, standing, 66, 75, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+905,stand,stand,stand,stand,sit-stand,False,False,stand,False,True,0.1945702835023557,0,0,192,True,0, 0, 0, 0,None, True, 90, standing, standing, 74, 76, uncertain_sitting, non_sitting, 2, 0, non_lying, non_lying
+906,stand,stand,stand,stand,sit-stand,False,False,uncertain_stand,False,True,0.21804460155932498,0,0,192,True,0.0, 0.0, 0.0, 0.0,None, True, 87, standing, standing, 68, 73, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+907,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,True,0.23801922687287388,0,0,184,True,0, 0, 0, 0,None, True, 81, standing, standing, 70, 74, uncertain_sitting, uncertain_sitting, 6, 2, non_lying, non_lying
+908,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,True,0.26504224297020723,0,0,195,True,0, 0, 0, 0,None, True, 76, standing, standing, 67, 69, uncertain_sitting, uncertain_sitting, 10, 6, non_lying, non_lying
+909,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,True,0.24035969937433851,0,0,192,True,0, 0, 0, 0,None, True, 71, standing, standing, 69, 70, uncertain_sitting, uncertain_sitting, 6, 4, non_lying, non_lying
+910,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.3028160237645473,0,0,184,True,0, 0, 0, 0,None, True, 70, standing, standing, 69, 70, uncertain_sitting, uncertain_sitting, 6, 4, non_lying, non_lying
+911,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.3315305451256612,0,0.4230769230769231,180,True,0, 0, 0, 0,None, True, 66, standing, standing, 71, 68, uncertain_sitting, uncertain_sitting, 4, 4, non_lying, non_lying
+912,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.3643983311110442,0,0,176,True,0, 0, 0, 0,None, True, 67, standing, uncertain_squat, 70, 61, uncertain_sitting, uncertain_sitting, 5, 6, non_lying, non_lying
+913,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.39594504888088844,0,0,196,True,0, 0, 0, 0,None, True, 69, standing, uncertain_squat, 66, 58, uncertain_sitting, uncertain_sitting, 7, 10, non_lying, non_lying
+914,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.3844253571242782,0,0,191,True,-0.3668198585510254, 0.0, -0.3569505214691162, -0.3612273335456848,None, True, 69, standing, uncertain_squat, 67, 60, uncertain_sitting, uncertain_sitting, 7, 10, non_lying, non_lying
+915,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.40223582169712724,0,0,192,True,0, 0, 0, 0,None, True, 69, standing, uncertain_squat, 68, 59, uncertain_sitting, uncertain_sitting, 7, 10, non_lying, non_lying
+916,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.36665706784221885,0,0,184,True,0, 0, 0, 0,None, True, 69, standing, uncertain_squat, 69, 62, uncertain_sitting, uncertain_sitting, 7, 10, non_lying, non_lying
+917,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.33740980561651934,0,0,184,True,0, 0, 0, 0,None, True, 67, standing, standing, 71, 71, uncertain_sitting, uncertain_sitting, 6, 5, non_lying, non_lying
+918,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.31816830088981474,0,0,176,True,0, 0, 0, 0,None, True, 69, standing, standing, 71, 74, uncertain_sitting, uncertain_sitting, 6, 4, non_lying, non_lying
+919,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,True,0.27388514294380983,0,0,176,True,0, 0, 0, 0,None, True, 69, standing, standing, 70, 78, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+920,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.3480616990570929,0,0,180,True,0, 0, 0, 0,None, True, 69, standing, standing, 67, 78, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+921,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.33506715758066535,0,0,176,True,0, 0, 0, 0,None, True, 71, standing, standing, 67, 75, uncertain_sitting, uncertain_sitting, 6, 4, non_lying, non_lying
+922,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.3128552981548683,0,0,192,True,-0.04515208303928375, 0.0, 0.0, -0.011019229888916016,None, True, 71, standing, standing, 70, 75, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+923,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.30897416435219904,0,0,199,True,0, 0, 0, 0,None, True, 71, standing, standing, 68, 74, uncertain_sitting, uncertain_sitting, 6, 4, non_lying, non_lying
+924,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.3068632895399368,0,0,201,True,0, 0, 0, 0,None, True, 72, standing, standing, 69, 73, uncertain_sitting, uncertain_sitting, 6, 4, non_lying, non_lying
+925,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,True,0.28118905159847324,0,0,200,True,0, 0, 0, 0,None, True, 72, standing, standing, 68, 78, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+926,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.3242410564531411,0,0,200,True,0, 0, 0, 0,None, True, 72, standing, standing, 70, 75, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+927,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,False,0.25339872871211655,0,0.47293233082706765,200,True,0, 0, 0, 0,None, True, 72, standing, standing, 62, 70, uncertain_sitting, uncertain_sitting, 10, 5, non_lying, non_lying
+928,stand,stand,stand,stand,sit-stand,False,False,uncertain_stand,False,False,0.21658901676332315,0,0.48195488721804514,199,True,0, 0, 0, 0,None, True, 73, standing, standing, 65, 71, uncertain_sitting, non_sitting, 10, 0, non_lying, non_lying
+929,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,False,0.23754908968257019,0,0.4842105263157895,194,True,0, 0, 0, 0,None, True, 73, standing, standing, 68, 72, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+930,stand,stand,stand,stand,sit-stand,False,False,uncertain_stand,False,True,0.22950024198830868,0,0,194,True,-0.02806827425956726, -0.020483314990997314, 0.0, 0.0,None, True, 74, standing, standing, 72, 73, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+931,stand,stand,stand,stand,sit-stand,False,False,uncertain_stand,False,True,0.2034075712973826,0,0,194,True,0, 0, 0, 0,None, True, 76, standing, standing, 72, 73, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+932,stand,stand,stand,stand,sit-stand,False,False,uncertain_stand,False,True,0.23296982256474003,1.5,0,192,True,0, 0, 0, 0,None, True, 73, standing, standing, 72, 73, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+933,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,True,0.24571233420289765,1.5,0,178,True,0, 0, 0, 0,None, True, 73, standing, standing, 78, 77, uncertain_sitting, non_sitting, 3, 0, non_lying, non_lying
+934,stand,stand,stand,stand,sit-stand,False,False,uncertain_stand,False,True,0.20699210699934167,0,0,179,True,0, 0, 0, 0,None, True, 69, standing, standing, 78, 78, uncertain_sitting, non_sitting, 3, 0, non_lying, non_lying
+935,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.32864074818731526,1.5,0.562406015037594,176,True,0, 0, 0, 0,None, True, 66, standing, standing, 77, 79, uncertain_sitting, non_sitting, 3, 0, non_lying, non_lying
+936,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,False,0.2547093744078648,0,0.562406015037594,168,True,0, 0, 0, 0,None, True, 67, standing, standing, 67, 76, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+937,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.3148657506079177,1.5,0.562406015037594,161,True,0, 0, 0, 0,None, True, 68, squat, squat, 54, 61, uncertain_sitting, uncertain_sitting, 10, 13, non_lying, non_lying
+938,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,False,0.27806550593947,0,0.562406015037594,165,True,-0.006416544318199158, -0.019892901182174683, 0.010697543621063232, 0.0,None, True, 68, uncertain_standing, uncertain_squat, 60, 65, uncertain_sitting, non_sitting, 7, 0, non_lying, non_lying
+939,stand,stand,stand,stand,sit-stand,False,False,uncertain_stand,False,False,0.20320809584605237,1.2,0.562406015037594,164,True,0, 0, 0, 0,None, True, 67, standing, standing, 69, 73, uncertain_sitting, non_sitting, 3, 0, non_lying, non_lying
+940,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,True,0.24371118066547856,0,0,160,True,0, 0, 0, 0,None, True, 65, standing, standing, 61, 72, uncertain_sitting, non_sitting, 7, 0, non_lying, non_lying
+941,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.300422356469764,1.5,0,161,True,0, 0, 0, 0,None, True, 66, uncertain_squat, uncertain_standing, 48, 71, uncertain_sitting, non_sitting, 20, 0, non_lying, non_lying
+942,stand,stand,stand,stand,sit-stand,False,False,uncertain_stand,False,True,0.21562512554233068,0,0,160,True,0, 0, 0, 0,None, True, 66, standing, standing, 63, 78, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+943,stand,stand,stand,stand,sit-stand,False,False,uncertain_stand,False,False,0.21262412884099338,1.5,0.4714285714285714,144,True,0, 0, 0, 0,None, True, 66, standing, standing, 69, 79, uncertain_sitting, non_sitting, 2, 0, non_lying, non_lying
+944,stand,stand,stand,stand,stand-stand,False,False,uncertain_stand,False,True,0.20272086202115708,0,0,152,True,0, 0, 0, 0,None, True, 67, standing, standing, 75, 81, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+945,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.25496304312548534,0,0,158,True,0, 0, 0, 0,None, True, 68, standing, standing, 61, 79, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+946,stand,stand,stand,stand,stand-stand,False,False,uncertain_stand,False,True,0.2348857555907634,0,0,161,True,-0.0012902766466140747, -0.006701543927192688, 0.0, 0.0,None, True, 70, standing, standing, 63, 78, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+947,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.26766706996237105,0,0,192,True,0, 0, 0, 0,None, True, 68, standing, standing, 62, 78, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+948,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.2994948636757644,0,0,188,True,0, 0, 0, 0,None, True, 69, standing, standing, 58, 75, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+949,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.2880945659913049,0,0.3706766917293233,164,True,0, 0, 0, 0,None, True, 75, standing, standing, 66, 75, uncertain_sitting, non_sitting, 3, 0, non_lying, non_lying
+950,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.28511390468397646,0,0,160,True,0, 0, 0, 0,None, True, 79, standing, standing, 67, 75, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+951,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.25830027588087184,0,0,147,True,0, 0, 0, 0,None, True, 78, standing, standing, 72, 77, uncertain_sitting, non_sitting, 2, 0, non_lying, non_lying
+952,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.2700970548773394,0,0,201,True,0, 0, 0, 0,None, True, 80, standing, standing, 72, 77, uncertain_sitting, non_sitting, 3, 0, non_lying, non_lying
+953,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.28999676022962484,0,0,206,True,0, 0, 0, 0,None, True, 79, standing, standing, 72, 75, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+954,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.30171284685702443,0,0.43007518796992483,212,True,-0.02330365777015686, -0.019015982747077942, 0.0, 0.0,None, True, 77, standing, standing, 72, 69, uncertain_sitting, non_sitting, 2, 0, non_lying, non_lying
+955,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.3144590957207563,0,0.43759398496240604,212,True,0, 0, 0, 0,None, True, 79, standing, standing, 70, 70, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+956,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.41386092003579295,1.5,0.4218045112781955,208,True,0, 0, 0, 0,None, True, 77, standing, standing, 68, 70, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+957,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.5319758401058587,0,0.4195488721804511,197,True,0, 0, 0, 0,None, True, 75, standing, standing, 69, 68, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+958,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.5578659070430738,0,0.42406015037593986,192,True,0, 0, 0, 0,None, True, 85, standing, standing, 68, 71, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+959,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.613421263500274,0,0.41729323308270677,195,True,0, 0, 0, 0,None, True, 82, standing, standing, 66, 74, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+960,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.6100743679330887,0,0.42406015037593986,208,True,0, 0, 0, 0,None, True, 80, standing, standing, 66, 74, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+961,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.6142981310030584,0,0.4150375939849624,207,True,0, 0, 0, 0,None, True, 81, standing, standing, 67, 74, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+962,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.653667573313563,0,0.42030075187969923,196,True,0.0, 0.0, 0.0, 0.0,None, True, 80, standing, standing, 64, 73, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+963,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.6546385115769845,0,0.4218045112781955,190,True,0, 0, 0, 0,None, True, 82, standing, standing, 64, 73, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+964,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.6665840720970403,0,0.42330827067669174,196,True,0, 0, 0, 0,None, True, 83, standing, standing, 62, 71, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+965,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.7266062569127228,0,0.43909774436090226,218,True,0, 0, 0, 0,None, True, 88, standing, standing, 62, 69, uncertain_sitting, uncertain_sitting, 10, 2, non_lying, non_lying
+966,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.761907139002268,0,0,218,True,0, 0, 0, 0,None, True, 90, standing, standing, 63, 68, uncertain_sitting, uncertain_sitting, 10, 2, non_lying, non_lying
+967,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.7677733895266287,0,0,200,True,0, 0, 0, 0,None, True, 90, standing, standing, 64, 69, uncertain_sitting, uncertain_sitting, 10, 3, non_lying, non_lying
+968,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.8017633520375091,0,0,201,True,0, 0, 0, 0,None, True, 90, standing, standing, 64, 71, uncertain_sitting, uncertain_sitting, 10, 2, non_lying, non_lying
+969,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.7639771216084543,0,0,208,True,0, 0, 0, 0,None, True, 88, standing, standing, 59, 67, uncertain_sitting, uncertain_sitting, 10, 5, non_lying, non_lying
+970,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.7363367579669018,0,0,210,True,0.0, 0.0, 0.0, 0.0,None, True, 90, standing, standing, 60, 65, uncertain_sitting, uncertain_sitting, 10, 6, non_lying, non_lying
+971,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.7004142624267232,0,0,210,True,0, 0, 0, 0,None, True, 91, standing, standing, 60, 66, uncertain_sitting, uncertain_sitting, 10, 6, non_lying, non_lying
+972,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.6716772803422653,0,0,212,True,0, 0, 0, 0,None, True, 86, standing, standing, 62, 67, uncertain_sitting, uncertain_sitting, 10, 5, non_lying, non_lying
+973,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.6534408371618172,0,0,215,True,0, 0, 0, 0,None, True, 73, standing, standing, 63, 70, uncertain_sitting, uncertain_sitting, 10, 4, non_lying, non_lying
+974,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.6222215030439658,0,0.562406015037594,216,True,0, 0, 0, 0,None, True, 70, standing, standing, 57, 67, uncertain_sitting, uncertain_sitting, 10, 5, non_lying, non_lying
+975,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.5990489254792737,0,0.5714285714285714,192,True,0, 0, 0, 0,None, True, 73, uncertain_squat, standing, 45, 60, uncertain_sitting, uncertain_sitting, 10, 6, non_lying, non_lying
+976,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.5804141974812361,0,0.5679574791192104,185,True,0, 0, 0, 0,None, True, 66, uncertain_squat, standing, 40, 58, uncertain_sitting, uncertain_sitting, 10, 7, non_lying, non_lying
+977,stand,sit,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.6203707232234351,0,0.562406015037594,184,True,0, 0, 0, 0,None, True, 57, non_standing, uncertain_standing, 35, 53, uncertain_sitting, uncertain_sitting, 20, 10, non_lying, non_lying
+978,stand,sit,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.6467501388369796,0,0.562406015037594,224,True,0.0, 0.0, 0.0, 0.0,None, True, 47, non_standing, uncertain_standing, -583, 55, sitting, uncertain_sitting, 30, 10, non_lying, non_lying
+979,stand,sit,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.6702712903619027,0,0.5731800766283525,232,True,0, 0, 0, 0,None, True, 47, non_standing, uncertain_squat, 32, 49, uncertain_sitting, uncertain_sitting, 20, 7, non_lying, non_lying
+980,stand,sit,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.6919790059443294,0,0.5875883739198743,233,True,0, 0, 0, 0,None, True, 37, non_standing, uncertain_standing, 36, 53, uncertain_sitting, uncertain_sitting, 10, 10, non_lying, non_lying
+981,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.7411758211761443,0,0.562406015037594,204,True,0, 0, 0, 0,None, True, 31, uncertain_squat, uncertain_standing, 50, 58, uncertain_sitting, uncertain_sitting, 10, 10, non_lying, non_lying
+982,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.7999930250180057,0,0.562406015037594,200,True,0, 0, 0, 0,None, True, 28, uncertain_squat, uncertain_standing, 44, 57, uncertain_sitting, uncertain_sitting, 10, 10, non_lying, non_lying
+983,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.8237778360252214,1.5,0.5658093797276853,177,True,0, 0, 0, 0,None, True, 32, uncertain_squat, uncertain_standing, 53, 61, uncertain_sitting, uncertain_sitting, 10, 10, non_lying, non_lying
+984,stand,sit,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.8400491943211551,1.5,0.5979216626698641,177,True,0, 0, 0, 0,None, True, 27, non_standing, uncertain_standing, -458, 60, sitting, uncertain_sitting, 30, 10, non_lying, non_lying
+985,stand,sit,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.8225349281945228,1.5,0.6228143213988343,192,True,0, 0, 0, 0,None, True, 25, non_standing, non_standing, -322, -239, sitting, sitting, 30, 30, non_lying, non_lying
+986,stand,sit,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.8493301430975132,1.5,0.6061588330632091,193,True,0.09059751033782959, 0.06833580136299133, 0.013619482517242432, 0.005442202091217041,None, True, 23, non_standing, non_standing, -251, -104, sitting, sitting, 30, 30, non_lying, non_lying
+987,stand,sit,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.8665703796830769,1.5,0.608130081300813,196,True,0, 0, 0, 0,None, True, 20, non_standing, non_standing, -251, -81, sitting, sitting, 30, 40, non_lying, non_lying
+988,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,True,False,0.8811822555390464,1.5,0.5875883739198743,208,True,0, 0, 0, 0,None, True, 18, non_standing, non_standing, -239, -73, sitting, sitting, 30, 30, non_lying, non_lying
+989,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9034777886795593,0,0.6875,207,True,0, 0, 0, 0,None, True, 19, non_standing, non_standing, -154, -49, sitting, sitting, 30, 40, non_lying, non_lying
+990,stand,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9233002936513919,0,0.5945945945945946,196,True,0, 0, 0, 0,None, True, 19, non_standing, non_standing, -143, -48, sitting, sitting, 30, 40, non_lying, non_lying
+991,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9474352700859069,0,0.6301600673967986,201,True,0, 0, 0, 0,None, True, 19, non_standing, non_standing, -121, -42, sitting, sitting, 30, 40, non_lying, non_lying
+992,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9526750324726554,0,0.6333615580016935,196,True,0, 0, 0, 0,None, True, 19, non_standing, non_standing, -122, -48, sitting, sitting, 30, 40, non_lying, non_lying
+993,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9691801510710724,0,0.6578715919085312,208,True,0, 0, 0, 0,None, True, 19, non_standing, non_standing, -119, -47, sitting, sitting, 30, 40, non_lying, non_lying
+994,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9872423502409193,0,0.6666666666666666,208,True,0.09189078211784363, 0.09630298614501953, 0.046973347663879395, 0.03479897975921631,None, True, 20, non_standing, non_standing, -116, -42, sitting, sitting, 40, 50, non_lying, non_lying
+995,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,1.0046691182010785,0,0.6887661141804788,206,True,0, 0, 0, 0,None, True, 21, non_standing, non_standing, -122, -32, sitting, sitting, 40, 50, non_lying, non_lying
+996,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,1.021347794431173,0,0.6875,204,True,0, 0, 0, 0,None, True, 20, non_standing, non_standing, -142, -32, sitting, sitting, 40, 50, non_lying, non_lying
+997,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,1.0241822564144154,0,0.6887661141804788,202,True,0, 0, 0, 0,None, True, 20, non_standing, non_standing, -145, -35, sitting, sitting, 40, 50, non_lying, non_lying
+998,stand-sit,sit,sit,lie,stand-sit-lie,False,False,lie,False,False,1.072511603525575,0,0.6906740535549399,204,True,0, 0, 0, 0,None, True, 20, non_standing, non_standing, -170, -51, sitting, sitting, 40, 50, non_lying, non_lying
+999,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9973469555222316,0,0.7069943289224953,202,True,0, 0, 0, 0,None, True, 20, non_standing, non_standing, -127, -50, sitting, sitting, 40, 50, non_lying, non_lying
+1000,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,1.010926136781848,0,0.6900369003690037,198,True,0, 0, 0, 0,None, True, 18, non_standing, non_standing, -108, -41, sitting, sitting, 40, 50, non_lying, non_lying
+1001,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9640149037241957,0,0.6997193638914874,190,True,0, 0, 0, 0,None, True, 17, non_standing, non_standing, -81, -32, sitting, sitting, 40, 50, non_lying, non_lying
+1002,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,1.0237383361222325,0,0.762487257900102,176,True,0.04980456829071045, 0.048730939626693726, 0.061762332916259766, 0.07204151153564453,None, True, 18, non_standing, non_standing, -84, -32, sitting, sitting, 40, 50, non_lying, non_lying
+1003,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,1.0061997257023167,0,0.748,175,True,0, 0, 0, 0,None, True, 17, non_standing, non_standing, -72, -30, sitting, sitting, 40, 50, non_lying, non_lying
+1004,stand-sit,sit,sit,lie,stand-sit-lie,False,False,lie,False,False,1.045392737852295,0,0.6824817518248175,166,True,0, 0, 0, 0,None, True, 20, non_standing, non_standing, -83, -31, sitting, sitting, 40, 50, non_lying, non_lying
+1005,stand-sit,sit,sit,lie,stand-sit-lie,False,False,lie,False,False,1.0479528488957814,0,0.7791666666666667,166,True,0, 0, 0, 0,None, True, 22, non_standing, non_standing, -86, -31, sitting, sitting, 40, 50, non_lying, non_lying
+1006,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9976205859978833,0,0.7076631977294229,152,True,0, 0, 0, 0,None, True, 25, non_standing, non_standing, -83, -37, sitting, sitting, 50, 50, non_lying, non_lying
+1007,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9707062492281605,0,0.8025751072961373,160,True,0, 0, 0, 0,None, True, 25, non_standing, non_standing, -77, -36, sitting, sitting, 50, 40, non_lying, non_lying
+1008,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9396616889276113,0,0.7023474178403756,154,True,0, 0, 0, 0,None, True, 28, non_standing, non_standing, -73, -37, sitting, sitting, 50, 40, non_lying, non_lying
+1009,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9494835556543533,0,0.7890295358649789,136,True,0, 0, 0, 0,None, True, 30, non_standing, non_standing, -79, -41, sitting, sitting, 30, 40, non_lying, non_lying
+1010,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9415212022006831,0,0.7123809523809523,110,True,0.008569300174713135, 0.01117640733718872, 0.026869595050811768, 0.03384900093078613,None, True, 30, non_standing, non_standing, -84, -43, sitting, sitting, 80, 40, non_lying, non_lying
+1011,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.912184955446038,0,0.7881981032665965,127,True,0, 0, 0, 0,None, True, 35, non_standing, non_standing, -79, -50, sitting, sitting, 30, 40, non_lying, non_lying
+1012,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.8934861614387521,0,0.8617511520737328,129,True,0, 0, 0, 0,None, True, 40, non_standing, non_standing, -70, -56, sitting, sitting, 40, 40, non_lying, non_lying
+1013,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9379280035676801,0,0.8707799767171129,162,True,0, 0, 0, 0,None, True, 43, non_standing, non_standing, -66, -53, sitting, sitting, 50, 40, non_lying, non_lying
+1014,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9676320654653533,0,0.8852071005917159,176,True,0, 0, 0, 0,None, True, 41, non_standing, non_standing, -69, -51, sitting, sitting, 50, 40, non_lying, non_lying
+1015,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9967432069201372,0,0.8682352941176471,176,True,0, 0, 0, 0,None, True, 39, non_standing, non_standing, -67, -49, sitting, sitting, 50, 40, non_lying, non_lying
+1016,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,True,0.8616448692986625,0,0,172,True,0, 0, 0, 0,None, True, 46, non_standing, non_standing, -72, -37, sitting, sitting, 30, 40, non_lying, non_lying
+1017,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9648335034220046,0,0.8657407407407407,172,True,0, 0, 0, 0,None, True, 50, non_standing, non_standing, -68, -38, sitting, sitting, 50, 40, non_lying, non_lying
+1018,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,1.0073878315488212,0,0.8363228699551569,176,True,0.017741680145263672, 0.013351678848266602, 0.0026136040687561035, 0.007077515125274658,None, True, 56, non_standing, non_standing, -62, -36, sitting, sitting, 50, 40, non_lying, non_lying
+1019,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,1.0078041916550093,0,0.8348214285714286,180,True,0, 0, 0, 0,None, True, 64, non_standing, non_standing, -59, -28, sitting, sitting, 50, 50, non_lying, non_lying
+1020,stand-sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,1.001091677389238,0,0.8265193370165745,145,True,0, 0, 0, 0,None, True, 60, non_standing, non_standing, -58, -21, sitting, sitting, 50, 50, non_lying, non_lying
+1021,sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,1.01769161910154,0,0.8548571428571429,134,True,0, 0, 0, 0,None, True, 55, non_standing, non_standing, -55, -26, sitting, sitting, 50, 50, non_lying, non_lying
+1022,sit,sit,sit,lie,stand-sit-lie,False,False,lie,False,False,1.0473680733167083,0,0.8637413394919169,100,True,0, 0, 0, 0,None, True, 53, non_standing, non_standing, -56, -28, sitting, sitting, 50, 50, non_lying, non_lying
+1023,sit,sit,sit,lie,stand-sit-lie,False,False,lie,False,False,1.0842965317836077,1.5,0.895808383233533,99,True,0, 0, 0, 0,None, True, 56, non_standing, non_standing, -57, -30, sitting, sitting, 50, 50, non_lying, non_lying
+1024,sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,True,0.9823578874820037,0,0,96,True,0, 0, 0, 0,None, True, 52, non_standing, non_standing, -61, -30, sitting, sitting, 50, 50, non_lying, non_lying
+1025,sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,0.9946564474079612,0,0.93,104,True,0, 0, 0, 0,None, True, 54, non_standing, non_standing, -62, -35, sitting, sitting, 50, 50, non_lying, non_lying
+1026,sit,sit,sit,sit,stand-sit,False,False,uncertain_sit,False,False,1.0214500746627553,0,0.9373433583959899,144,True,0.004332184791564941, 0.007823348045349121, 0.0, 0.0,None, True, 54, non_standing, non_standing, -67, -37, sitting, sitting, 50, 40, non_lying, non_lying
+1027,sit,sit,sit,lie,stand-sit-lie,False,False,lie,False,False,1.108447486557178,0,0.929192546583851,142,True,0, 0, 0, 0,None, True, 54, non_standing, non_standing, -67, -40, sitting, sitting, 50, 40, non_lying, non_lying
+1028,sit,sit,sit,lie,stand-sit-lie,False,False,lie,False,False,1.12353816033878,0,0.9298245614035088,144,True,0, 0, 0, 0,None, True, 59, non_standing, non_standing, -67, -40, sitting, sitting, 50, 50, non_lying, non_lying
+1029,sit,sit,sit,lie,stand-sit-lie,False,False,lie,False,False,1.1673329322755255,0,0.9385194479297365,142,True,0, 0, 0, 0,None, True, 59, non_standing, non_standing, -70, -40, sitting, sitting, 50, 50, non_lying, non_lying
+1030,sit,sit,sit,lie,stand-sit-lie,False,False,lie,False,True,1.103600523297972,0,0,138,True,0, 0, 0, 0,None, True, 63, non_standing, non_standing, -69, -35, sitting, sitting, 50, 50, non_lying, non_lying
+1031,sit,sit,sit,lie,sit-lie,False,False,lie,False,True,1.0944103613001874,0,0,119,True,0, 0, 0, 0,None, True, 66, non_standing, non_standing, -69, -34, sitting, sitting, 40, 50, non_lying, non_lying
+1032,sit,sit,sit,lie,sit-lie,False,False,lie,False,False,1.108549723932455,0,1.4773218142548596,111,True,0, 0, 0, 0,None, True, 84, non_standing, non_standing, -68, -30, sitting, sitting, 50, 50, non_lying, non_lying
+1033,sit,sit,sit,lie,sit-lie,False,False,lie,False,False,1.1086898549384454,0,0.8688524590163934,113,True,0, 0, 0, 0,None, True, 87, non_standing, non_standing, -69, -29, sitting, sitting, 50, 50, non_lying, non_lying
+1034,sit,sit,sit,lie,sit-lie,False,False,lie,False,False,1.1341805702083527,0,0.853904282115869,82,True,0.00584864616394043, 0.010736465454101562, 0.0, 0.0,None, True, 88, non_standing, non_standing, -66, -27, sitting, sitting, 50, 50, non_lying, non_lying
+1035,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,1.043430467130318,0,0,83,True,0, 0, 0, 0,None, True, 84, non_standing, non_standing, -66, -25, sitting, sitting, 40, 50, non_lying, non_lying
+1036,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,1.0261206857853884,0,0,84,True,0, 0, 0, 0,None, True, 79, non_standing, non_standing, -63, -24, sitting, sitting, 40, 50, non_lying, non_lying
+1037,sit,sit,sit,lie,sit-lie,False,False,lie,False,False,1.1086810569868792,0,0.8756281407035176,82,True,0, 0, 0, 0,None, True, 72, non_standing, non_standing, -58, -24, sitting, sitting, 50, 50, non_lying, non_lying
+1038,sit,sit,sit,lie,sit-lie,False,False,lie,False,True,1.0785799528454056,0,0,82,True,0, 0, 0, 0,None, True, 71, non_standing, non_standing, -57, -25, sitting, sitting, 50, 50, non_lying, non_lying
+1039,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,1.0313927083114733,0,0,88,True,0, 0, 0, 0,None, True, 72, non_standing, non_standing, -57, -24, sitting, sitting, 40, 50, non_lying, non_lying
+1040,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,1.021382532069276,0,0,88,True,0, 0, 0, 0,None, True, 72, non_standing, non_standing, -56, -18, sitting, sitting, 40, 40, non_lying, non_lying
+1041,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,True,0.9971588092697032,0,0,96,True,0, 0, 0, 0,None, True, 72, non_standing, non_standing, -56, -19, sitting, sitting, 40, 50, non_lying, non_lying
+1042,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9968679946837915,0,0,104,True,0.0, 0.0, 0.0, 0.0,None, True, 68, non_standing, non_standing, -56, -18, sitting, sitting, 40, 50, non_lying, non_lying
+1043,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9853297701939532,0,0,104,True,0, 0, 0, 0,None, True, 67, non_standing, non_standing, -56, -19, sitting, sitting, 40, 50, non_lying, non_lying
+1044,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9842502187053993,0,0,85,True,0, 0, 0, 0,None, True, 66, non_standing, non_standing, -57, -20, sitting, sitting, 40, 50, non_lying, non_lying
+1045,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9842484683251703,0,0,84,True,0, 0, 0, 0,None, True, 66, non_standing, non_standing, -58, -21, sitting, sitting, 40, 50, non_lying, non_lying
+1046,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9747917631135736,0,0,81,True,0, 0, 0, 0,None, True, 63, non_standing, non_standing, -59, -21, sitting, sitting, 40, 50, non_lying, non_lying
+1047,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,True,0.9634180016049256,0,0,81,True,0, 0, 0, 0,None, True, 62, non_standing, non_standing, -59, -24, sitting, sitting, 40, 50, non_lying, non_lying
+1048,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,True,0.9554144811613373,0,0,80,True,0, 0, 0, 0,None, True, 63, non_standing, uncertain_squat, -59, -20, sitting, sitting, 40, 50, non_lying, non_lying
+1049,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.94905536178616,0,0,74,True,0, 0, 0, 0,None, True, 63, non_standing, uncertain_squat, -59, -20, sitting, sitting, 40, 50, non_lying, non_lying
+1050,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9746613489320607,0,0,67,True,0.0, 0.003682553768157959, 0.0, 0.000333249568939209,None, True, 62, non_standing, uncertain_squat, -58, -19, sitting, sitting, 50, 50, non_lying, non_lying
+1051,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9900447798347788,1.5,0,67,True,0, 0, 0, 0,None, True, 60, non_standing, uncertain_squat, -58, -20, sitting, sitting, 50, 50, non_lying, non_lying
+1052,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,1.0031678059804376,1.5,0,72,True,0, 0, 0, 0,None, True, 61, non_standing, non_standing, -58, -21, sitting, sitting, 50, 50, non_lying, non_lying
+1053,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,1.0037953540528655,1.5,0,65,True,0, 0, 0, 0,None, True, 58, non_standing, non_standing, -58, -31, sitting, sitting, 50, 50, non_lying, non_lying
+1054,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,1.004064340740123,1.5,0,80,True,0, 0, 0, 0,None, True, 53, non_standing, non_standing, -59, -37, sitting, sitting, 50, 40, non_lying, non_lying
+1055,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,1.006491998989242,1.2,0,96,True,0, 0, 0, 0,None, True, 52, non_standing, non_standing, -59, -37, sitting, sitting, 50, 50, non_lying, non_lying
+1056,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,1.0064750944347756,1.2,0,76,True,0, 0, 0, 0,None, True, 52, non_standing, non_standing, -59, -36, sitting, sitting, 50, 50, non_lying, non_lying
+1057,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9945073840560185,1.2,0,72,True,0, 0, 0, 0,None, True, 51, non_standing, non_standing, -59, -35, sitting, sitting, 50, 50, non_lying, non_lying
+1058,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9959967796977354,1.5,0,76,True,0.0, 0.0, 0.0, 0.0,None, True, 50, non_standing, non_standing, -58, -25, sitting, sitting, 50, 50, non_lying, non_lying
+1059,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9893657910664623,1.5,0,72,True,0, 0, 0, 0,None, True, 49, non_standing, non_standing, -58, -22, sitting, sitting, 50, 50, non_lying, non_lying
+1060,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9907424333034933,1.5,0,72,True,0, 0, 0, 0,None, True, 50, non_standing, non_standing, -58, -21, sitting, sitting, 50, 50, non_lying, non_lying
+1061,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9878271856943847,1.5,0,65,True,0, 0, 0, 0,None, True, 50, non_standing, non_standing, -58, -25, sitting, sitting, 50, 50, non_lying, non_lying
+1062,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9839806514933346,0,0,65,True,0, 0, 0, 0,None, True, 50, non_standing, non_standing, -57, -26, sitting, sitting, 50, 50, non_lying, non_lying
+1063,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9980233901235301,0,0,74,True,0, 0, 0, 0,None, True, 49, non_standing, non_standing, -57, -27, sitting, sitting, 50, 50, non_lying, non_lying
+1064,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9959531180330521,0,0,84,True,0, 0, 0, 0,None, True, 48, non_standing, uncertain_squat, -58, -19, sitting, sitting, 50, 50, non_lying, non_lying
+1065,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,True,0.9884903062869165,0,0,84,True,0, 0, 0, 0,None, True, 49, non_standing, uncertain_squat, -58, -15, sitting, sitting, 50, 50, non_lying, non_lying
+1066,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,True,0.9873215903433956,0,0,80,True,0.0, 0.0, 0.0, 0.0,None, True, 53, non_standing, non_standing, -58, -22, sitting, sitting, 50, 50, non_lying, non_lying
+1067,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9862494139158374,0,0,80,True,0, 0, 0, 0,None, True, 56, non_standing, uncertain_squat, -58, -19, sitting, sitting, 50, 50, non_lying, non_lying
+1068,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9830798145472496,0,0,79,True,0, 0, 0, 0,None, True, 57, non_standing, uncertain_squat, -58, -16, sitting, sitting, 50, 50, non_lying, non_lying
+1069,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9874723022093493,0,0,80,True,0, 0, 0, 0,None, True, 57, non_standing, uncertain_squat, -57, -15, sitting, sitting, 50, 50, non_lying, non_lying
+1070,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,True,1.011320885834562,0,0,80,True,0, 0, 0, 0,None, True, 56, non_standing, uncertain_squat, -57, -14, sitting, sitting, 50, 50, non_lying, non_lying
+1071,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,True,1.0161973962899156,0,0,71,True,0, 0, 0, 0,None, True, 55, non_standing, non_standing, -57, -22, sitting, sitting, 50, 50, non_lying, non_lying
+1072,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,True,1.0212709097020756,0,0,65,True,0, 0, 0, 0,None, True, 55, non_standing, non_standing, -57, -25, sitting, sitting, 50, 50, non_lying, non_lying
+1073,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,True,1.0345112165709003,1.5,0,65,True,0, 0, 0, 0,None, True, 54, non_standing, non_standing, -57, -27, sitting, sitting, 50, 50, non_lying, non_lying
+1074,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,True,1.0169035206593435,1.5,0,76,True,0.0, 0.0, 0.0, 0.0,None, True, 53, non_standing, non_standing, -57, -28, sitting, sitting, 50, 50, non_lying, non_lying
+1075,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,True,0.9906677446837193,1.5,0,84,True,0, 0, 0, 0,None, True, 53, non_standing, non_standing, -58, -28, sitting, sitting, 50, 50, non_lying, non_lying
+1076,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,True,0.9559493075246726,1.5,0,85,True,0, 0, 0, 0,None, True, 56, non_standing, non_standing, -60, -29, sitting, sitting, 50, 50, non_lying, non_lying
+1077,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,True,0.9372675389103081,0,0,86,True,0, 0, 0, 0,None, True, 57, non_standing, non_standing, -61, -29, sitting, sitting, 40, 50, non_lying, non_lying
+1078,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9248088668186442,0,0,87,True,0, 0, 0, 0,None, True, 62, non_standing, uncertain_squat, -61, -18, sitting, sitting, 40, 50, non_lying, non_lying
+1079,sit,sit,sit,sit,sit-lie-sit,False,False,uncertain_sit,False,True,0.9098893306899987,0,0,90,True,0, 0, 0, 0,None, True, 62, non_standing, uncertain_squat, -62, -14, sitting, sitting, 40, 50, non_lying, non_lying
+1080,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,True,0.8661395582412282,0,0,100,True,0, 0, 0, 0,None, True, 61, non_standing, uncertain_squat, -65, -14, sitting, sitting, 40, 50, non_lying, non_lying
+1081,sit,sit,sit,sit,lie-sit,False,False,uncertain_sit,False,False,0.8731489504253377,0,0.7907845579078456,98,True,0, 0, 0, 0,None, True, 61, non_standing, uncertain_squat, -70, -12, sitting, sitting, 40, 50, non_lying, non_lying
+1082,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.8566973872877074,0,0.7893432465923172,99,True,0.0, 0.0, 0.0, 0.0,None, True, 64, non_standing, uncertain_squat, -75, -13, sitting, sitting, 40, 50, non_lying, non_lying
+1083,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.8404890876080102,0,0.7873918417799752,100,True,0, 0, 0, 0,None, True, 63, non_standing, uncertain_squat, -77, -14, sitting, sitting, 30, 50, non_lying, non_lying
+1084,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.8515164609094755,0,0.7772337821297429,100,True,0, 0, 0, 0,None, True, 62, non_standing, uncertain_squat, -81, -15, sitting, sitting, 40, 50, non_lying, non_lying
+1085,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.8571640608383738,0,0.7802469135802469,100,True,0, 0, 0, 0,None, True, 58, non_standing, uncertain_squat, -84, -16, sitting, sitting, 40, 50, non_lying, non_lying
+1086,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.8638752043749975,0,0.7658536585365854,98,True,0, 0, 0, 0,None, True, 58, non_standing, uncertain_squat, -86, -17, sitting, sitting, 40, 50, non_lying, non_lying
+1087,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.875306698963102,0,0.787621359223301,96,True,0, 0, 0, 0,None, True, 53, non_standing, uncertain_squat, -92, -21, sitting, sitting, 30, 50, non_lying, non_lying
+1088,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.8839244994765105,1.5,0.774390243902439,95,True,0, 0, 0, 0,None, True, 46, non_standing, uncertain_squat, -99, -25, sitting, sitting, 30, 50, non_lying, non_lying
+1089,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.9336533566835713,1.5,0.7461263408820024,100,True,0, 0, 0, 0,None, True, 46, non_standing, uncertain_squat, -104, -25, sitting, sitting, 50, 50, non_lying, non_lying
+1090,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.9287039827238414,1.2,0.7706093189964157,96,True,0.0, 0.0, 0.0, 0.0,None, True, 42, non_standing, uncertain_squat, -100, -23, sitting, sitting, 50, 50, non_lying, non_lying
+1091,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.9243978466416638,1.2,0.7610513739545998,97,True,0, 0, 0, 0,None, True, 40, non_standing, uncertain_squat, -95, -24, sitting, sitting, 50, 40, non_lying, non_lying
+1092,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.9375479196855583,1.2,0.7446808510638298,104,True,0, 0, 0, 0,None, True, 38, non_standing, uncertain_squat, -102, -26, sitting, sitting, 50, 40, non_lying, non_lying
+1093,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.9186643424796552,1.5,0.7359154929577465,132,True,0, 0, 0, 0,None, True, 40, non_standing, uncertain_squat, -107, -26, sitting, sitting, 50, 40, non_lying, non_lying
+1094,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.9638460543813249,1.5,0.7420118343195267,133,True,0, 0, 0, 0,None, True, 39, non_standing, uncertain_squat, -115, -27, sitting, sitting, 50, 40, non_lying, non_lying
+1095,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.9691433823201404,1.5,0.7494145199063232,142,True,0, 0, 0, 0,None, True, 40, non_standing, uncertain_squat, -115, -25, sitting, sitting, 50, 40, non_lying, non_lying
+1096,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,1.0079297338704654,1.5,0.7341040462427746,162,True,0, 0, 0, 0,None, True, 42, non_standing, uncertain_squat, -171, -40, sitting, sitting, 40, 40, non_lying, non_lying
+1097,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.9915657668395962,0,0.704954954954955,176,True,0, 0, 0, 0,None, True, 31, non_standing, uncertain_squat, -164, -45, sitting, sitting, 40, 40, non_lying, non_lying
+1098,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,True,0.8595300310590877,0,0,184,True,0.0, 0.0, 0.0, 0.0,None, True, 26, non_standing, uncertain_squat, -159, -54, sitting, sitting, 40, 30, non_lying, non_lying
+1099,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.8502814528569987,0,0.6882546652030735,190,True,0, 0, 0, 0,None, True, 29, non_standing, non_standing, -331, -185, sitting, sitting, 50, 30, non_lying, non_lying
+1100,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.8340983259646865,0,0.677801724137931,190,True,0, 0, 0, 0,None, True, 32, non_standing, non_standing, -306, -181, sitting, sitting, 50, 30, non_lying, non_lying
+1101,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,True,0.7766645791586926,0,0,194,True,0, 0, 0, 0,None, True, 33, non_standing, non_standing, -266, -192, sitting, sitting, 50, 30, non_lying, non_lying
+1102,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,True,0.6942189444786104,0,0,197,True,0, 0, 0, 0,None, True, 36, non_standing, non_standing, -276, -295, sitting, sitting, 50, 30, non_lying, non_lying
+1103,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,True,0.6575262123760475,0,0,198,True,0, 0, 0, 0,None, True, 31, non_standing, non_standing, -208, -192, sitting, sitting, 50, 30, non_lying, non_lying
+1104,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,True,0.6533796290572557,0,0,198,True,0, 0, 0, 0,None, True, 31, non_standing, non_standing, -217, -216, sitting, sitting, 40, 30, non_lying, non_lying
+1105,sit,sit,sit,sit,sit-sit,False,False,uncertain_sit,False,True,0.6484682579656201,0,0,192,True,0, 0, 0, 0,None, True, 34, non_standing, standing, -374, 64, sitting, uncertain_sitting, 30, 7, non_lying, non_lying
+1106,sit,stand,sit,sit,sit-sit,False,False,uncertain_sit,False,True,0.6323807759834651,0,0,184,True,-0.0024193525314331055, -0.006431698799133301, 0.0, 0.0,None, True, 37, uncertain_squat, standing, 51, 67, uncertain_sitting, uncertain_sitting, 10, 4, non_lying, non_lying
+1107,sit,stand,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.5991175213600025,0,0.5758377425044092,179,True,0, 0, 0, 0,None, True, 51, uncertain_squat, standing, 60, 77, uncertain_sitting, non_sitting, 7, 0, non_lying, non_lying
+1108,sit,stand,sit,sit,sit-sit,False,False,uncertain_sit,False,True,0.6199846846148809,0,0,178,True,0, 0, 0, 0,None, True, 45, standing, standing, 63, 70, uncertain_sitting, non_sitting, 7, 0, non_lying, non_lying
+1109,sit,stand,sit,sit,sit-sit,False,False,uncertain_sit,False,True,0.6351555883529799,0,0,178,True,0, 0, 0, 0,None, True, 43, standing, standing, 66, 73, uncertain_sitting, non_sitting, 7, 0, non_lying, non_lying
+1110,sit,stand,stand,stand,sit-stand,False,False,uncertain_sit,True,True,0.6026563902730279,0,0,200,True,0, 0, 0, 0,None, True, 49, standing, standing, 70, 74, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+1111,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,True,0.5792489654234132,0,0,200,True,0, 0, 0, 0,None, True, 43, standing, standing, 66, 70, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+1112,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,True,0.5681628514743204,1.5,0,208,True,0, 0, 0, 0,None, True, 41, standing, standing, 69, 70, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+1113,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5385480261122261,1.5,0,216,True,0, 0, 0, 0,None, True, 43, standing, standing, 68, 67, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+1114,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5067314672954447,1.2,0,219,True,-0.05016672611236572, -0.04979681968688965, 0.0, 0.0,None, True, 45, standing, standing, 63, 66, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+1115,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5045651556705868,1.2,0,212,True,0, 0, 0, 0,None, True, 45, standing, standing, 61, 63, uncertain_sitting, non_sitting, 10, 0, non_lying, non_lying
+1116,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5105484844780156,1.2,0,208,True,0, 0, 0, 0,None, True, 50, standing, standing, 63, 65, uncertain_sitting, non_sitting, 10, 0, non_lying, non_lying
+1117,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5134820230395125,1.5,0,215,True,0, 0, 0, 0,None, True, 59, standing, standing, 63, 64, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+1118,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5076657893609201,1.2,0,224,True,0, 0, 0, 0,None, True, 59, standing, standing, 67, 66, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+1119,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.5195543862358392,1.5,0.556390977443609,224,True,0, 0, 0, 0,None, True, 64, standing, standing, 68, 66, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+1120,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.5200182824057112,1.2,0.562406015037594,226,True,0, 0, 0, 0,None, True, 84, standing, standing, 73, 69, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+1121,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.5270692918433063,1.5,0.5571428571428572,216,True,0, 0, 0, 0,None, True, 87, standing, standing, 74, 71, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+1122,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.5323535046886873,1.2,0.5571428571428572,216,True,-0.15025213360786438, -0.14228671789169312, -0.06481724977493286, -0.06055551767349243,None, True, 85, standing, standing, 74, 72, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+1123,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.5415904909971971,1.5,0.5548872180451128,216,True,0, 0, 0, 0,None, True, 86, standing, standing, 72, 72, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+1124,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.5486663460565637,1.5,0.5571428571428572,214,True,0, 0, 0, 0,None, True, 87, standing, standing, 71, 71, uncertain_sitting, uncertain_sitting, 6, 0, non_lying, non_lying
+1125,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,False,0.555950346702714,0,0.562406015037594,208,True,0, 0, 0, 0,None, True, 95, standing, standing, 70, 71, uncertain_sitting, uncertain_sitting, 6, 1, non_lying, non_lying
+1126,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.543385935426155,1.5,0.5571428571428572,200,True,0, 0, 0, 0,None, True, 92, standing, standing, 67, 69, uncertain_sitting, uncertain_sitting, 7, 3, non_lying, non_lying
+1127,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,True,0.5553107982529717,1.5,0,196,True,0, 0, 0, 0,None, True, 86, standing, standing, 67, 70, uncertain_sitting, uncertain_sitting, 10, 4, non_lying, non_lying
+1128,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,True,0.5563174150040979,0,0,196,True,0, 0, 0, 0,None, True, 97, standing, standing, 69, 73, uncertain_sitting, uncertain_sitting, 10, 4, non_lying, non_lying
+1129,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,True,0.5679809236711749,0,0,177,True,0, 0, 0, 0,None, True, 97, standing, standing, 70, 73, uncertain_sitting, uncertain_sitting, 10, 3, non_lying, non_lying
+1130,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,False,0.6035842733450477,0,0.4714285714285714,185,True,-0.09682518243789673, -0.08864977955818176, -0.0638047456741333, -0.06503301858901978,None, True, 96, standing, standing, 72, 75, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+1131,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,False,0.564109692012998,0,0.48345864661654137,177,True,0, 0, 0, 0,None, True, 97, standing, standing, 71, 74, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+1132,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,False,0.5821607609897603,0,0.48721804511278194,182,True,0, 0, 0, 0,None, True, 98, standing, standing, 70, 73, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+1133,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.5347814607331693,0,0.48270676691729325,168,True,0, 0, 0, 0,None, True, 98, standing, standing, 64, 71, uncertain_sitting, uncertain_sitting, 10, 3, non_lying, non_lying
+1134,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5245331622476445,0,0,167,True,0, 0, 0, 0,None, True, 96, standing, standing, 64, 71, uncertain_sitting, uncertain_sitting, 10, 3, non_lying, non_lying
+1135,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5115057368439533,0,0,175,True,0, 0, 0, 0,None, True, 96, standing, standing, 65, 71, uncertain_sitting, uncertain_sitting, 7, 3, non_lying, non_lying
+1136,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.5073280466406747,0,0.5097744360902255,176,True,0, 0, 0, 0,None, True, 98, standing, standing, 72, 74, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+1137,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5047110938907805,0,0,177,True,0, 0, 0, 0,None, True, 98, standing, standing, 74, 74, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+1138,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.48791571961385305,0,0,160,True,-0.04726116359233856, -0.05987603962421417, -0.04153567552566528, -0.04953134059906006,None, True, 96, standing, standing, 73, 74, uncertain_sitting, uncertain_sitting, 5, 1, non_lying, non_lying
+1139,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.48697070541905535,0,0,168,True,0, 0, 0, 0,None, True, 96, standing, standing, 72, 73, uncertain_sitting, uncertain_sitting, 5, 0, non_lying, non_lying
+1140,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.5006775922790743,0,0.49624060150375937,192,True,0, 0, 0, 0,None, True, 97, standing, standing, 74, 73, uncertain_sitting, non_sitting, 3, 0, non_lying, non_lying
+1141,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5058277704721298,0,0,176,True,0, 0, 0, 0,None, True, 97, standing, standing, 73, 73, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+1142,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5304757419345584,0,0,167,True,0, 0, 0, 0,None, True, 97, standing, standing, 70, 72, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+1143,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5303565772823811,1.5,0,164,True,0, 0, 0, 0,None, True, 95, standing, standing, 63, 71, uncertain_sitting, non_sitting, 2, 0, non_lying, non_lying
+1144,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.5336669718829639,0,0.4631578947368421,192,True,0, 0, 0, 0,None, True, 95, standing, standing, 67, 71, uncertain_sitting, non_sitting, 3, 0, non_lying, non_lying
+1145,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5340466820185544,1.5,0,200,True,0, 0, 0, 0,None, True, 96, standing, standing, 63, 70, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+1146,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5263849420228718,1.5,0,212,True,-0.006864622235298157, -0.008613377809524536, -0.00790703296661377, -0.0025794506072998047,None, True, 96, standing, standing, 65, 69, uncertain_sitting, uncertain_sitting, 6, 3, non_lying, non_lying
+1147,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.5145232726936176,1.2,0,211,True,0, 0, 0, 0,None, True, 96, standing, standing, 62, 68, uncertain_sitting, uncertain_sitting, 7, 5, non_lying, non_lying
+1148,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.5193271151164076,1.5,0.556390977443609,216,True,0, 0, 0, 0,None, True, 94, standing, standing, 62, 68, uncertain_sitting, uncertain_sitting, 10, 5, non_lying, non_lying
+1149,stand,stand,stand,stand,sit-stand,False,False,sit,False,True,0.52073286754057,1.5,0,218,True,0, 0, 0, 0,None, True, 95, standing, standing, 61, 67, uncertain_sitting, uncertain_sitting, 10, 6, non_lying, non_lying
+1150,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.5368085690117242,1.5,0.5609022556390978,217,True,0, 0, 0, 0,None, True, 95, standing, standing, 60, 66, uncertain_sitting, uncertain_sitting, 10, 6, non_lying, non_lying
+1151,stand,stand,stand,stand,sit-stand,False,False,sit,False,False,0.5472938968902125,1.5,0.5616541353383459,214,True,0, 0, 0, 0,None, True, 95, standing, standing, 59, 67, uncertain_sitting, uncertain_sitting, 10, 6, non_lying, non_lying
+1152,stand,stand,stand,stand,sit-stand,False,False,uncertain_sit,False,True,0.5666015263624609,0,0,220,True,0, 0, 0, 0,None, True, 94, standing, standing, 57, 65, uncertain_sitting, uncertain_sitting, 10, 10, non_lying, non_lying
+1153,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.5752166048411008,0,0,224,True,0, 0, 0, 0,None, True, 95, standing, standing, 58, 66, uncertain_sitting, uncertain_sitting, 10, 7, non_lying, non_lying
+1154,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.5569208605746175,0,0,224,True,-0.014640212059020996, -0.020813241600990295, 0.0, -0.008990943431854248,None, True, 96, standing, standing, 69, 72, uncertain_sitting, uncertain_sitting, 7, 2, non_lying, non_lying
+1155,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.5617463312951442,0,0,214,True,0, 0, 0, 0,None, True, 96, standing, standing, 72, 72, uncertain_sitting, uncertain_sitting, 7, 2, non_lying, non_lying
+1156,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,False,0.5712377640163633,0,0.5112781954887218,207,True,0, 0, 0, 0,None, True, 95, standing, standing, 71, 71, uncertain_sitting, uncertain_sitting, 6, 2, non_lying, non_lying
+1157,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.5933819458607608,0,0,213,True,0, 0, 0, 0,None, True, 96, standing, standing, 73, 72, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+1158,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.6009962101257171,0,0,213,True,0, 0, 0, 0,None, True, 96, standing, standing, 73, 73, uncertain_sitting, uncertain_sitting, 5, 2, non_lying, non_lying
+1159,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.579976077355208,0,0,208,True,0, 0, 0, 0,None, True, 96, standing, standing, 75, 73, uncertain_sitting, uncertain_sitting, 4, 2, non_lying, non_lying
+1160,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.5634727848249277,0,0,205,True,0, 0, 0, 0,None, True, 86, standing, standing, 73, 71, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+1161,stand,stand,stand,stand,stand-stand,False,False,uncertain_sit,False,True,0.5605170432487154,0,0,208,True,0, 0, 0, 0,None, True, 91, standing, standing, 69, 70, uncertain_sitting, uncertain_sitting, 7, 2, non_lying, non_lying
+1162,stand,stand,stand,stand,stand-stand,False,False,sit,False,True,0.5427848588548816,0,0,201,True,-0.01744750142097473, -0.027927085757255554, 0.0, -0.0041348934173583984,None, True, 91, standing, standing, 68, 69, uncertain_sitting, uncertain_sitting, 10, 2, non_lying, non_lying
+1163,stand,stand,stand,stand,stand-stand,False,False,sit,False,False,0.5118579687210565,0,0.4932330827067669,178,True,0, 0, 0, 0,None, True, 93, standing, standing, 77, 77, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+1164,None,None,None,None,None,False,False,None,False,True,0,0,0,199,True,0, 0, 0, 0,
+1165,None,None,None,None,None,False,False,None,False,True,0,0,0,198,True,0, 0, 0, 0,
+1166,None,None,None,None,None,False,False,None,False,False,0,0,0.5135338345864662,200,True,0, 0, 0, 0,
+1167,None,None,None,None,None,False,False,None,False,True,0,0,0,192,True,0, 0, 0, 0,
+1168,None,None,None,None,None,False,False,None,False,True,0,0,0,202,True,0, 0, 0, 0,
+1169,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,206,True,0, 0, 0, 0,
+1170,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,210,True,0, 0, 0, 0,
+1171,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,216,True,0, 0, 0, 0,
+1172,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,216,True,0, 0, 0, 0,
+1173,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,208,True,0, 0, 0, 0,
+1174,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,194,True,0, 0, 0, 0,
+1175,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,198,True,0, 0, 0, 0,
+1176,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,204,True,0, 0, 0, 0,
+1177,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,209,True,0, 0, 0, 0,
+1178,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,211,True,0, 0, 0, 0,
+1179,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,217,True,0, 0, 0, 0,
+1180,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,216,True,0, 0, 0, 0,
+1181,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,212,True,0, 0, 0, 0,
+1182,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,215,True,0, 0, 0, 0,
+1183,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,216,True,0, 0, 0, 0,
+1184,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,220,True,0, 0, 0, 0,
+1185,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,226,True,0, 0, 0, 0,
+1186,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,224,True,0, 0, 0, 0,
+1187,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,226,True,0, 0, 0, 0,
+1188,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,220,True,0, 0, 0, 0,
+1189,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,160,True,0, 0, 0, 0,
+1190,stand,sit,stand,stand,stand-stand,False,False,lie,False,False,3.286460714876723,0,0.562406015037594,131,True,0, 0, 0, 0,None, True, 20, non_standing, non_standing, -484, -426, sitting, sitting, 50, 50, non_lying, non_lying
+1191,stand,sit,stand,stand,stand-stand,False,False,lie,False,False,4.005314509978119,0,0.562406015037594,120,True,0, 0, 0, 0,None, True, 19, non_standing, non_standing, -250, -302, sitting, sitting, 50, 50, non_lying, non_lying
+1192,stand,sit,stand,stand,stand-stand,False,False,lie,False,False,3.7227693387323226,0,0.562406015037594,113,True,0, 0, 0, 0,None, True, 18, non_standing, non_standing, -370, -235, sitting, sitting, 50, 50, non_lying, non_lying
+1193,stand,sit,stand,stand,stand-stand,False,False,lie,False,False,3.8485808818365923,0,0.562406015037594,114,True,0, 0, 0, 0,None, True, 17, non_standing, non_standing, -360, -177, sitting, sitting, 50, 50, non_lying, non_lying
+1194,stand,sit,sit,lie,stand-lie,False,False,lie,True,False,3.914566756811789,0,0.562406015037594,113,True,0, 0, 0, 0,None, True, 16, non_standing, non_standing, -201, -138, sitting, sitting, 50, 50, non_lying, non_lying
+1195,stand,sit,sit,lie,stand-lie,False,False,lie,False,False,4.818912302900198,0,0.562406015037594,114,True,0, 0, 0, 0,None, True, 11, non_standing, non_standing, -137, -122, sitting, sitting, 50, 50, non_lying, lying
+1196,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,116,True,0, 0, 0, 0,
+1197,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,116,True,0, 0, 0, 0,
+1198,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,116,True,0, 0, 0, 0,
+1199,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,114,True,0, 0, 0, 0,
+1200,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,114,True,0, 0, 0, 0,
+1201,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,168,True,0, 0, 0, 0,
+1202,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,169,True,0, 0, 0, 0,
+1203,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,176,True,0, 0, 0, 0,
+1204,None,None,None,None,None,False,False,None,False,False,0,0,0.562406015037594,176,True,0, 0, 0, 0,
+1205,None,None,None,None,None,False,False,None,False,True,0,0,0,166,True,0, 0, 0, 0,
+1206,None,None,None,None,None,False,False,None,False,True,0,0,0,160,True,0, 0, 0, 0,
+1207,None,None,None,None,None,False,False,None,False,True,0,0,0,161,True,0, 0, 0, 0,
+1208,None,None,None,None,None,False,False,None,False,True,0,0,0,144,True,0, 0, 0, 0,
+1209,None,None,None,None,None,False,False,None,False,True,0,0,0,96,True,0, 0, 0, 0,
+1210,None,None,None,None,None,False,False,None,False,True,0,0,0,93,True,0, 0, 0, 0,
+1211,None,None,None,None,None,False,False,None,False,True,0,0,0,133,True,0, 0, 0, 0,
+1212,None,None,None,None,None,False,False,None,False,True,0,0,0,146,True,0, 0, 0, 0,
+1213,None,None,None,None,None,False,False,None,False,True,0,0,0,152,True,0, 0, 0, 0,
+1214,None,None,None,None,None,False,False,None,False,True,0,0,0,162,True,0, 0, 0, 0,
+1215,None,None,None,None,None,False,False,None,False,True,0,0,0,162,True,0, 0, 0, 0,
+1216,None,None,None,None,None,False,False,None,False,False,0,0,0.2903703703703704,146,True,0, 0, 0, 0,
+1217,None,None,None,None,None,False,False,None,False,False,0,0,0.17088607594936708,133,True,0, 0, 0, 0,
+1218,None,None,None,None,None,False,False,None,False,False,0,0,0.3380281690140845,132,True,0, 0, 0, 0,
+1219,None,None,None,None,None,False,False,None,False,False,0,0,0.29329173166926675,136,True,0, 0, 0, 0,
+1220,None,None,None,None,None,False,False,None,False,False,0,0,0.34392523364485983,151,True,0, 0, 0, 0,
+1221,None,None,None,None,None,False,False,None,False,True,0,0,0,160,True,0, 0, 0, 0,
+1222,None,None,None,None,None,False,False,None,False,False,0,0,0.3333333333333333,161,True,0, 0, 0, 0,
+1223,None,None,None,None,None,False,False,None,False,True,0,0,0,176,True,0, 0, 0, 0,
+1224,None,None,None,None,None,False,False,None,False,False,0,0,0.3108348134991119,176,True,0, 0, 0, 0,
+1225,None,None,None,None,None,False,False,None,False,False,0,0,0.32706766917293234,90,True,0, 0, 0, 0,
+1226,None,None,None,None,None,False,False,None,False,False,0,0,0.3326612903225806,90,True,0, 0, 0, 0,
+1227,None,None,None,None,None,False,False,None,False,False,0,0,0.30864197530864196,86,True,0, 0, 0, 0,
+1228,None,None,None,None,None,False,False,None,False,False,0,0,0.3064182194616977,88,True,0, 0, 0, 0,
+1229,None,None,None,None,None,False,False,None,False,True,0,0,0,88,True,0, 0, 0, 0,
+1230,None,None,None,None,None,False,False,None,False,True,0,0,0,85,True,0, 0, 0, 0,
+1231,None,None,None,None,None,False,False,None,False,True,0,0,0,86,True,0, 0, 0, 0,
+1232,None,None,None,None,None,False,False,None,False,True,0,0,0,85,True,0, 0, 0, 0,
+1233,None,None,None,None,None,False,False,None,False,True,0,0,0,86,True,0, 0, 0, 0,
+1234,None,None,None,None,None,False,False,None,False,True,0,0,0,86,True,0, 0, 0, 0,
+1235,None,None,None,None,None,False,False,None,False,True,0,0,0,80,True,0, 0, 0, 0,
+1271,None,None,None,None,None,False,False,None,False,True,0,0,0,27,True,0, 0, 0, 0,
+1272,None,None,None,None,None,False,False,None,False,True,0,0,0,26,True,0, 0, 0, 0,
+1288,None,None,None,None,None,False,False,None,False,True,0,0,0,33,True,0, 0, 0, 0,
+1289,None,None,None,None,None,False,False,None,False,True,0,0,0,33,True,0, 0, 0, 0,
+1296,None,None,None,None,None,False,False,None,False,True,0,0,0,29,True,0, 0, 0, 0,
+1315,None,None,None,None,None,False,False,None,False,True,0,0,0,136,True,0, 0, 0, 0,
+1316,None,None,None,None,None,False,False,None,False,True,0,0,0,141,True,0, 0, 0, 0,
+1317,None,None,None,None,None,False,False,None,False,True,0,0,0,137,True,0, 0, 0, 0,
+1318,None,None,None,None,None,False,False,None,False,True,0,0,0,136,True,0, 0, 0, 0,
+1319,None,None,None,None,None,False,False,None,False,True,0,0,0,136,True,0, 0, 0, 0,
+1320,None,None,None,None,None,False,False,None,False,True,0,0,0,136,True,0, 0, 0, 0,
+1321,None,None,None,None,None,False,False,None,False,True,0,0,0,142,True,0, 0, 0, 0,
+1322,None,None,None,None,None,False,False,None,False,True,0,0,0,136,True,0, 0, 0, 0,
+1323,None,None,None,None,None,False,False,None,False,True,0,0,0,137,True,0, 0, 0, 0,
+1324,None,None,None,None,None,False,False,None,False,False,0,0,0.13111545988258316,160,True,0, 0, 0, 0,
+1325,None,None,None,None,None,False,False,None,False,False,0,0,0.13886210221793635,160,True,0, 0, 0, 0,
+1326,None,None,None,None,None,False,False,None,False,True,0,0,0,162,True,0, 0, 0, 0,
+1327,None,None,None,None,None,False,False,None,False,True,0,0,0,161,True,0, 0, 0, 0,
+1328,None,None,None,None,None,False,False,None,False,False,0,0,0.21029668411867364,152,True,0, 0, 0, 0,
+1329,None,None,None,None,None,False,False,None,False,True,0,0,0,152,True,0, 0, 0, 0,
+1330,None,None,None,None,None,False,False,None,False,True,0,0,0,162,True,0, 0, 0, 0,
+1331,None,None,None,None,None,False,False,None,False,True,0,0,0,168,True,0, 0, 0, 0,
+1332,nan,sit,sit,sit,None,False,False,sit,False,True,0.3310428116965325,0,0,173,True,0.0, 0.0, 0.0, 0.0,None, True, 78, uncertain_squat, uncertain_standing, 60, 67, sitting, uncertain_sitting, 20, 10, non_lying, non_lying
+1333,nan,stand,sit,sit,sit-sit,False,False,uncertain_sit,False,False,0.2472827314301283,1.5,0.19792498004788509,168,True,0, 0, 0, 0,None, True, 75, uncertain_squat, uncertain_standing, 64, 64, uncertain_sitting, non_sitting, 10, 0, non_lying, non_lying
+1334,nan,sit,sit,sit,sit-sit,False,False,sit,False,False,0.3313591277329391,0,0.1982414068745004,168,True,0, 0, 0, 0,None, True, 74, uncertain_squat, uncertain_standing, 68, 65, sitting, non_sitting, 20, 0, non_lying, non_lying
+1335,nan,stand,sit,sit,sit-sit,False,False,sit,False,True,0.35097840216340603,0,0,172,True,0, 0, 0, 0,None, True, 78, standing, standing, 80, 65, uncertain_sitting, non_sitting, 1, 0, non_lying, non_lying
+1336,nan,stand,sit,sit,sit-sit,False,False,sit,False,True,0.4014997381887093,0,0,169,True,0, 0, 0, 0,None, True, 77, standing, standing, 76, 66, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+1337,nan,stand,sit,sit,sit-sit,False,False,sit,False,True,0.37017529467711485,1.5,0,168,True,0, 0, 0, 0,None, True, 73, standing, standing, 75, 69, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+1338,nan,stand,sit,sit,sit-sit,False,False,sit,False,True,0.39992869176566226,0,0,166,True,0, 0, 0, 0,None, True, 72, standing, standing, 70, 69, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+1339,nan,stand,stand,stand,sit-stand,False,False,sit,True,False,0.3742996154402569,0,0.2572741194486983,171,True,0, 0, 0, 0,None, True, 85, standing, standing, 82, 66, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+1340,nan,stand,stand,stand,sit-stand,False,False,sit,False,False,0.36540349893769647,0,0.262406015037594,172,True,0.0, 0.0, 0.0, 0.0,None, True, 81, standing, standing, 75, 70, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+1341,nan,stand,stand,stand,sit-stand,False,False,sit,False,False,0.3762381810168698,0,0.27960275019098546,200,True,0, 0, 0, 0,None, True, 82, standing, standing, 75, 71, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+1342,nan,stand,stand,stand,sit-stand,False,False,sit,False,True,0.35472610586063824,0,0,232,True,0, 0, 0, 0,None, True, 83, standing, standing, 77, 79, uncertain_sitting, non_sitting, 3, 0, non_lying, non_lying
+1343,nan,stand,stand,stand,sit-stand,False,False,sit,False,True,0.32276468794913116,0,0,232,True,0, 0, 0, 0,None, True, 82, standing, standing, 73, 76, uncertain_sitting, uncertain_sitting, 6, 3, non_lying, non_lying
+1344,nan,stand,stand,stand,sit-stand,False,False,sit,False,True,0.3137574165130936,0,0,232,True,0, 0, 0, 0,None, True, 81, standing, standing, 72, 75, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+1345,nan,stand,stand,stand,sit-stand,False,False,sit,False,True,0.32369613639592837,0,0,232,True,0, 0, 0, 0,None, True, 82, standing, standing, 69, 69, uncertain_sitting, uncertain_sitting, 10, 5, non_lying, non_lying
+1346,nan,stand,stand,stand,sit-stand,False,False,sit,False,True,0.4116396573842282,0,0,233,True,0, 0, 0, 0,None, True, 86, standing, standing, 69, 71, uncertain_sitting, uncertain_sitting, 7, 6, non_lying, non_lying
+1347,nan,stand,stand,stand,sit-stand,False,False,sit,False,True,0.3897526538562597,0,0,234,True,0, 0, 0, 0,None, True, 85, standing, standing, 70, 73, uncertain_sitting, uncertain_sitting, 7, 4, non_lying, non_lying
+1348,nan,stand,stand,stand,sit-stand,False,False,sit,False,False,0.4248701816394805,0,0.3443609022556391,234,True,0.0, 0.0, 0.0, 0.0,None, True, 84, standing, standing, 69, 68, uncertain_sitting, uncertain_sitting, 7, 4, non_lying, non_lying
+1349,nan,stand,stand,stand,sit-stand,False,False,sit,False,False,0.4044725843423578,0,0.3556390977443609,234,True,0, 0, 0, 0,None, True, 83, standing, standing, 66, 58, uncertain_sitting, uncertain_sitting, 10, 7, non_lying, non_lying
+1350,nan,stand,stand,stand,sit-stand,False,False,sit,False,True,0.41426390349481246,0,0,224,True,0, 0, 0, 0,None, True, 83, standing, standing, 68, 63, uncertain_sitting, uncertain_sitting, 7, 5, non_lying, non_lying
+1351,stand-lie,stand,stand,stand,sit-stand,True,False,sit,False,True,0.4299058261529945,0,0,198,True,0, 0, 0, 0,None, True, 82, standing, standing, 69, 71, uncertain_sitting, uncertain_sitting, 7, 4, non_lying, non_lying
+1352,stand-lie,stand,stand,stand,sit-stand,True,False,sit,False,True,0.45424772945694725,1.5,0,196,True,0, 0, 0, 0,None, True, 80, standing, standing, 68, 70, uncertain_sitting, uncertain_sitting, 7, 4, non_lying, non_lying
+1353,stand-lie,stand,stand,stand,sit-stand,True,False,sit,False,True,0.46310866583010957,0,0,210,True,0, 0, 0, 0,None, True, 80, standing, standing, 67, 66, uncertain_sitting, uncertain_sitting, 10, 5, non_lying, non_lying
+1354,stand-lie,stand,stand,stand,sit-stand,True,False,sit,False,True,0.5245621599429335,1.5,0,208,True,0, 0, 0, 0,None, True, 80, standing, standing, 68, 68, uncertain_sitting, uncertain_sitting, 10, 10, non_lying, non_lying
+1355,stand-lie,sit,stand,stand,sit-stand,True,False,uncertain_sit,False,True,0.5662862514688273,0,0,197,True,0, 0, 0, 0,None, True, 79, uncertain_squat, non_standing, -311, -151, sitting, sitting, 30, 30, non_lying, non_lying
+1356,stand-lie,sit,stand,stand,sit-stand,True,False,sit,False,True,0.5112117685451486,1.5,0,197,True,0.0, 0.0, 0.0, 0.0,None, True, 86, uncertain_standing, non_standing, -219, -204, sitting, sitting, 30, 40, non_lying, non_lying
+1357,stand-lie,sit,stand,stand,sit-stand,True,False,uncertain_sit,False,True,0.63331415106634,0,0,192,True,0, 0, 0, 0,None, True, 88, uncertain_squat, non_standing, -206, -211, sitting, sitting, 30, 40, non_lying, non_lying
+1358,stand-lie,sit,stand,stand,sit-stand,True,False,sit,False,True,0.5519581608366596,0,0,194,True,0, 0, 0, 0,None, True, 89, non_standing, non_standing, -312, -193, sitting, sitting, 30, 40, non_lying, non_lying
+1359,stand-lie,sit,sit,sit,sit-stand-sit,True,False,uncertain_sit,True,False,0.5796875114391118,0,0.6243739565943238,193,True,0, 0, 0, 0,None, True, 89, non_standing, non_standing, -254, -237, sitting, sitting, 30, 30, non_lying, non_lying
+1360,stand-lie,stand,sit,sit,sit-stand-sit,True,False,sit,False,False,0.5163617650579128,0,0.6106122448979592,192,True,0, 0, 0, 0,None, True, 88, standing, standing, 76, 75, uncertain_sitting, non_sitting, 4, 0, non_lying, non_lying
+1361,stand-lie,stand,sit,sit,sit-stand-sit,True,False,sit,False,True,0.4782740025063555,0,0,190,True,0, 0, 0, 0,None, True, 83, standing, standing, 70, 70, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+1362,stand-lie,stand,sit,sit,sit-stand-sit,True,False,sit,False,True,0.42152148374345405,0,0,186,True,0, 0, 0, 0,None, True, 79, standing, standing, 73, 77, uncertain_sitting, non_sitting, 0, 0, non_lying, non_lying
+1363,stand-lie,stand,sit,sit,sit-stand-sit,True,False,sit,False,False,0.34674844930190457,0,0.584092792046396,196,True,0, 0, 0, 0,None, True, 77, standing, standing, 70, 75, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+1364,stand-lie,stand,stand,stand,sit-stand,True,False,sit,True,True,0.33191031848083535,0,0,200,True,0.0, 0.0, 0.0, 0.0,None, True, 78, standing, uncertain_standing, 70, -215, non_sitting, sitting, 0, 0, non_lying, non_lying
+1365,stand-lie,stand,stand,stand,sit-stand,True,False,uncertain_sit,False,False,0.2698903230119172,0,0.6611265004616805,202,True,0, 0, 0, 0,None, True, 82, standing, standing, 69, 74, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+1366,stand-lie,stand,stand,stand,sit-stand,True,False,uncertain_stand,False,True,0.23453925577468793,0,0,193,True,0, 0, 0, 0,None, True, 80, standing, standing, 69, 74, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+1367,stand-lie,stand,stand,stand,sit-stand,True,False,uncertain_stand,False,True,0.23059738901314614,0,0,175,True,0, 0, 0, 0,None, True, 82, standing, standing, 81, 87, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+1368,stand-lie,stand,stand,stand,sit-stand,True,False,uncertain_stand,False,False,0.22663589684970237,0,0.634974533106961,161,True,0, 0, 0, 0,None, True, 83, standing, standing, 74, 81, non_sitting, non_sitting, 0, 0, non_lying, non_lying
+1369,stand-lie,sit,stand,stand,sit-stand,True,False,sit,False,False,0.50911869703526,0,0.7144221585482331,148,True,0, 0, 0, 0,None, True, 50, uncertain_standing, non_standing, -104, -152, sitting, sitting, 0, 0, non_lying, non_lying
+1370,None,None,None,None,None,True,False,None,False,False,0,0,0.73046875,126,True,0, 0, 0, 0,
+1371,None,None,None,None,None,True,False,None,False,False,0,0,0.7333333333333333,146,True,0, 0, 0, 0,
+1372,None,None,None,None,None,True,False,None,False,True,0,0,0,148,True,0, 0, 0, 0,
+1373,None,None,None,None,None,True,False,None,False,True,0,0,0,152,True,0, 0, 0, 0,
+1374,None,None,None,None,None,True,False,None,False,True,0,0,0,164,True,0, 0, 0, 0,
+1375,None,None,None,None,None,True,False,None,False,True,0,0,0,164,True,0, 0, 0, 0,
+1376,None,None,None,None,None,True,False,None,False,False,0,0,0.9341021416803954,164,True,0, 0, 0, 0,
+1377,None,None,None,None,None,True,False,None,False,False,0,0,0.9266666666666666,164,True,0, 0, 0, 0,
+1378,None,None,None,None,None,True,False,None,False,False,0,0,0.9438775510204082,164,True,0, 0, 0, 0,
+1379,None,None,None,None,None,True,False,None,False,False,0,0,0.9064039408866995,156,True,0, 0, 0, 0,
+1380,None,None,None,None,None,True,False,None,False,False,0,0,0.9488448844884488,148,True,0, 0, 0, 0,
+1381,None,None,None,None,None,True,False,None,False,False,0,0,0.9186046511627907,156,True,0, 0, 0, 0,
+1382,None,None,None,None,None,True,False,None,False,False,0,0,0.9549393414211439,152,True,0, 0, 0, 0,
+1383,None,None,None,None,None,True,False,None,False,True,0,0,0,112,True,0, 0, 0, 0,
+1384,None,None,None,None,None,True,False,None,False,True,0,0,0,128,True,0, 0, 0, 0,
+1385,None,None,None,None,None,True,False,None,False,False,0,0,0.5816485225505443,128,True,0, 0, 0, 0,
+1386,None,None,None,None,None,True,False,None,False,False,0,0,0.562406015037594,129,True,0, 0, 0, 0,
+1387,None,None,None,None,None,True,False,None,False,False,0,0,0.562406015037594,81,True,0, 0, 0, 0,
+1388,None,None,None,None,None,True,False,None,False,False,0,0,0.562406015037594,80,True,0, 0, 0, 0,
+1389,None,None,None,None,None,True,False,None,False,False,0,0,0.562406015037594,96,True,0, 0, 0, 0,
+1390,None,None,None,None,None,True,False,None,False,False,0,0,0.56752655538695,124,True,0, 0, 0, 0,
+1391,None,None,None,None,None,True,False,None,False,False,0,0,1.103244837758112,148,True,0, 0, 0, 0,
+1392,None,None,None,None,None,True,False,None,False,False,0,0,0.5679574791192104,148,True,0, 0, 0, 0,
+1393,stand-lie,lie,stand,stand,sit-stand,True,False,lie,False,False,1.5325021387450688,0,0.5692541856925418,144,True,0, 0, 0, 0,None, False, 93, non_standing, non_standing, -236, 40, sitting, sitting, 50, 50, lying, lying
+1394,stand-lie,lie,stand,stand,sit-stand,True,False,lie,False,False,1.3583410465895125,0,0.5688212927756654,138,True,0, 0, 0, 0,None, False, 84, non_standing, non_standing, -209, -298, sitting, sitting, 50, 0, lying, lying
+1395,stand-lie,lie,stand,stand,sit-stand,True,False,uncertain_sit,False,False,0.8540323730422833,1.5,0.771875,137,True,0.21265816688537598, 0.18446046113967896, 0.026820778846740723, 0.03381103277206421,None, False, 83, non_standing, non_standing, -240, -353, sitting, sitting, 20, 0, lying, lying
+1396,stand-lie,lie,stand,stand,sit-stand,True,False,sit,False,True,0.3352986272265508,1.5,0,138,True,0, 0, 0, 0,None, False, 81, uncertain_squat, standing, 61, 68, non_sitting, non_sitting, 0, 0, lying, lying
+1397,stand-lie,stand,stand,stand,sit-stand,True,False,uncertain_sit,False,True,0.2586960383727127,1.5,0,133,True,0, 0, 0, 0,None, False, 85, standing, standing, 81, 78, non_sitting, non_sitting, 0, 0, lying, lying
+1398,stand-lie,stand,stand,stand,sit-stand,True,False,sit,False,True,0.3538590001787165,1.2,0,79,True,0, 0, 0, 0,None, False, 60, standing, standing, 69, 72, non_sitting, non_sitting, 0, 0, lying, lying
+1399,stand-lie,stand,stand,stand,sit-stand,True,False,sit,False,True,0.3911686874356183,1.2,0,81,True,0, 0, 0, 0,None, False, 82, standing, standing, 73, 74, non_sitting, non_sitting, 0, 0, lying, lying
+1400,stand-lie,stand,stand,stand,sit-stand,True,False,sit,False,False,0.33794753498425334,1.5,0.8581196581196581,104,True,0, 0, 0, 0,None, False, 72, standing, standing, 81, 80, non_sitting, non_sitting, 0, 0, lying, lying
+1401,stand-lie,lie,stand,stand,sit-stand,True,False,uncertain_sit,False,True,0.6643212285228774,1.5,0,104,True,0, 0, 0, 0,None, False, 91, non_standing, non_standing, -396, -266, sitting, sitting, 0, 0, lying, lying
+1402,stand-lie,lie,stand,stand,sit-stand,True,False,uncertain_sit,False,True,0.6965152152160132,1.5,0,66,True,0, 0, 0, 0,None, False, 92, non_standing, non_standing, -317, -356, sitting, sitting, 0, 0, lying, lying
+1403,stand-lie,lie,stand,stand,sit-stand,True,False,uncertain_sit,False,True,0.7145374702697889,1.5,0,66,True,0.0, 0.0, 0.0, 0.0,None, False, 91, non_standing, non_standing, -350, -461, sitting, sitting, 0, 0, lying, lying
+1404,None,None,None,None,None,True,False,None,False,True,0,0,0,60,True,0, 0, 0, 0,
+1405,None,None,None,None,None,True,False,None,False,True,0,0,0,100,True,0, 0, 0, 0,
+1406,None,None,None,None,None,True,False,None,False,True,0,0,0,112,True,0, 0, 0, 0,
+1407,None,None,None,None,None,True,False,None,False,True,0,0,0,112,True,0, 0, 0, 0,
+1408,None,None,None,None,None,True,False,None,False,False,0,0,1.1614906832298137,114,True,0, 0, 0, 0,
+1409,None,None,None,None,None,True,False,None,False,False,0,0,1.1507692307692308,116,True,0, 0, 0, 0,
+1410,None,None,None,None,None,True,False,None,False,False,0,0,1.1891891891891893,104,True,0, 0, 0, 0,
+1411,None,None,None,None,None,True,False,None,False,False,0,0,1.1761006289308176,122,True,0, 0, 0, 0,
+1412,None,None,None,None,None,True,False,None,False,False,0,0,1.1265060240963856,122,True,0, 0, 0, 0,
+1413,sit-stand,sit,stand,stand,sit-stand,True,False,lie,False,False,2.2951834014852013,0,1.1385083713850837,120,True,0, 0, 0, 0,None, True, 26, non_standing, non_standing, -101, -87, sitting, sitting, 0, 0, non_lying, non_lying
+1414,sit-stand,sit,stand,stand,stand-sit-stand,True,False,lie,False,False,2.213134725600556,1.5,1.0685714285714285,136,True,0, 0, 0, 0,None, True, 27, non_standing, non_standing, -102, -81, sitting, sitting, 10, 0, non_lying, non_lying
+1415,sit-stand,sit,stand,stand,stand-sit-stand,True,False,lie,False,False,2.2398714965741173,0,0.876905041031653,142,True,0, 0, 0, 0,None, True, 25, non_standing, non_standing, -96, -94, sitting, sitting, 50, 20, non_lying, non_lying
+1416,sit-stand,sit,stand,stand,stand-sit-stand,True,False,lie,False,False,2.773679121139228,0,0.9385194479297365,143,True,0, 0, 0, 0,None, True, 27, non_standing, non_standing, -120, -167, sitting, sitting, 50, 50, non_lying, non_lying
+1417,sit-stand,sit,sit,lie,stand-sit-lie,True,True,lie,True,False,1.5429668488612867,0,0.8841607565011821,138,True,0, 0, 0, 0,None, True, 31, non_standing, non_standing, -284, -287, sitting, sitting, 50, 50, non_lying, non_lying
+1418,sit-stand,sit,sit,lie,stand-sit-lie,True,True,lie,False,False,1.3324960833355026,0,0.827433628318584,148,True,0, 0, 0, 0,None, True, 33, non_standing, non_standing, -221, -226, sitting, sitting, 50, 0, non_lying, non_lying
+1419,sit-stand,sit,sit,lie,stand-sit-lie,True,True,lie,False,False,1.04632038131277,0,0.7906976744186046,148,True,0, 0, 0, 0,None, True, 36, non_standing, non_standing, 47, -359, non_sitting, sitting, 0, 20, non_lying, non_lying
+1420,sit-stand,sit,sit,sit,stand-sit,True,True,uncertain_sit,False,False,0.9601007488580019,0,0.7318982387475538,140,True,0.0, 0.0, 0.0, 0.0,None, True, 40, non_standing, non_standing, 47, -301, uncertain_sitting, sitting, 10, 20, non_lying, non_lying
+1421,sit-stand,sit,sit,lie,stand-sit-lie,True,True,lie,False,False,1.1676623546359584,0,0.562406015037594,125,True,0, 0, 0, 0,None, True, 41, non_standing, non_standing, 27, -122, sitting, sitting, 27, 10, non_lying, non_lying
+1422,sit-stand,sit,sit,lie,stand-sit-lie,True,True,lie,False,False,1.0543485650572526,0,0.6806569343065694,141,True,0, 0, 0, 0,None, True, 44, non_standing, non_standing, 20, -140, uncertain_sitting, sitting, 10, 0, non_lying, non_lying
+1423,sit-stand,sit,sit,sit,stand-sit,True,True,uncertain_sit,False,False,0.975693070253682,0,0.5894405043341213,146,True,0, 0, 0, 0,None, True, 47, non_standing, non_standing, 32, -160, uncertain_sitting, sitting, 7, 0, non_lying, non_lying
+1424,sit-stand,sit,sit,sit,stand-sit,True,True,uncertain_sit,False,False,0.8822839418171777,0,0.6317567567567568,146,True,0, 0, 0, 0,None, True, 48, non_standing, non_standing, 42, -363, uncertain_sitting, sitting, 5, 0, non_lying, non_lying
+1425,sit-stand,stand,sit,sit,stand-sit,True,True,uncertain_sit,False,False,0.8649353358083811,0,0.562406015037594,149,True,0, 0, 0, 0,None, True, 46, non_standing, uncertain_squat, 46, 62, uncertain_sitting, non_sitting, 6, 0, non_lying, non_lying
+1426,sit-stand,stand,sit,sit,stand-sit,True,True,uncertain_sit,False,False,0.7232661119505038,0,0.562406015037594,154,True,0, 0, 0, 0,None, True, 50, uncertain_standing, uncertain_squat, 67, 68, uncertain_sitting, non_sitting, 5, 0, non_lying, non_lying
+1427,sit-stand,stand,sit,sit,stand-sit,True,True,uncertain_sit,False,False,0.5890066587594694,0,0.562406015037594,154,True,0, 0, 0, 0,None, True, 52, standing, standing, 80, 76, uncertain_sitting, non_sitting, 3, 0, non_lying, non_lying
+1428,sit-stand,stand,sit,sit,stand-sit,True,True,uncertain_sit,False,False,0.5692562142968354,0,0.562406015037594,160,True,0.0, 0.0, 0.0, 0.0,None, True, 49, standing, uncertain_squat, 82, 64, uncertain_sitting, uncertain_sitting, 4, 10, non_lying, non_lying
+1429,sit-stand,stand,stand,stand,stand-sit-stand,True,True,sit,True,False,0.5385160065393734,0,0.562406015037594,165,True,0, 0, 0, 0,None, True, 48, standing, uncertain_squat, 84, 59, uncertain_sitting, uncertain_sitting, 5, 20, non_lying, non_lying
+1430,sit-stand,stand,stand,stand,stand-sit-stand,True,True,sit,False,False,0.5449325386722368,0,0.562406015037594,160,True,0, 0, 0, 0,None, True, 65, uncertain_standing, non_standing, 75, -212, uncertain_sitting, sitting, 10, 40, non_lying, non_lying
+1431,sit-stand,sit,stand,stand,stand-sit-stand,True,True,uncertain_sit,False,False,0.592897168404268,1.5,0.562406015037594,166,True,0, 0, 0, 0,None, True, 63, non_standing, non_standing, -228, -230, sitting, sitting, 30, 50, non_lying, non_lying
+1432,sit-stand,sit,stand,stand,stand-sit-stand,True,True,uncertain_sit,False,False,0.6944837356559639,0,0.562406015037594,162,True,0, 0, 0, 0,None, True, 67, non_standing, non_standing, -39, -71, sitting, sitting, 200, 200, non_lying, non_lying
+1433,sit-stand,sit,stand,stand,stand-sit-stand,True,True,uncertain_sit,False,False,0.7540866549335677,1.5,0.562406015037594,165,True,0, 0, 0, 0,None, True, 72, non_standing, non_standing, -91, -92, sitting, sitting, 200, 200, non_lying, non_lying
+1434,sit-stand,sit,stand,stand,sit-stand,True,True,uncertain_sit,False,True,0.6383755445194985,1.5,0,168,True,0, 0, 0, 0,None, True, 68, non_standing, non_standing, -165, -83, sitting, sitting, 200, 200, non_lying, non_lying
+1435,None,None,None,None,None,True,True,None,False,False,0,0,0.562406015037594,176,True,0, 0, 0, 0,
+1436,None,None,None,None,None,True,True,None,False,False,0,0,0.562406015037594,168,True,0, 0, 0, 0,
+1437,None,None,None,None,None,True,True,None,False,True,0,0,0,170,True,0, 0, 0, 0,
+1438,None,None,None,None,None,True,True,None,False,True,0,0,0,168,True,0, 0, 0, 0,
+1439,None,None,None,None,None,True,True,None,False,True,0,0,0,160,True,0, 0, 0, 0,
+1440,None,None,None,None,None,True,True,None,False,True,0,0,0,132,True,0, 0, 0, 0,
+1441,None,None,None,None,None,True,True,None,False,True,0,0,0,129,True,0, 0, 0, 0,
+1442,None,None,None,None,None,True,True,None,False,True,0,0,0,132,True,0, 0, 0, 0,
+1443,None,None,None,None,None,True,True,None,False,True,0,0,0,168,True,0, 0, 0, 0,
+1444,None,None,None,None,None,True,True,None,False,False,0,0,0.493984962406015,160,True,0, 0, 0, 0,
+1445,None,None,None,None,None,True,True,None,False,True,0,0,0,164,True,0, 0, 0, 0,
+1446,None,None,None,None,None,True,True,None,False,True,0,0,0,163,True,0, 0, 0, 0,
+1447,None,None,None,None,None,True,True,None,False,True,0,0,0,160,True,0, 0, 0, 0,
+1448,None,None,None,None,None,True,True,None,False,False,0,0,0.562406015037594,163,True,0, 0, 0, 0,
+1449,None,None,None,None,None,True,True,None,False,False,0,0,0.562406015037594,165,True,0, 0, 0, 0,
+1450,None,None,None,None,None,True,True,None,False,False,0,0,0.562406015037594,168,True,0, 0, 0, 0,
+1451,None,None,None,None,None,True,True,None,False,False,0,0,0.562406015037594,184,True,0, 0, 0, 0,
+1452,None,None,None,None,None,True,True,None,False,False,0,0,0.562406015037594,179,True,0, 0, 0, 0,
+1453,None,None,None,None,None,True,True,None,False,False,0,0,0.562406015037594,168,True,0, 0, 0, 0,
+1454,None,None,None,None,None,True,True,None,False,False,0,0,0.562406015037594,107,True,0, 0, 0, 0,
+1455,None,None,None,None,None,True,True,None,False,False,0,0,0.562406015037594,97,True,0, 0, 0, 0,
+1456,None,None,None,None,None,True,True,None,False,True,0,0,0,104,True,0, 0, 0, 0,
+1457,None,None,None,None,None,True,True,None,False,True,0,0,0,162,True,0, 0, 0, 0,
+1458,None,None,None,None,None,True,True,None,False,True,0,0,0,161,True,0, 0, 0, 0,
+1459,None,None,None,None,None,True,True,None,False,True,0,0,0,146,True,0, 0, 0, 0,
+1460,None,None,None,None,None,True,True,None,False,True,0,0,0,127,True,0, 0, 0, 0,
+1461,None,None,None,None,None,True,True,None,False,True,0,0,0,128,True,0, 0, 0, 0,
+1462,None,None,None,None,None,True,True,None,False,True,0,0,0,96,True,0, 0, 0, 0,
+1463,None,None,None,None,None,True,True,None,False,True,0,0,0,96,True,0, 0, 0, 0,
+1464,None,None,None,None,None,True,True,None,False,True,0,0,0,96,True,0, 0, 0, 0,
+1465,None,None,None,None,None,True,True,None,False,True,0,0,0,98,True,0, 0, 0, 0,
+1466,None,None,None,None,None,True,True,None,False,True,0,0,0,96,True,0, 0, 0, 0,
+1467,None,None,None,None,None,True,True,None,False,True,0,0,0,96,True,0, 0, 0, 0,
+1468,None,None,None,None,None,True,True,None,False,True,0,0,0,128,True,0, 0, 0, 0,
+1469,None,None,None,None,None,True,True,None,False,True,0,0,0,130,True,0, 0, 0, 0,
+1470,None,None,None,None,None,True,True,None,False,True,0,0,0,144,True,0, 0, 0, 0,
+1471,None,None,None,None,None,True,True,None,False,False,0,0,0.37669172932330824,152,True,0, 0, 0, 0,
+1472,None,None,None,None,None,True,True,None,False,False,0,0,0.3774436090225564,112,True,0, 0, 0, 0,
+1473,None,None,None,None,None,True,True,None,False,True,0,0,0,105,True,0, 0, 0, 0,
+1474,None,None,None,None,None,True,True,None,False,True,0,0,0,111,True,0, 0, 0, 0,
+1475,None,None,None,None,None,True,True,None,False,True,0,0,0,192,True,0, 0, 0, 0,
+1476,None,None,None,None,None,True,True,None,False,True,0,0,0,217,True,0, 0, 0, 0,
+1477,None,None,None,None,None,True,True,None,False,True,0,0,0,224,True,0, 0, 0, 0,
+1478,None,None,None,None,None,True,True,None,False,True,0,0,0,225,True,0, 0, 0, 0,
+1479,None,None,None,None,None,True,True,None,False,True,0,0,0,224,True,0, 0, 0, 0,
+1480,None,None,None,None,None,True,True,None,False,True,0,0,0,220,True,0, 0, 0, 0,
+1481,None,None,None,None,None,True,True,None,False,True,0,0,0,133,True,0, 0, 0, 0,
+1482,None,None,None,None,None,True,True,None,False,True,0,0,0,132,True,0, 0, 0, 0,
+1483,None,None,None,None,None,True,True,None,False,True,0,0,0,104,True,0, 0, 0, 0,
+1484,None,None,None,None,None,True,True,None,False,True,0,0,0,124,True,0, 0, 0, 0,
+1485,None,None,None,None,None,True,True,None,False,True,0,0,0,209,True,0, 0, 0, 0,
+1486,None,None,None,None,None,True,True,None,False,True,0,0,0,224,True,0, 0, 0, 0,
+1487,None,None,None,None,None,True,True,None,False,True,0,0,0,224,True,0, 0, 0, 0,
+1488,None,None,None,None,None,True,True,None,False,True,0,0,0,208,True,0, 0, 0, 0,
+1489,None,None,None,None,None,True,True,None,False,True,0,0,0,174,True,0, 0, 0, 0,
+1490,None,None,None,None,None,True,True,None,False,True,0,0,0,144,True,0, 0, 0, 0,
+1491,None,None,None,None,None,True,True,None,False,False,0,0,0.1598890942698706,97,True,0, 0, 0, 0,
+1492,None,None,None,None,None,True,True,None,False,False,0,0,0.15033301617507136,72,True,0, 0, 0, 0,
+1493,None,None,None,None,None,True,True,None,False,False,0,0,0.1617933723196881,76,True,0, 0, 0, 0,
+1494,None,None,None,None,None,True,True,None,False,False,0,0,0.14893617021276595,80,True,0, 0, 0, 0,
+1495,None,None,None,None,None,True,True,None,False,False,0,0,0.24796084828711257,79,True,0, 0, 0, 0,
+1496,None,None,None,None,None,True,True,None,False,False,0,0,0.1796276013143483,80,True,0, 0, 0, 0,
+1497,None,None,None,None,None,True,True,None,False,False,0,0,0.20199778024417314,82,True,0, 0, 0, 0,
+1498,None,None,None,None,None,True,True,None,False,True,0,0,0,84,True,0, 0, 0, 0,
+1499,None,None,None,None,None,True,True,None,False,True,0,0,0,84,True,0, 0, 0, 0,
+1500,None,None,None,None,None,True,True,None,False,True,0,0,0,81,True,0, 0, 0, 0,
+1501,None,None,None,None,None,True,True,None,False,True,0,0,0,76,True,0, 0, 0, 0,
+1502,None,None,None,None,None,True,True,None,False,True,0,0,0,72,True,0, 0, 0, 0,
+1503,None,None,None,None,None,True,True,None,False,True,0,0,0,72,True,0, 0, 0, 0,
+1504,None,None,None,None,None,True,True,None,False,False,0,0,0.19928400954653938,72,True,0, 0, 0, 0,
+1505,None,None,None,None,None,True,True,None,False,False,0,0,0.21052631578947367,80,True,0, 0, 0, 0,
+1506,None,None,None,None,None,True,True,None,False,False,0,0,0.19166666666666668,75,True,0, 0, 0, 0,
+1507,None,None,None,None,None,True,True,None,False,True,0,0,0,72,True,0, 0, 0, 0,
+1508,None,None,None,None,None,True,True,None,False,False,0,0,0.20591715976331362,66,True,0, 0, 0, 0,

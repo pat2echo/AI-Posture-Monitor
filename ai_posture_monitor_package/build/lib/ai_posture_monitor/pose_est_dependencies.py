@@ -4,14 +4,13 @@ import numpy as np
 import pandas as df
 import os
 
-from frame_diff_dependencies import FrameDiff
-from features_dependencies import  get_features
-from predict_dependencies import  predict_pose, get_attr_of_features
-from plot_dependencies import plot_fall_data, plot_label_vs_prediction_data
+from .frame_diff_dependencies import FrameDiff
+from .features_dependencies import  get_features
+from .predict_dependencies import  predict_pose, get_attr_of_features
 
 class PoseEstimation:
     def process_video(self, video_file=None, label_file=None, scaling_factor=0.5, use_bounding_box=True,
-                      model_number=1, is_predict_pose=False, use_frame_diff=True, BASE_OUTPUT_DIR=None, plot_results=False, predict_fall=True):
+                      model_number=1, is_predict_pose=False, use_frame_diff=True, BASE_OUTPUT_DIR=None):
         self.is_predict_pose = is_predict_pose
 
         self.model_number = model_number
@@ -149,8 +148,6 @@ class PoseEstimation:
         self.fall_fail = 0
         self.previous_fall_prediction_states = {}
 
-        empty_features = np.full(len(features_attr), np.nan)
-
         while True:
             # Get the next frame
             frame, frame_color = self.my_frame_diff.get_frame(cap, scaling_factor=scaling_factor)
@@ -182,7 +179,7 @@ class PoseEstimation:
             #frame_gray = cv2.cvtColor(frame.copy(), cv2.COLOR_GRAY2RGB)
             frame_output = cv2.cvtColor(frame_color.copy(), cv2.COLOR_BGR2RGB)
 
-            features = empty_features
+            features = np.full(len(features_attr), np.nan)
             prediction = None
             initial_prediction = None
             aspect_ratio_prediction = None
@@ -233,17 +230,14 @@ class PoseEstimation:
                                                                                                       manual_landmark_drawing=False,
                                                                                                       bbox_aspect_ratio=bbox_aspect_ratio,
                                                                                                       keypoints_of_focus=keypoints_for_velocity,
-                                                                                                      use_bounding_box=use_bounding_box, predict_fall=predict_fall,
+                                                                                                      use_bounding_box=use_bounding_box,
                                                                                                       bounding_boxes=predict_rect)
                 else:
                     self.update_tranistion_sequence(state=None)
 
             # Display the result
             frame_output = cv2.cvtColor(frame_output, cv2.COLOR_RGB2BGR)
-            frame_title = 'Posture Classification Mode (ESC Key to Close)'
-            if predict_fall:
-                frame_title = 'Fall Detection Mode (ESC Key to Close)'
-            cv2.imshow(frame_title, frame_output)
+            cv2.imshow('Motion Detection and Pose Estimation', frame_output)
 
             # Save frame at regular intervals
             if process_image and self.frame_count % self.save_interval == 0:
@@ -258,11 +252,7 @@ class PoseEstimation:
 
                 # Save max value of absolute difference to csv
                 #print(frame_title, max_value, process_image)
-                #output_data.append([self.frame_count, frame_label, initial_prediction, prediction, state_transition_prediction, state_sequence, self.fall_watch, self.fall_watch_prediction, aspect_ratio_prediction, is_transition, aoi_from_memory, bbox_aspect_ratio_of_pose, aspect_ratio_movement, bbox_aspect_ratio, max_value, is_motion, ', '.join(map(str, list(velocity))), ', '.join(map(str, features)) ])
-                if len(features) == 0:
-                    features = empty_features
-                out_one = [self.frame_count, frame_label, initial_prediction, prediction, state_transition_prediction, state_sequence, self.fall_watch, self.fall_watch_prediction, aspect_ratio_prediction, is_transition, aoi_from_memory, bbox_aspect_ratio_of_pose, aspect_ratio_movement, bbox_aspect_ratio, max_value, is_motion] + list(velocity) + list(features)
-                output_data.append(out_one)
+                output_data.append([self.frame_count, frame_label, initial_prediction, prediction, state_transition_prediction, state_sequence, self.fall_watch, self.fall_watch_prediction, aspect_ratio_prediction, is_transition, aoi_from_memory, bbox_aspect_ratio_of_pose, aspect_ratio_movement, bbox_aspect_ratio, max_value, is_motion, ', '.join(map(str, list(velocity))), ', '.join(map(str, features)) ])
 
             # Check for the ESC key press
 
@@ -272,27 +262,16 @@ class PoseEstimation:
             if key == 27:  # ESC key
                 break
 
-        # Release resources
-        cap.release()
-        cv2.destroyAllWindows()
-
         # Save the NumPy array to CSV
-        if plot_results:
-            df_for_plot = df.DataFrame(output_data, columns=['file_name', 'label', 'prediction', 'smooth_prediction',
-                                                    'state_transition_prediction', 'state_sequence', 'fall_watch',
-                                                    'fall_watch_prediction', 'aspect_ratio_prediction', 'is_transition',
-                                                    'aoi_from_memory', 'bbox_aspect_ratio_of_pose',
-                                                    'aspect_ratio_movement', 'bbox_aspect_ratio', 'max_value',
-                                                    'is_motion'] + ['v_lshoulder', 'v_rshoulder', 'v_lhip',
-                                                                    'v_rhip'] + features_attr)
-            if predict_fall:
-                plot_fall_data(df=df_for_plot, plot_title=f'fall_{os.path.basename(video_file)}')
-            else:
-                plot_label_vs_prediction_data(df=df_for_plot, plot_title=f'static_pose_{os.path.basename(video_file)}')
-
         np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
                    header='file_name,label,prediction,smooth_prediction,state_transition_prediction,state_sequence,fall_watch,fall_watch_prediction,aspect_ratio_prediction,is_transition,aoi_from_memory,bbox_aspect_ratio_of_pose,aspect_ratio_movement,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) +','+ ','.join(features_attr), comments='')
 
+        #np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_velocity.csv'), np.array(self.tmp_data), fmt='%s', delimiter=',',
+        #           header='frame,lshoulder,rshoulder,lhip,rhip,lankle,rankle,lsa,rsa,lha,rha', comments='')
+
+        # Release resources
+        cap.release()
+        cv2.destroyAllWindows()
 
     def get_font_attributes(self):
         # Define the text and its position
@@ -371,7 +350,7 @@ class PoseEstimation:
 
         return transition
 
-    def process_frame(self, frame_output, use_bounding_box=True, bounding_boxes=None, keypoints_of_focus=None, bbox_aspect_ratio=0, manual_landmark_drawing=False, predict_fall=True):
+    def process_frame(self, frame_output, use_bounding_box=True, bounding_boxes=None, keypoints_of_focus=None, bbox_aspect_ratio=0, manual_landmark_drawing=False):
         features = []
         prediction = None
         initial_prediction = None
@@ -595,14 +574,12 @@ class PoseEstimation:
                     (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale, self.font_thickness)
                     cv2.putText(frame_output, frame_text, (20, frame_height - text_height - 10), self.font, self.font_scale, font_color, self.font_thickness)
 
-                    if predict_fall:
-                        acc = (self.fall_pass * 100) / (self.fall_count) if self.fall_count > 0 else 0
-                        frame_text = f'{fall_non_fall} - Accuracy: {acc}, Label: {label_fall} {str(fall_prediction)}'
-                        prev_text_height = text_height
-                        (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale,
-                                                                       self.font_thickness)
-                        cv2.putText(frame_output, frame_text, (20, frame_height - (text_height + prev_text_height + 20) ), self.font, self.font_scale, fall_font_color, self.font_thickness)
-
+                    acc = (self.fall_pass * 100) / (self.fall_count) if self.fall_count > 0 else 0
+                    frame_text = f'{fall_non_fall} - Accuracy: {acc}, Label: {label_fall} {str(fall_prediction)}'
+                    prev_text_height = text_height
+                    (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale,
+                                                                   self.font_thickness)
+                    cv2.putText(frame_output, frame_text, (20, frame_height - (text_height + prev_text_height + 20) ), self.font, self.font_scale, fall_font_color, self.font_thickness)
                 else:
                     self.update_tranistion_sequence(state=None)
 

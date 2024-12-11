@@ -89,23 +89,14 @@ This plot will give you an idea of the class balance
 
 4. Fall Detection
 Use the video and labels to detect and validate falls
-`python code/proof-of-concept/pose-estimation-on-video/predict_fall.py VIDEO_FILE MAKE_PREDICTION SCALING_FACTOR LABEL_CSV_FILE`
+`python code/proof-of-concept/pose-estimation-on-video/predict_pose.py VIDEO_FILE MAKE_PREDICTION SCALING_FACTOR LABEL_CSV_FILE`
 **Note:**
 -- VIDEO_FILE: file path to the video file
 -- MAKE_PREDICTION: accepts 1 or 0 
 -- SCALING_FACTOR: accepts >= 0.1 
 -- LABEL_CSV_FILE: file path to the csv label file 
 
-You can also perform posture classification only with
-`python code/proof-of-concept/pose-estimation-on-video/predict_pose.py VIDEO_FILE MAKE_PREDICTION SCALING_FACTOR LABEL_CSV_FILE`
-
 Example:
 ```aiignore
-python code/proof-of-concept/pose-estimation-on-video/predict_fall.py ./dataset/fall_detection_9.mp4 1 1 ./code/labels/fall_detection_9.csv
-python code/proof-of-concept/pose-estimation-on-video/predict_pose.py ./dataset/fall_detection_9.mp4 1 1 ./code/labels/fall_detection_9.csv
-```
-
-5. Visualize Fall Plot
-```aiignore
-python code/proof-of-concept/pose-estimation-on-video/fall_plot.py ./output/output_results/fall_detection_4_results.csv
+python code/proof-of-concept/pose-estimation-on-video/predict_pose.py ./dataset/fall_detection_4.mp4 1 1 ./code/labels/fall_detection_4.csv
 ```

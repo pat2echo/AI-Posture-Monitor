@@ -1,0 +1,15 @@
+LICENSE
+README.md
+setup.py
+ai_posture_monitor/__init__.py
+ai_posture_monitor/evaluation_dependencies.py
+ai_posture_monitor/features_dependencies.py
+ai_posture_monitor/frame_diff_dependencies.py
+ai_posture_monitor/plot_dependencies.py
+ai_posture_monitor/pose_est_dependencies.py
+ai_posture_monitor/predict_dependencies.py
+ai_posture_monitor.egg-info/PKG-INFO
+ai_posture_monitor.egg-info/SOURCES.txt
+ai_posture_monitor.egg-info/dependency_links.txt
+ai_posture_monitor.egg-info/requires.txt
+ai_posture_monitor.egg-info/top_level.txt

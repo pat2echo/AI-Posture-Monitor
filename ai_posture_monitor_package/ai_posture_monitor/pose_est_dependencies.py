@@ -4,10 +4,10 @@ import numpy as np
 import pandas as df
 import os
 
-from frame_diff_dependencies import FrameDiff
-from features_dependencies import  get_features
-from predict_dependencies import  predict_pose, get_attr_of_features
-from plot_dependencies import plot_fall_data, plot_label_vs_prediction_data
+from .frame_diff_dependencies import FrameDiff
+from .features_dependencies import  get_features
+from .predict_dependencies import  predict_pose, get_attr_of_features
+from .plot_dependencies import plot_fall_data, plot_label_vs_prediction_data
 
 class PoseEstimation:
     def process_video(self, video_file=None, label_file=None, scaling_factor=0.5, use_bounding_box=True,
