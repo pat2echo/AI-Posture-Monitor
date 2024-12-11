@@ -76,23 +76,23 @@ start_time,end_time,action,is_fall
 ```aiignore
 python proof-of-concept/pose-estimation-on-video/analyze_manual_label.py ./labels/fall_detection_4.csv 0
 ```
-**Note:** the second argument can accept values of 1 or 0
--- 1: Show all classes in the plot
--- 0: Compress to only key classes (Stand, Sit, Lie)
+**Note:** the second argument can accept values of 1 or 0  
+-- 1: Show all classes in the plot  
+-- 0: Compress to only key classes (Stand, Sit, Lie)  
   
 This plot will give you an idea of the class balance  
 
 4. Fall Detection
-Use the video and labels to detect and validate falls
-`python proof-of-concept/pose-estimation-on-video/predict_fall.py VIDEO_FILE MAKE_PREDICTION SCALING_FACTOR LABEL_CSV_FILE`
-**Note:**
--- VIDEO_FILE: file path to the video file
--- MAKE_PREDICTION: accepts 1 or 0 
--- SCALING_FACTOR: accepts >= 0.1 
--- LABEL_CSV_FILE: file path to the csv label file 
+Use the video and labels to detect and validate falls  
+`python proof-of-concept/pose-estimation-on-video/predict_fall.py VIDEO_FILE MAKE_PREDICTION SCALING_FACTOR LABEL_CSV_FILE`  
+**Note:**  
+-- VIDEO_FILE: file path to the video file  
+-- MAKE_PREDICTION: accepts 1 or 0   
+-- SCALING_FACTOR: accepts >= 0.1   
+-- LABEL_CSV_FILE: file path to the csv label file   
 
-You can also perform posture classification only with
-`python proof-of-concept/pose-estimation-on-video/predict_pose.py VIDEO_FILE MAKE_PREDICTION SCALING_FACTOR LABEL_CSV_FILE`
+You can also perform posture classification only with  
+`python proof-of-concept/pose-estimation-on-video/predict_pose.py VIDEO_FILE MAKE_PREDICTION SCALING_FACTOR LABEL_CSV_FILE`  
 
 Example:
 ```aiignore
@@ -142,12 +142,12 @@ python proof-of-concept/pose-estimation-on-video/analyze_manual_label.py ./outpu
 ```
 
 # Color Codes
-Yellow: bounding box of the expanded area of interest from memory
-Blue: the bounding box by expanding the current area of interest to include the previous area of interest, creating a union of both if they intersect
-Green: bounding box around the moving object
-Pink: bounding box around the detected pose
-
-Evaluate Static Pose Prediction
+Yellow: bounding box of the expanded area of interest from memory  
+Blue: the bounding box by expanding the current area of interest to include the previous area of interest, creating a union of both if they intersect  
+Green: bounding box around the moving object  
+Pink: bounding box around the detected pose  
+  
+Evaluate Static Pose Prediction  
 ```aiignore
 python proof-of-concept/pose-estimation-on-video/static_pose_eval.py ./output/output_results/_results.csv
 ```
