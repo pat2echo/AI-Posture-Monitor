@@ -2,6 +2,16 @@
 
 This project, `ai_posture_monitor`, is designed to be an innovative and cost-effective solution for real-time activity monitoring of elderly individuals. It utilizes the MediaPipe pose estimation model, along with fuzzy logic and finite state machines, to achieve reliable tracking, posture recognition, and fall detection.
 
+## Contents
+- Key Functionalities
+- How it Works
+- Other Utility Scripts
+- Color Codes
+- Evaluation
+- Dataset
+- Self-Consent Form for Dataset Usage
+
+
 ## Key Functionalities
 
 * **Real-time Activity Monitoring:** Continuously tracks and analyzes movements, providing a comprehensive view of activity patterns.
@@ -43,7 +53,7 @@ When the subject remains in the fallen state for at least 1 second excluding tra
 ### How to Prepare New Dataset
 1. Extract keyframes from the video at a rate of one frame per second to represent the temporal evolution of the activity
 ```aiignore
-python code/proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/fall_detection_4.mp4
+python proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/fall_detection_4.mp4
 ```
 2. Create a label csv file by recording the activities for each second, shown below is an example csv file
 ```aiignore
@@ -64,7 +74,7 @@ start_time,end_time,action,is_fall
 ```
 3. Visually validate the labelled data by verifying that the plot follows a logical pattern
 ```aiignore
-python code/proof-of-concept/pose-estimation-on-video/analyze_manual_label.py ./code/labels/fall_detection_4.csv 0
+python proof-of-concept/pose-estimation-on-video/analyze_manual_label.py ./labels/fall_detection_4.csv 0
 ```
 **Note:** the second argument can accept values of 1 or 0
 -- 1: Show all classes in the plot
@@ -74,7 +84,7 @@ This plot will give you an idea of the class balance
 
 4. Fall Detection
 Use the video and labels to detect and validate falls
-`python code/proof-of-concept/pose-estimation-on-video/predict_fall.py VIDEO_FILE MAKE_PREDICTION SCALING_FACTOR LABEL_CSV_FILE`
+`python proof-of-concept/pose-estimation-on-video/predict_fall.py VIDEO_FILE MAKE_PREDICTION SCALING_FACTOR LABEL_CSV_FILE`
 **Note:**
 -- VIDEO_FILE: file path to the video file
 -- MAKE_PREDICTION: accepts 1 or 0 
@@ -82,17 +92,17 @@ Use the video and labels to detect and validate falls
 -- LABEL_CSV_FILE: file path to the csv label file 
 
 You can also perform posture classification only with
-`python code/proof-of-concept/pose-estimation-on-video/predict_pose.py VIDEO_FILE MAKE_PREDICTION SCALING_FACTOR LABEL_CSV_FILE`
+`python proof-of-concept/pose-estimation-on-video/predict_pose.py VIDEO_FILE MAKE_PREDICTION SCALING_FACTOR LABEL_CSV_FILE`
 
 Example:
 ```aiignore
-python code/proof-of-concept/pose-estimation-on-video/predict_fall.py ./dataset/fall_detection_9.mp4 1 1 ./code/labels/fall_detection_9.csv
-python code/proof-of-concept/pose-estimation-on-video/predict_pose.py ./dataset/fall_detection_9.mp4 1 1 ./code/labels/fall_detection_9.csv
+python proof-of-concept/pose-estimation-on-video/predict_fall.py ./dataset/fall_detection_9.mp4 1 1 ./labels/fall_detection_9.csv
+python proof-of-concept/pose-estimation-on-video/predict_pose.py ./dataset/fall_detection_9.mp4 1 1 ./labels/fall_detection_9.csv
 ```
 
 5. Visualize Fall Plot
 ```aiignore
-python code/proof-of-concept/pose-estimation-on-video/fall_plot.py ./output/output_results/fall_detection_4_results.csv
+python proof-of-concept/pose-estimation-on-video/fall_plot.py ./output/output_results/fall_detection_4_results.csv
 ```
 
 ---
@@ -100,35 +110,35 @@ python code/proof-of-concept/pose-estimation-on-video/fall_plot.py ./output/outp
 ## Other Utility Scripts
 Plot Histogram
 ```aiignore
-python code/proof-of-concept/pose-estimation-on-video/plot_his.py ./dataset/hr_fall_detection_3.mp4 1
+python proof-of-concept/pose-estimation-on-video/plot_his.py ./dataset/hr_fall_detection_3.mp4 1
 ```
 
 Frame Differencing
 ```aiignore
-python code/proof-of-concept/pose-estimation-on-video/frame_diff.py ./dataset/hr_fall_detection_3.mp4 1
+python proof-of-concept/pose-estimation-on-video/frame_diff.py ./dataset/hr_fall_detection_3.mp4 1
 ```
 
 Predict Pose
 ```aiignore
-python code/proof-of-concept/pose-estimation-on-video/predict_pose.py ./dataset/hr_fall_detection_3.mp4 1 1
-python code/proof-of-concept/pose-estimation-on-video/predict_pose.py ./dataset/hr_fall_detection_3.mp4 1 1 ./code/labels/hr_fall_detection_3.csv
+python proof-of-concept/pose-estimation-on-video/predict_pose.py ./dataset/hr_fall_detection_3.mp4 1 1
+python proof-of-concept/pose-estimation-on-video/predict_pose.py ./dataset/hr_fall_detection_3.mp4 1 1 ./labels/hr_fall_detection_3.csv
 ```
 
 Get Ground Truth
 ```aiignore
-python code/proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/hr_fall_detection_1.mp4
-python code/proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/hr_fall_detection_2.mp4
-python code/proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/hr_fall_detection_3.mp4
+python proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/hr_fall_detection_1.mp4
+python proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/hr_fall_detection_2.mp4
+python proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/hr_fall_detection_3.mp4
 
-python code/proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/fall_detection_4.mp4
+python proof-of-concept/pose-estimation-on-video/groundtruth.py ./dataset/fall_detection_4.mp4
 ```
 
 Analyze Ground Truth
 ```aiignore
-python code/proof-of-concept/pose-estimation-on-video/analyze_manual_label.py ./code/labels/hr_fall_detection_3.csv 1
-python code/proof-of-concept/pose-estimation-on-video/analyze_manual_label.py ./code/labels/fall_detection_4.csv 1
+python proof-of-concept/pose-estimation-on-video/analyze_manual_label.py ./labels/hr_fall_detection_3.csv 1
+python proof-of-concept/pose-estimation-on-video/analyze_manual_label.py ./labels/fall_detection_4.csv 1
 
-python code/proof-of-concept/pose-estimation-on-video/analyze_manual_label.py ./output/output_results/hr_fall_detection_3_results.csv 1 prediction
+python proof-of-concept/pose-estimation-on-video/analyze_manual_label.py ./output/output_results/hr_fall_detection_3_results.csv 1 prediction
 ```
 
 # Color Codes
@@ -139,15 +149,55 @@ Pink: bounding box around the detected pose
 
 Evaluate Static Pose Prediction
 ```aiignore
-python code/proof-of-concept/pose-estimation-on-video/static_pose_eval.py ./output/output_results/_results.csv
+python proof-of-concept/pose-estimation-on-video/static_pose_eval.py ./output/output_results/_results.csv
 ```
 
 Track and Plot Velocity of Keypoints
 ```aiignore
-python code/proof-of-concept/pose-estimation-on-video/plot_activity_prediction.py ./output/output_results/hr_fall_detection_1_results.csv
+python proof-of-concept/pose-estimation-on-video/plot_activity_prediction.py ./output/output_results/hr_fall_detection_1_results.csv
 ```
 
 Plot Activity Recognition
 ```aiignore
-python code/proof-of-concept/pose-estimation-on-video/transition_plot.py ./output/output_results/hr_fall_detection_3_results.csv
+python proof-of-concept/pose-estimation-on-video/transition_plot.py ./output/output_results/hr_fall_detection_3_results.csv
 ```
+
+
+## Dataset: Video Files used in this Experiment
+Dataset in University of Essex Onedrive: https://essexuniversity-my.sharepoint.com/:f:/g/personal/po23102_essex_ac_uk/End63nA718NNjDdOPOjRaMABtli7MI-JnkAZwXesGFe2KA?e=Bmxtjf
+
+---
+
+# Self-Consent Form for Dataset Usage
+
+**Project Title:** AI-Driven Posture Analysis Fall Detection System for the Elderly
+
+**Researcher Name:** Patrick O. Ogbuitepu
+
+**Purpose of the Dataset:**
+
+This dataset, consisting of 113 static images and 9 video recordings, will be used solely for academic research and development of an AI-powered fall detection system for the elderly as part of my dissertation project.
+
+**Dataset Details:**
+
+* **Static Images:** 113 self-portraits capturing various static poses.
+* **Videos:** 9 recordings of myself performing daily activities relevant to the research.
+* **Storage Location:** University of Essex OneDrive
+* **Access Link:** (Replace with appropriate access control measures. Consider removing if not publicly accessible)
+
+**Consent:**
+
+By signing below, I acknowledge the following:
+
+* I am the sole subject in the dataset and willingly recorded the images and videos for the stated purpose.
+* I consent to the use of this dataset in my dissertation project, including analysis, algorithm development, and result validation.
+* I understand the dataset will be stored securely on the University of Essex OneDrive and will not be shared publicly without explicit approval.
+* I retain the right to withdraw consent for dataset usage at any time, acknowledging this may affect the research project's progress. 
+* I understand and comply with the University of Essex's ethical guidelines for using personal data in research.
+
+**Signature:** Patrick O. Ogbuitepu
+
+**Date:** 11-Dec-2024
+
+**Note:** This is a modified version of the consent form. Sensitive information like the access link has been replaced with a placeholder. Consider consulting with the University of Essex regarding appropriate data storage and access control procedures.
+
