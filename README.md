@@ -45,7 +45,17 @@ pe.process_video(video_file=video_file, plot_results=True)
 ----
 
 ## Using Source Codes in Repo
-Alternatively, you can use the project source code to run a complete workflow from validating your labels to predictions and outputting your results
+Alternatively, you can use the project source code to run a complete workflow from validating your labels to predictions and outputting your results  
+
+Install the dependencies:
+```aiignore
+pip install numpy
+pip install opencv-python
+pip install mediapipe
+pip install pandas
+pip install scikit-learn
+pip install matplotlib
+```
 
 ### Definition of Fall
 When the subject remains in the fallen state for at least 1 second excluding transition to the fallen state
