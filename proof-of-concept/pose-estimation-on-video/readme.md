@@ -12,6 +12,9 @@ Predict Pose
 ```aiignore
 python code/proof-of-concept/pose-estimation-on-video/predict_pose.py ./dataset/hr_fall_detection_3.mp4 1 1
 python code/proof-of-concept/pose-estimation-on-video/predict_pose.py ./dataset/hr_fall_detection_3.mp4 1 1 ./code/labels/hr_fall_detection_3.csv
+
+# using the webcam
+python code/proof-of-concept/pose-estimation-on-video/predict_pose.py 0 1 1
 ```
 
 Get Ground Truth
@@ -42,14 +45,16 @@ Evaluate Static Pose Prediction
 python code/proof-of-concept/pose-estimation-on-video/static_pose_eval.py ./output/output_results/_results.csv
 ```
 
-Track and Plot Velocity of Keypoints
-```aiignore
-python code/proof-of-concept/pose-estimation-on-video/plot_activity_prediction.py ./output/output_results/hr_fall_detection_1_results.csv
-```
-
 Plot Activity Recognition
 ```aiignore
+python code/proof-of-concept/pose-estimation-on-video/plot_activity_prediction.py ./output/output_results/hr_fall_detection_3_results.csv
+python code/proof-of-concept/pose-estimation-on-video/plot_activity_prediction.py ./output/output_results/fall_detection_9_results.csv
+```
+
+Plot State Transition
+```aiignore
 python code/proof-of-concept/pose-estimation-on-video/transition_plot.py ./output/output_results/hr_fall_detection_3_results.csv
+python code/proof-of-concept/pose-estimation-on-video/transition_plot.py ./output/output_results/fall_detection_9_results.csv
 ```
 
 ## Definition of Fall

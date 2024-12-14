@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib
 import os
 
-matplotlib.use('TkAgg')
+#matplotlib.use('TkAgg')  # Use TkAgg for terminal
 import matplotlib.pyplot as plt
 
 # Reference: from Adrian Clark Computer Vision Lab 1 - CSEE - University of Essex
@@ -190,10 +190,13 @@ def plot_label_vs_prediction(csv_file=None, class_label='label', prediction_labe
     df = pd.read_csv(csv_file)
     return plot_label_vs_prediction_data(df=df, class_label=class_label, prediction_label=prediction_label, smooth_prediction_label=smooth_prediction_label,plot_title=plot_title, show_all_classes=show_all_classes)
 
-def plot_label_vs_prediction_data(df=None, class_label='label', prediction_label='prediction', smooth_prediction_label='smooth_prediction', plot_title=None, show_all_classes=False):
+def plot_label_vs_prediction_data(df=None, class_label='label', prediction_label='prediction', smooth_prediction_label='smooth_prediction', plot_title=None, show_all_classes=False, plot_size=(15, 5)):
     # Load data
-    # Replace NaN or None with "Inactivity"
+    hasLabel = False if df[class_label].isna().all() else True
+    multiplier = 0.6 if hasLabel else 1
+
     df['action'] = df[ class_label ].fillna("Inactivity")
+    # Replace NaN or None with "Inactivity"
     df['pred'] = df[ prediction_label ].fillna("Inactivity")
     df['smooth'] = df[ smooth_prediction_label ].fillna("Inactivity")
 
@@ -252,17 +255,17 @@ def plot_label_vs_prediction_data(df=None, class_label='label', prediction_label
 
         pred = row['s']
         failed_sprediction = row['s']
-        if row['s'] == row['y'] or row['s'] == row['y1']:
+        if hasLabel and row['s'] == row['y'] or row['s'] == row['y1']:
             pred = row['y']
             failed_sprediction = 0
 
         times.append(start)  # Start time
         values.append(row['y'])         # Current priority value
-        values_z.append(pred*0.6)         # Current priority value
+        values_z.append(pred*multiplier)         # Current priority value
         values_zb.append(pred_b*0.8)         # Current priority value
         times.append(end)   # End time
         values.append(row['y'])         # Maintain value until the end time
-        values_z.append(pred*0.6)         # Current priority value
+        values_z.append(pred*multiplier)         # Current priority value
         values_zb.append(pred*0.8)         # Current priority value
 
         # Record marker positions for false predictions
@@ -280,14 +283,15 @@ def plot_label_vs_prediction_data(df=None, class_label='label', prediction_label
             pass
 
     # Plotting
-    fig, ax = plt.subplots(figsize=(15, 5))
+    fig, ax = plt.subplots(figsize=plot_size)
     activity_ax = ax
 
     # Step plot for actions
     #activity_ax.step(times, values_zb, where='post', label='Prediction Before Smoothing', color='red', linewidth=1, linestyle='--')
-    activity_ax.step(times, values, where='post', label='Label', color='blue', linewidth=2)
+    if hasLabel:
+        activity_ax.step(times, values, where='post', label='Label', color='blue', linewidth=2)
+        activity_ax.scatter(marker_times, marker_values, color='red', label='False Prediction Eliminated By Smoothing', zorder=5)
     activity_ax.step(times, values_z, where='post', label='Prediction', color='green', linewidth=2)
-    activity_ax.scatter(marker_times, marker_values, color='red', label='False Prediction Eliminated By Smoothing', zorder=5)
     #activity_ax.scatter(marker_times_s, marker_values_s, color='yellow', label='False S.Prediction', zorder=5)
 
     # Customize the activity plot

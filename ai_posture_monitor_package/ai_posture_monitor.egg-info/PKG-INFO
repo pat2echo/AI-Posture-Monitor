@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ai_posture_monitor
-Version: 0.0.7
+Version: 0.0.15
 Summary: A package designed to predict static pose and detect falls with 2D RGB Camera in well lit indoor environments.
 Author: Patrick Ogbuitepu
 Author-email: pat2echo@gmail.com

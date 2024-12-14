@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib
 import os
 
-matplotlib.use('TkAgg')
+#matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
 # Reference: from Adrian Clark Computer Vision Lab 1 - CSEE - University of Essex

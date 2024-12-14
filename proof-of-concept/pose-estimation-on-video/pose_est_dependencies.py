@@ -11,10 +11,11 @@ from plot_dependencies import plot_fall_data, plot_label_vs_prediction_data
 
 class PoseEstimation:
     def process_video(self, video_file=None, label_file=None, scaling_factor=0.8, use_bounding_box=True,
-                      model_number=2, is_predict_pose=True, use_frame_diff=True, BASE_OUTPUT_DIR=None, plot_results=False, predict_fall=True):
+                      model_number=2, is_predict_pose=True, use_frame_diff=True, BASE_OUTPUT_DIR=None, debug_mode=True, plot_results=False, predict_fall=True):
         self.is_predict_pose = is_predict_pose
 
         self.model_number = model_number
+        self.debug_mode = debug_mode
 
         # Initialize MediaPipe Pose
         self.mp_pose = mp.solutions.pose
@@ -28,7 +29,11 @@ class PoseEstimation:
 
         # Open the video file or capture device
         # video_file = "walking_to_sit.mp4"
-        cap = cv2.VideoCapture(video_file)
+        if video_file is None:
+            print("Video file was not specified, using webcam")
+            cap = cv2.VideoCapture(0)
+        else:
+            cap = cv2.VideoCapture(video_file)
 
         # Get the FPS of the video
         self.video_fps = cap.get(cv2.CAP_PROP_FPS)
@@ -222,7 +227,7 @@ class PoseEstimation:
                     is_motion = process_image
                     if use_bounding_box and process_image:
                         rectangles, area_of_interest = self.my_frame_diff.get_bounding_box(diff_frame=diff_frame, frame_output=frame_output, intersect_rectangles=intersect_rectangles,
-                                 frame_count=self.frame_count, save_interval=self.save_interval, show_grid=False, snap_to_grid=True, show_rectangle=True)
+                                 frame_count=self.frame_count, save_interval=self.save_interval, show_grid=False, snap_to_grid=True, show_rectangle=self.debug_mode)
 
                 if process_image:
                     if 'memory' in area_of_interest:
@@ -284,6 +289,10 @@ class PoseEstimation:
         cv2.destroyAllWindows()
 
         # Save the NumPy array to CSV
+        plot_title = 'webcam'
+        if video_file is not None:
+            plot_title = os.path.basename(video_file)
+
         if plot_results:
             df_for_plot = df.DataFrame(output_data, columns=['file_name', 'label', 'prediction', 'smooth_prediction',
                                                     'state_transition_prediction', 'state_sequence', 'fall_watch',
@@ -292,13 +301,15 @@ class PoseEstimation:
                                                     'aspect_ratio_movement', 'bbox_aspect_ratio', 'max_value',
                                                     'is_motion'] + ['v_lshoulder', 'v_rshoulder', 'v_lhip',
                                                                     'v_rhip'] + features_attr)
+
+
             if predict_fall:
-                plot_fall_data(df=df_for_plot, plot_title=f'fall_{os.path.basename(video_file)}')
+                plot_fall_data(df=df_for_plot, plot_title=f'fall_{plot_title}')
             else:
-                plot_label_vs_prediction_data(df=df_for_plot, plot_title=f'static_pose_{os.path.basename(video_file)}')
+                plot_label_vs_prediction_data(df=df_for_plot, plot_title=f'static_pose_{plot_title}', plot_size=(10,8))
 
         if self.save_data:
-            np.savetxt(os.path.join(output_results, f'{os.path.basename(video_file).split('.')[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
+            np.savetxt(os.path.join(output_results, f'{plot_title.split('.')[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
                    header='file_name,label,prediction,smooth_prediction,state_transition_prediction,state_sequence,fall_watch,fall_watch_prediction,aspect_ratio_prediction,is_transition,aoi_from_memory,bbox_aspect_ratio_of_pose,aspect_ratio_movement,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) +','+ ','.join(features_attr), comments='')
 
 
@@ -420,7 +431,10 @@ class PoseEstimation:
 
             if results.pose_landmarks:
                 # print(results.pose_landmarks)
-                if manual_landmark_drawing:
+                if not self.debug_mode:
+                    # skip drawing pose
+                    pass
+                elif manual_landmark_drawing:
                     self.manual_drwaing_of_landmark(frame=frame_output,
                                                     pose_landmark=results.pose_landmarks,
                                                     pose_connection=self.mp_pose.POSE_CONNECTIONS)
@@ -435,7 +449,7 @@ class PoseEstimation:
 
                 # Get the frame dimensions and calculate the text position
                 timestamp_text, timestamp_secs = self.get_timestamp(frame_count=self.frame_count,
-                                                                    video_fps=self.video_fps)
+                                                                    video_fps=self.video_fps, show_full_info=self.debug_mode)
 
                 if self.label_df is not None:
                     timestamp_rounded = np.floor(timestamp_secs)
@@ -479,7 +493,7 @@ class PoseEstimation:
                     features = all_features[0]
 
                     # get aspect ratio of bounding box surrounding the landmark
-                    bbox_aspect_ratio_of_pose = self.get_bounding_box_of_detected_pose(frame=frame_output, pose_landmark=np.array(landmarks_data))
+                    bbox_aspect_ratio_of_pose = self.get_bounding_box_of_detected_pose(frame=frame_output, pose_landmark=np.array(landmarks_data), show=self.debug_mode)
 
                     # get y-axis of keypoints and calculate velocity
                     keypoints_for_velocity = all_features[1][:,1]
@@ -597,11 +611,13 @@ class PoseEstimation:
                     else:
                         self.fail_count += 1
 
+
                     prev_text_height = 0
-                    acc = (self.pass_count * 100) / (self.pass_count + self.fail_count)
-                    frame_text = f'Pose: {pass_fail} - Accuracy: {acc:.2f}, aspect ratio: {bbox_aspect_ratio_of_pose:.3f}/{aspect_ratio_movement}, max velocity: {self.max_velocity:.3f}, trans: {state_transition_prediction}'
-                    (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale, self.font_thickness)
-                    cv2.putText(frame_output, frame_text, (20, frame_height - text_height - 10), self.font, self.font_scale, font_color, self.font_thickness)
+                    if self.label_df is not None:
+                        acc = (self.pass_count * 100) / (self.pass_count + self.fail_count)
+                        frame_text = f'Pose: {pass_fail} - Accuracy: {acc:.2f}, aspect ratio: {bbox_aspect_ratio_of_pose:.3f}/{aspect_ratio_movement}, max velocity: {self.max_velocity:.3f}, trans: {state_transition_prediction}'
+                        (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale, self.font_thickness)
+                        cv2.putText(frame_output, frame_text, (20, frame_height - text_height - 10), self.font, self.font_scale, font_color, self.font_thickness)
 
                     if predict_fall:
                         acc = (self.fall_pass * 100) / (self.fall_count) if self.fall_count > 0 else 0
@@ -617,11 +633,19 @@ class PoseEstimation:
 
                 state_text = 'Transition ' if is_transition else ''
 
-                frame_text = f'{state_text}Label: {label} Pred: {prediction} {timestamp_text}'
+
+                if self.label_df is None:
+                    self.font_scale = 1.3
+                    self.font_thickness = 4
+                    frame_text = f'Pred: {prediction} {timestamp_text}'
+                    text_y = 50
+                else:
+                    frame_text = f'{state_text}Label: {label} Pred: {prediction} {timestamp_text}'
+                    text_y = 20
+
                 #frame_text = f'{self.prefix_text} Label: {label} Pred: {prediction} {timestamp_text}'
                 (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale, self.font_thickness)
                 text_x = frame_width - text_width - 10  # 10 px padding from the right edge
-                text_y = 20  # Position near the top
                 cv2.putText(frame_output, frame_text, (text_x, text_y), self.font, self.font_scale, self.font_color,
                             self.font_thickness)
 
@@ -821,7 +845,7 @@ class PoseEstimation:
                     # Draw the connection line
                     cv2.line(frame, start_point, end_point, (0, 255, 255), 2)
 
-    def get_timestamp(self, frame_count=None, video_fps=None, export_fps=0):
+    def get_timestamp(self, frame_count=None, video_fps=None, export_fps=0, show_full_info=True):
         # Calculate timestamp in seconds (with fraction for frames_per_second)
         timestamp_sec = frame_count / video_fps
 
@@ -833,7 +857,11 @@ class PoseEstimation:
         if export_fps > 0:
             fraction = int((timestamp_sec * export_fps) % export_fps)
 
-        timestamp_text = f"frame: {frame_count:04d} - {hours:02}:{minutes:02}:{seconds:02}.{fraction:01} - {round(timestamp_sec):.2f} - fps: {video_fps:.2f}"
+        if show_full_info:
+            timestamp_text = f"frame: {frame_count:04d} - {hours:02}:{minutes:02}:{seconds:02}.{fraction:01} - {round(timestamp_sec):.2f} - fps: {video_fps:.2f}"
+        else:
+            timestamp_text = f"{hours:02}:{minutes:02}:{seconds:02}"
+
         return timestamp_text, timestamp_sec
 
     def generate_frames_for_groundtruth(self, video_file=None, frames_per_second=1, BASE_OUTPUT_DIR=None):
