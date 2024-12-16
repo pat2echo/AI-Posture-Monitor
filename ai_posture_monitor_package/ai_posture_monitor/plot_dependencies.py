@@ -1,10 +1,113 @@
 import numpy as np
 import pandas as pd
-import matplotlib
+#import matplotlib
 import os
 
-#matplotlib.use('TkAgg')
+import matplotlib.backends.backend_agg as plt_backend_agg
+
+#matplotlib.use('TkAgg')  # Use TkAgg for terminal
 import matplotlib.pyplot as plt
+
+class DynamicPlot:
+    def __init__(self):
+        # dynamic plot
+        plt.ion()  # Enable interactive mode
+        self.fig, self.ax = plt.subplots(figsize=(4, 2), dpi=100, facecolor='white', alpha=0.5)
+        self.plot_prediction = []
+        self.plot_img_resized = None
+
+    def close(self):
+        plt.ioff()
+        plt.close(self.fig)
+        self.plot_prediction = []
+        self.plot_img_resized = None
+
+    def plot(self, prediction=None, frame_output=None, type='pose', offset=0):
+        plot_title = 'Static Posture' if type == 'pose' else 'Fall Detection'
+
+        self.plot_prediction.append(prediction)
+        if len(self.plot_prediction) >= 600:
+            self.plot_prediction.pop(0)
+        if len(self.plot_prediction) >= 100:
+            if self.plot_img_resized is None or offset % 10 == 0:
+                ptimes, pvalues, pactions = self.plot_values_for_dynamic_trend(predictions=self.plot_prediction,
+                                                                          type=type, offset=offset)
+                self.ax.cla()
+                y_ticks = list(pactions.values())
+                y_labels = list(pactions.keys())
+                self.ax.set_yticks(y_ticks)
+                self.ax.set_yticklabels(y_labels)
+                self.ax.step(ptimes, pvalues, where='post', label=plot_title, color='green', linewidth=2)
+
+                # Convert plot to image
+                canvas = plt_backend_agg.FigureCanvasAgg(self.fig)
+                canvas.draw()
+                plot_img = np.frombuffer(canvas.buffer_rgba(), dtype=np.uint8)
+
+                # Resize and overlay on frame
+                width, height = canvas.get_width_height()
+                self.plot_img_resized = plot_img.reshape((height, width, 4))[:, :, :3]
+
+            if self.plot_img_resized is not None:
+                x_offset = 5
+                #y_offset = frame_output.shape[0] - (5 + self.plot_img_resized.shape[0] )
+                y_offset = 5
+                frame_output[y_offset:y_offset + self.plot_img_resized.shape[0],
+                x_offset:x_offset + self.plot_img_resized.shape[1]] = self.plot_img_resized
+
+        return frame_output
+
+    def plot_values_for_dynamic_trend(self, predictions=None, type='pose', offset=0):
+        actions = {
+            'pose':{
+                "stand": 3,
+                "sit": 2,
+                "lie": 1,
+                "Inactive": 0
+            },
+            'fall':{
+                "Safe":1,
+                "Fall":0,
+            }
+        }
+        action_priority = actions[type]
+
+
+        # Prepare the step plot data
+        times = []
+        values = []
+        start = offset
+        prev_pred = 0
+        if type == 'pose':
+            for pred_key in predictions:
+                pred = action_priority[pred_key] if pred_key in action_priority else 0
+
+                if prev_pred != pred:
+                    times.append(start)  # Start time
+                    values.append(prev_pred)  # Current priority value
+                    times.append(start)  # Start time
+                    values.append(pred)  # Current priority value
+                elif start == offset:
+                    times.append(start)  # Start time
+                    values.append(pred)  # Current priority value
+
+                prev_pred = pred
+
+                start += 1
+        else:
+            for pred_key in predictions:
+                pred = pred_key
+                prev_pred = 0 if pred else 1
+                times.append(start)
+                values.append(prev_pred)  # Maintain value until the end time
+                start += 1
+
+        times.append(start)  # Start time
+        values.append(prev_pred)  # Current priority value
+        #print(predictions)
+        #print(times, values, action_priority)
+        return times, values, action_priority
+
 
 # Reference: from Adrian Clark Computer Vision Lab 1 - CSEE - University of Essex
 def plot_histogram (x, y, title, xlabel, colours=["blue", "green", "red"]):
@@ -190,10 +293,13 @@ def plot_label_vs_prediction(csv_file=None, class_label='label', prediction_labe
     df = pd.read_csv(csv_file)
     return plot_label_vs_prediction_data(df=df, class_label=class_label, prediction_label=prediction_label, smooth_prediction_label=smooth_prediction_label,plot_title=plot_title, show_all_classes=show_all_classes)
 
-def plot_label_vs_prediction_data(df=None, class_label='label', prediction_label='prediction', smooth_prediction_label='smooth_prediction', plot_title=None, show_all_classes=False):
+def plot_label_vs_prediction_data(df=None, class_label='label', prediction_label='prediction', smooth_prediction_label='smooth_prediction', plot_title=None, show_all_classes=False, plot_size=(15, 5)):
     # Load data
-    # Replace NaN or None with "Inactivity"
+    hasLabel = False if df[class_label].isna().all() else True
+    multiplier = 0.6 if hasLabel else 1
+
     df['action'] = df[ class_label ].fillna("Inactivity")
+    # Replace NaN or None with "Inactivity"
     df['pred'] = df[ prediction_label ].fillna("Inactivity")
     df['smooth'] = df[ smooth_prediction_label ].fillna("Inactivity")
 
@@ -252,17 +358,17 @@ def plot_label_vs_prediction_data(df=None, class_label='label', prediction_label
 
         pred = row['s']
         failed_sprediction = row['s']
-        if row['s'] == row['y'] or row['s'] == row['y1']:
+        if hasLabel and row['s'] == row['y'] or row['s'] == row['y1']:
             pred = row['y']
             failed_sprediction = 0
 
         times.append(start)  # Start time
         values.append(row['y'])         # Current priority value
-        values_z.append(pred*0.6)         # Current priority value
+        values_z.append(pred*multiplier)         # Current priority value
         values_zb.append(pred_b*0.8)         # Current priority value
         times.append(end)   # End time
         values.append(row['y'])         # Maintain value until the end time
-        values_z.append(pred*0.6)         # Current priority value
+        values_z.append(pred*multiplier)         # Current priority value
         values_zb.append(pred*0.8)         # Current priority value
 
         # Record marker positions for false predictions
@@ -280,14 +386,15 @@ def plot_label_vs_prediction_data(df=None, class_label='label', prediction_label
             pass
 
     # Plotting
-    fig, ax = plt.subplots(figsize=(15, 5))
+    fig, ax = plt.subplots(figsize=plot_size)
     activity_ax = ax
 
     # Step plot for actions
     #activity_ax.step(times, values_zb, where='post', label='Prediction Before Smoothing', color='red', linewidth=1, linestyle='--')
-    activity_ax.step(times, values, where='post', label='Label', color='blue', linewidth=2)
+    if hasLabel:
+        activity_ax.step(times, values, where='post', label='Label', color='blue', linewidth=2)
+        activity_ax.scatter(marker_times, marker_values, color='red', label='False Prediction Eliminated By Smoothing', zorder=5)
     activity_ax.step(times, values_z, where='post', label='Prediction', color='green', linewidth=2)
-    activity_ax.scatter(marker_times, marker_values, color='red', label='False Prediction Eliminated By Smoothing', zorder=5)
     #activity_ax.scatter(marker_times_s, marker_values_s, color='yellow', label='False S.Prediction', zorder=5)
 
     # Customize the activity plot
@@ -307,7 +414,6 @@ def plot_label_vs_prediction_data(df=None, class_label='label', prediction_label
     plt.savefig(f"output/plot/{plot_title}.png", dpi=300)
     plt.show()
     plt.close(fig)  # Close the figure to free memory
-
 
 def plot_transitions(csv_file=None, class_label='label', prediction_label='smooth_prediction', plot_title=None):
     # Load data
@@ -489,13 +595,15 @@ def get_transition(prev_state, current_state, previous_activity):
 
     return transition, current_activity
 
-
-def plot_fall(csv_file=None, class_label='fall_watch', prediction_label='fall_watch_prediction', plot_title=None):
+def plot_fall(csv_file=None, class_label='fall_watch', prediction_label='fall', plot_title=None):
     # Load data
     df = pd.read_csv(csv_file)
     return plot_fall_data(df, class_label=class_label, prediction_label=prediction_label, plot_title=plot_title)
 
-def plot_fall_data(df=None, class_label='fall_watch', prediction_label='fall_watch_prediction', plot_title=None):
+def plot_fall_data(df=None, class_label='fall_watch', prediction_label='fall', plot_title=None, plot_size=(15, 5)):
+    hasLabel = False if df[class_label].isna().all() else True
+    multiplier = -1 if hasLabel else 1
+
     # Replace NaN or None with "Inactivity"
     df['action'] = df[ class_label ].fillna("Inactivity")
     df['pred'] = df[ prediction_label ].fillna("Inactivity")
@@ -518,77 +626,67 @@ def plot_fall_data(df=None, class_label='fall_watch', prediction_label='fall_wat
     result = {'label':[], 'predicted_label':[]}
     result2 = {'label':[], 'predicted_label':[]}
 
+    prev_label = None
+    prev_pred = None
+
     for _, row in df.iterrows():
         end = row['file_name']
 
         label = row['action']
         t_value = 1 if label else 0
         result['label'].append(t_value)
+
         times.append(start)  # Start time
-        values.append(t_value)
         times.append(end)  # End time
-        values.append(t_value)  # Maintain value until the end time
+        if hasLabel:
+            values.append(t_value)
+            values.append(t_value)  # Maintain value until the end time
 
         pred = row['pred']
         pred_t_value = 1 if pred else 0
         result['predicted_label'].append(pred_t_value)
-        pred_values.append(pred_t_value*-1)
-        pred_values.append(pred_t_value*-1)  # Maintain value until the end time
+        pred_values.append(pred_t_value*multiplier)
+        pred_values.append(pred_t_value*multiplier)  # Maintain value until the end time
 
-        if pred_t_value == 1 and not is_start_pred_fall:
-            is_start_pred_fall = True
+        if label != prev_label:
+            if prev_pred is not None and len(result2['label']) != len(result2['predicted_label']):
+                result2['predicted_label'].append(prev_pred)
+            result2['label'].append(label)
 
-        if t_value == 1 and not is_start_fall:
-            is_start_fall = True
-
-        if pred_t_value == 0 and not is_start_pred_non_fall:
-            is_start_pred_non_fall = True
-
-        if t_value == 0 and not is_start_non_fall:
-            is_start_non_fall = True
-
-        if t_value == 0 and is_start_fall:
-            result2['label'].append(is_start_fall)
-            result2['predicted_label'].append(is_start_pred_fall)
-
-            # end of fall label
-            is_start_fall = False
-        elif t_value == 1 and is_start_non_fall:
-            result2['label'].append(not is_start_non_fall)
-            result2['predicted_label'].append(not is_start_pred_non_fall)
-            is_start_non_fall = False
-
-        if pred_t_value == 0 and is_start_pred_fall:
-            # end of fall prediction
-            is_start_pred_fall = False
-
-        if pred_t_value == 1 and is_start_pred_non_fall:
-            # end of fall prediction
-            is_start_pred_non_fall = False
+        if pred != prev_pred and len(result2['label']) != len(result2['predicted_label']):
+            result2['predicted_label'].append(pred)
+        prev_label = label
+        prev_pred = pred
 
         start = end
 
-    if is_start_fall:
-        result2['label'].append(is_start_fall)
-        result2['predicted_label'].append(is_start_pred_fall)
-    elif is_start_non_fall:
-        result2['label'].append(not is_start_non_fall)
-        result2['predicted_label'].append(not is_start_pred_non_fall)
 
-    print(df["action"].value_counts())
+    if len(result2['label']) != len(result2['predicted_label']):
+        result2['predicted_label'].append(pred)
+    #print(result2)
+    #print(df["action"].value_counts())
     #print('accuracy t', tp_pred/(tp_pred+tf_pred))
     #print(np.unique( np.array(values), return_counts=True))
 
     # Plotting
-    fig, ax = plt.subplots(figsize=(15, 5))
+    fig, ax = plt.subplots(figsize=plot_size)
     activity_ax = ax
 
     # Step plot for actions
-    activity_ax.step(times, values, where='post', label='Label', color='blue', linewidth=2)
+    if hasLabel:
+        activity_ax.step(times, values, where='post', label='Label', color='blue', linewidth=2)
     activity_ax.step(times, pred_values, where='post', label='Predicted Fall', color='green', linewidth=2)
 
     #activity_ax.scatter(marker_times, marker_values, color='red', label='False Prediction of State Change', zorder=5)
     #activity_ax.scatter(vmarker_times, vmarker_values, color='purple', label='Velocity', zorder=5)
+    action_priority = {
+        "fall": 1,
+        "safe": 0
+    }
+    y_ticks = list(action_priority.values())
+    y_labels = list(action_priority.keys())
+    activity_ax.set_yticks(y_ticks)
+    activity_ax.set_yticklabels(y_labels)
 
     # Customize the activity plot
     activity_ax.set_xlabel('Time', fontsize=14)

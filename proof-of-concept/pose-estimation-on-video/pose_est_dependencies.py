@@ -7,7 +7,7 @@ import os
 from frame_diff_dependencies import FrameDiff
 from features_dependencies import  get_features
 from predict_dependencies import  predict_pose, get_attr_of_features
-from plot_dependencies import plot_fall_data, plot_label_vs_prediction_data
+from plot_dependencies import plot_fall_data, plot_label_vs_prediction_data, DynamicPlot
 
 class PoseEstimation:
     def process_video(self, video_file=None, label_file=None, scaling_factor=0.8, use_bounding_box=True,
@@ -160,8 +160,19 @@ class PoseEstimation:
         self.fall_pass = 0
         self.fall_fail = 0
         self.previous_fall_prediction_states = {}
+        self.fall_alert_prediction_sequence = []
+        self.fall_alert_prediction_sequence_window = 9
+        self.fall_alert_sequence = []
+        self.fall_alert = False
 
         empty_features = np.full(len(features_attr), np.nan)
+
+        # dynamic plot
+        showDynamicPlot = False if self.debug_mode else True
+        dynamicPlot = None
+        if showDynamicPlot:
+            dynamicPlot = DynamicPlot()
+
 
         while True:
             # Get the next frame
@@ -182,6 +193,8 @@ class PoseEstimation:
 
             # Increment current frame number
             self.frame_count += 1
+            #if self.frame_count < 1000:
+            #    continue
             frame_label = 0
 
             # Set max absolute value to 0 in case frame was not processed
@@ -247,14 +260,23 @@ class PoseEstimation:
                                                                                                       keypoints_of_focus=keypoints_for_velocity,
                                                                                                       use_bounding_box=use_bounding_box, predict_fall=predict_fall,
                                                                                                       bounding_boxes=predict_rect)
+                    self.update_fall_prediction_sequence(state=self.fall_watch_prediction)
                 else:
                     self.update_tranistion_sequence(state=None)
+                    self.update_fall_prediction_sequence(state=None)
 
             # Display the result
             frame_output = cv2.cvtColor(frame_output, cv2.COLOR_RGB2BGR)
             frame_title = 'Posture Classification Mode (ESC Key to Close)'
             if predict_fall:
                 frame_title = 'Fall Detection Mode (ESC Key to Close)'
+
+            if showDynamicPlot:
+                plot_pred = prediction
+                if predict_fall:
+                    plot_pred = self.fall_alert
+                frame_output = dynamicPlot.plot(prediction=plot_pred, frame_output=frame_output, offset=self.frame_count, type='fall' if predict_fall else 'pose')
+
             cv2.imshow(frame_title, frame_output)
 
             # Save frame at regular intervals
@@ -273,7 +295,7 @@ class PoseEstimation:
                 #output_data.append([self.frame_count, frame_label, initial_prediction, prediction, state_transition_prediction, state_sequence, self.fall_watch, self.fall_watch_prediction, aspect_ratio_prediction, is_transition, aoi_from_memory, bbox_aspect_ratio_of_pose, aspect_ratio_movement, bbox_aspect_ratio, max_value, is_motion, ', '.join(map(str, list(velocity))), ', '.join(map(str, features)) ])
                 if len(features) == 0:
                     features = empty_features
-                out_one = [self.frame_count, frame_label, initial_prediction, prediction, state_transition_prediction, state_sequence, self.fall_watch, self.fall_watch_prediction, aspect_ratio_prediction, is_transition, aoi_from_memory, bbox_aspect_ratio_of_pose, aspect_ratio_movement, bbox_aspect_ratio, max_value, is_motion] + list(velocity) + list(features)
+                out_one = [self.frame_count, frame_label, initial_prediction, prediction, state_transition_prediction, state_sequence, self.fall_alert, self.fall_watch, self.fall_watch_prediction, aspect_ratio_prediction, is_transition, aoi_from_memory, bbox_aspect_ratio_of_pose, aspect_ratio_movement, bbox_aspect_ratio, max_value, is_motion] + list(velocity) + list(features)
                 output_data.append(out_one)
 
             # Check for the ESC key press
@@ -288,6 +310,9 @@ class PoseEstimation:
         cap.release()
         cv2.destroyAllWindows()
 
+        if showDynamicPlot:
+            dynamicPlot.close()
+
         # Save the NumPy array to CSV
         plot_title = 'webcam'
         if video_file is not None:
@@ -295,7 +320,7 @@ class PoseEstimation:
 
         if plot_results:
             df_for_plot = df.DataFrame(output_data, columns=['file_name', 'label', 'prediction', 'smooth_prediction',
-                                                    'state_transition_prediction', 'state_sequence', 'fall_watch',
+                                                    'state_transition_prediction', 'state_sequence', 'fall', 'fall_watch',
                                                     'fall_watch_prediction', 'aspect_ratio_prediction', 'is_transition',
                                                     'aoi_from_memory', 'bbox_aspect_ratio_of_pose',
                                                     'aspect_ratio_movement', 'bbox_aspect_ratio', 'max_value',
@@ -310,7 +335,7 @@ class PoseEstimation:
 
         if self.save_data:
             np.savetxt(os.path.join(output_results, f'{plot_title.split('.')[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
-                   header='file_name,label,prediction,smooth_prediction,state_transition_prediction,state_sequence,fall_watch,fall_watch_prediction,aspect_ratio_prediction,is_transition,aoi_from_memory,bbox_aspect_ratio_of_pose,aspect_ratio_movement,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) +','+ ','.join(features_attr), comments='')
+                   header='file_name,label,prediction,smooth_prediction,state_transition_prediction,state_sequence,fall,fall_watch,fall_watch_prediction,aspect_ratio_prediction,is_transition,aoi_from_memory,bbox_aspect_ratio_of_pose,aspect_ratio_movement,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) +','+ ','.join(features_attr), comments='')
 
 
     def get_font_attributes(self):
@@ -404,6 +429,7 @@ class PoseEstimation:
         is_transition = False
         aspect_ratio_movement = 0
         state_sequence = None
+        has_no_fall_prediction = True
 
         #keypoints_of_focus=[11, 12, 23, 24, 27, 28]: shoulder, hip, ankle
 
@@ -489,7 +515,7 @@ class PoseEstimation:
                         landmarks_data.append([landmark.x, landmark.y, landmark.z])
 
                     all_features = get_features(landmarks_3d=np.array(landmarks_data), image_name=None,
-                                            model=self.model_number, return_keypoints=keypoints_of_focus)
+                                                model=self.model_number, return_keypoints=keypoints_of_focus)
                     features = all_features[0]
 
                     # get aspect ratio of bounding box surrounding the landmark
@@ -573,19 +599,16 @@ class PoseEstimation:
                     fall_prediction = self.get_fall_prediction(np.array(self.state_transition_sequence))
                     state_sequence = fall_prediction['seq']
 
+                    has_no_fall_prediction = False
+                    is_fallen = False
                     if 'fall' in fall_prediction and fall_prediction['fall'] > 0:
+                        is_fallen = True
                         fall_non_fall = f'{fall_non_fall}+Fall'
-                        fall_font_color = (255, 255, 0)
-                        if arr[arr == True].size > 0:
-                            self.fall_watch_prediction = True
-                            fall_font_color = (0,0,255)
-                    # elif not self.fall_watch and self.previous_fall_prediction_states is not None and \
-                    #         'fall' in self.previous_fall_prediction_states and self.previous_fall_prediction_states['fall'] > 0 and \
-                    #         fall_prediction['seq'] != self.previous_fall_prediction_states['seq']:
-                    #     # When Current Label is not Fall and Previous Prediction was Fall Sequence and Prediction has Changed
-                    #     self.fall_watch = True
-                    #     if arr[arr == True].size > 0:
-                    #         fall_font_color = (0,0,255)
+                        self.fall_watch_prediction = True
+                        fall_font_color = (0,0,255)
+
+                    #if self.previous_fall_prediction_states is None or (self.previous_fall_prediction_states is not None and 'seq' in self.previous_fall_prediction_states and self.previous_fall_prediction_states['seq'] != state_sequence):
+                    self.predict_fall_alert(state_sequence=fall_prediction)
 
                     self.previous_fall_prediction_states = fall_prediction
 
@@ -597,9 +620,9 @@ class PoseEstimation:
                             self.fall_fail += 1
                         # End of fall watch
                         self.fall_watch = False
+
+                    if not is_fallen:
                         self.fall_watch_prediction = False
-
-
 
                     #print(features, prediction)
                     font_color = (255,0,0)
@@ -617,15 +640,15 @@ class PoseEstimation:
                         acc = (self.pass_count * 100) / (self.pass_count + self.fail_count)
                         frame_text = f'Pose: {pass_fail} - Accuracy: {acc:.2f}, aspect ratio: {bbox_aspect_ratio_of_pose:.3f}/{aspect_ratio_movement}, max velocity: {self.max_velocity:.3f}, trans: {state_transition_prediction}'
                         (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale, self.font_thickness)
+                        prev_text_height = text_height
                         cv2.putText(frame_output, frame_text, (20, frame_height - text_height - 10), self.font, self.font_scale, font_color, self.font_thickness)
 
-                    if predict_fall:
-                        acc = (self.fall_pass * 100) / (self.fall_count) if self.fall_count > 0 else 0
-                        frame_text = f'{fall_non_fall} - Accuracy: {acc}, Label: {label_fall} {str(fall_prediction)}'
-                        prev_text_height = text_height
-                        (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale,
-                                                                       self.font_thickness)
-                        cv2.putText(frame_output, frame_text, (20, frame_height - (text_height + prev_text_height + 20) ), self.font, self.font_scale, fall_font_color, self.font_thickness)
+                        if predict_fall:
+                            acc = (self.fall_pass * 100) / (self.fall_count) if self.fall_count > 0 else 0
+                            frame_text = f'{fall_non_fall} - Accuracy: {acc}, Label: {label_fall} {str(fall_prediction)}'
+                            (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale,
+                                                                           self.font_thickness)
+                            cv2.putText(frame_output, frame_text, (20, frame_height - (text_height + prev_text_height + 20) ), self.font, self.font_scale, fall_font_color, self.font_thickness)
 
                 else:
                     self.update_tranistion_sequence(state=None)
@@ -634,14 +657,19 @@ class PoseEstimation:
                 state_text = 'Transition ' if is_transition else ''
 
 
-                if self.label_df is None:
+                if not self.debug_mode:
                     self.font_scale = 1.3
                     self.font_thickness = 4
-                    frame_text = f'Pred: {prediction} {timestamp_text}'
                     text_y = 50
                 else:
-                    frame_text = f'{state_text}Label: {label} Pred: {prediction} {timestamp_text}'
                     text_y = 20
+
+                if self.label_df is None:
+                    frame_text = f'Pose: {prediction.upper()} {timestamp_text}'
+                    if predict_fall:
+                        frame_text = f'Fall: {1 if self.fall_alert else 0} {frame_text}'
+                else:
+                    frame_text = f'{state_text}Label: {label} Pred: {prediction} {timestamp_text}'
 
                 #frame_text = f'{self.prefix_text} Label: {label} Pred: {prediction} {timestamp_text}'
                 (text_width, text_height), _ = cv2.getTextSize(frame_text, self.font, self.font_scale, self.font_thickness)
@@ -654,21 +682,30 @@ class PoseEstimation:
                 if self.save_data:
                     self.my_frame_diff.save_image(aoi_for_pose, os.path.join(self.my_frame_diff.output_folder_aoi_pose, f"pose_{self.frame_count:04d}"))
 
+        # reset fall pred in live mode
+        if has_no_fall_prediction and self.label_df is None:
+            self.fall_watch_prediction = None
+
         return is_transition, initial_prediction, prediction, state_transition_prediction, state_sequence, aspect_ratio_prediction, bbox_aspect_ratio_of_pose, aspect_ratio_movement, features, label, timestamp_secs, velocity
 
     def get_finite_states(self):
         # State transitions and fall/no fall
         return {
             'stand-sit': {'fall': 0, 'end_episode': 0},
-            'stand-sit-stand': {'fall': 0, 'end_episode': 1},
+            'stand-sit-stand': {'fall': 0, 'end_episode': 2},
+            #'stand-sit-stand': {'fall': 0, 'end_episode': 1},
             'stand-sit-lie': {'fall': 2, 'end_episode': 1},
-            'sit-stand': {'fall': 0, 'end_episode': 1},
+            'sit-stand': {'fall': 0, 'end_episode': 2},
+            #'sit-stand': {'fall': 0, 'end_episode': 1},
             'stand-lie': {'fall': 2, 'end_episode': 0},
-            'stand-lie-stand': {'fall': 1, 'end_episode': 1},
-            'lie-stand': {'fall': 0, 'end_episode': 1},
-            'sit-lie': {'fall': 0, 'end_episode': 0},
+            'stand-lie-stand': {'fall': 0, 'end_episode': 2},
+            #'stand-lie-stand': {'fall': 1, 'end_episode': 1},
+            'lie-stand': {'fall': 0, 'end_episode': 2},
+            #'lie-stand': {'fall': 0, 'end_episode': 1},
+            'sit-lie': {'fall': 0, 'end_episode': 2},
+            #'sit-lie': {'fall': 0, 'end_episode': 0},
             'sit-lie-sit': {'fall': 0, 'end_episode': 0},
-            'lie-sit': {'fall': 0, 'end_episode': 0},
+            'lie-sit': {'fall': 0, 'end_episode': 2},
             'lie-sit-lie': {'fall': 2, 'end_episode': 1},
             'lie-lie': {'fall': 1, 'end_episode': 0},  # leave out of scope, check for downward velocity
         }
@@ -677,6 +714,40 @@ class PoseEstimation:
         self.state_transition_sequence.append(state)
         if len(self.state_transition_sequence) >= self.state_transition_window:
             self.state_transition_sequence.pop(0)
+
+    def update_fall_prediction_sequence(self, state=None):
+        self.fall_alert_prediction_sequence.append(state)
+        if len(self.fall_alert_prediction_sequence) > self.fall_alert_prediction_sequence_window:
+            self.fall_alert_prediction_sequence.pop(0)
+
+    def predict_fall_alert(self, state_sequence=None):
+        #if self.fall_alert_prediction_sequence[-1] == True
+        true_count = np.sum(np.array(self.fall_alert_prediction_sequence) == True)  # `== True` filters for True only
+        list_length = len(self.fall_alert_prediction_sequence)
+        #print('predfall 1', self.frame_count, true_count / list_length, self.fall_alert_prediction_sequence)
+        #print(state_sequence)
+        #self.fall_alert = True if true_count / list_length > 0.5 else False
+        self.fall_alert_sequence.append(True if true_count / list_length > 0.5 else False)
+        # retain values for only 1 second
+        if len(self.fall_alert_sequence) > 30:
+            self.fall_alert_sequence.pop(0)
+
+        #print(state_sequence)
+        if state_sequence is not None and 'end_episode' in state_sequence:
+            if state_sequence['end_episode'] > 1:
+                self.fall_alert_sequence = []
+                self.fall_alert = False
+            else:
+                true_count = np.sum(np.array(self.fall_alert_sequence) == True)
+                list_length = len(self.fall_alert_sequence)
+                #print('predfall 2', self.frame_count, true_count / list_length, self.fall_alert_sequence)
+
+                self.fall_alert = True if true_count / list_length > 0.2 else False
+        elif len(self.fall_alert_sequence) >= 30:
+            true_count = np.sum(np.array(self.fall_alert_sequence) == True)
+            list_length = len(self.fall_alert_sequence)
+            #print('predfall 3', self.frame_count, true_count / list_length, self.fall_alert_sequence)
+            self.fall_alert = True if true_count / list_length > 0.8 else False
 
     def first_non_none(self, data_array):
         for i, x in enumerate(data_array):

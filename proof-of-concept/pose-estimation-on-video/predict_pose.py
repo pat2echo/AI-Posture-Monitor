@@ -10,6 +10,7 @@ label_file = None
 
 scaling_factor = 0.5
 predict = False
+debug_mode = True
 
 if len(sys.argv) > 1:
     video_file = sys.argv[1]
@@ -28,6 +29,13 @@ if len(sys.argv) > 1:
 
     if len(sys.argv) > 4:
         label_file = sys.argv[4]
+        if video_file == '0' or video_file == '' or video_file == '-' or not os.path.exists(label_file):
+            label_file = None
+
+    if len(sys.argv) > 5:
+        demo = sys.argv[5]
+        if not (demo == '0' or demo == '' or demo == '-'):
+            debug_mode = False
 
 else:
     print("Expecting 2 arguments: video file and scaling factor")
@@ -36,6 +44,7 @@ else:
 print('video_file', video_file, 'label_file', label_file, 'is_predict_pose', predict, 'scaling_factor', scaling_factor)
 
 pe = PoseEstimation()
-pe.process_video(debug_mode=False, video_file=video_file, label_file=label_file, is_predict_pose=predict, model_number=2, use_frame_diff=True, use_bounding_box=True, scaling_factor=scaling_factor, BASE_OUTPUT_DIR=BASE_OUTPUT_DIR, plot_results=True, predict_fall=False)
+pe.process_video(debug_mode=debug_mode, video_file=video_file, label_file=label_file, is_predict_pose=predict, model_number=2, use_frame_diff=True, use_bounding_box=True, scaling_factor=scaling_factor, BASE_OUTPUT_DIR=BASE_OUTPUT_DIR, plot_results=True, predict_fall=False)
+
 
 #print(pe.get_fall_prediction(data_array=data))

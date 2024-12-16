@@ -56,6 +56,7 @@ pip install pandas
 pip install scikit-learn
 pip install matplotlib
 ```
+Pre-requisite: this prototype is built to be executed from the command line only
 
 ### Definition of Fall
 When the subject remains in the fallen state for at least 1 second excluding transition to the fallen state
