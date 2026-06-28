@@ -1,5 +1,5 @@
-Metadata-Version: 2.4
-Name: ai_posture_monitor
+Metadata-Version: 2.1
+Name: ai-posture-monitor
 Version: 0.0.17
 Summary: A package designed to predict static pose and detect falls with 2D RGB Camera in well lit indoor environments.
 Author: Patrick Ogbuitepu
@@ -7,20 +7,6 @@ Author-email: pat2echo@gmail.com
 Keywords: Fall Detection,Human Motion Classification,Pose Estimation,Elderly Care,Computer Vision,Machine Learning,Real-time Monitoring,Occlusion Handling,Finite State Machine,Activity Recognition,Elderly Care Technology,Pose Estimation Models,Real-Time Motion Tracking,Occlusion Handling,Static Pose Classification,Fuzzy Logic Systems,Temporal Pose Analysis,Human Pose Detection,Motion Detection Algorithms,Inactivity Monitoring,Rehabilitation Monitoring,Bounding Box Analysis,Multi-Camera Systems,Pose Transition Detection,Computational Intelligence Applications,Human-Centric AI,Assistive Technologies,Vision-Based Health Monitoring,Sensorless Activity Recognition,Human-Computer Interaction (HCI),Machine Learning in Elderly Care,AI for Healthcare Monitoring,Zero False Alarm Systems,Dim Light Pose Recognition,Occlusion Robustness,Home Monitoring Systems
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: numpy
-Requires-Dist: opencv-python
-Requires-Dist: mediapipe==0.10.14
-Requires-Dist: pandas
-Requires-Dist: scikit-learn
-Requires-Dist: matplotlib
-Dynamic: author
-Dynamic: author-email
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: keywords
-Dynamic: license-file
-Dynamic: requires-dist
-Dynamic: summary
 
 # AI Posture Monitor
 This project introduces an innovative, cost-effective solution for real-time activity monitoring of elderly individuals. By leveraging the MediaPipe pose estimation model, fuzzy logic, and finite state machines, the system can reliably track individuals, recognize static postures (standing, sitting, lying), and detect transitions, particularly focusing on falls. 
