@@ -5,7 +5,7 @@ import pandas as pd
 
 import matplotlib
 
-matplotlib.use('TkAgg')
+#matplotlib.use('TkAgg')  # Use TkAgg for terminal
 import matplotlib.pyplot as plt
 
 from .frame_diff_dependencies import pose_landmarks

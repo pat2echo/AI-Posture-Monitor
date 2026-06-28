@@ -172,13 +172,14 @@ def clustering_analysis(file_path, method='kmeans', field_name='aspect_ratio', n
 
             # Plot histogram to visualize the distribution of aspect ratios
             plt.figure(figsize=(10, 6))
+            k_label = k.replace('_', ' ').capitalize()
             if bins == 0:
                 plt.hist(aspect_ratios, color='orange', edgecolor='black', alpha=0.7)
-                plt.title(f'Histogram of {k.replace('_', ' ').capitalize()}')
+                plt.title(f'Histogram of {k_label}')
             else:
                 plt.hist(aspect_ratios, bins=bins, color='skyblue', edgecolor='black', alpha=0.7)
-                plt.title(f'Histogram of {k.replace('_', ' ').capitalize()} \nNo of Bins: {bins} rule {bin_rule}')
-            plt.xlabel(f'{k.replace('_', ' ').capitalize()}')
+                plt.title(f'Histogram of {k_label} \nNo of Bins: {bins} rule {bin_rule}')
+            plt.xlabel(f'{k_label}')
             plt.ylabel('Frequency')
             plt.show()
 
@@ -195,7 +196,7 @@ def clustering_analysis(file_path, method='kmeans', field_name='aspect_ratio', n
                 plt.text(center[0], 0, f'{i}', fontsize=12, fontweight='bold', ha='center', va='bottom')
 
         plt.title(f"{method.upper()} Clustering \n No of Clusters: {n_clusters}")
-        plt.xlabel(f'{k.replace('_', ' ').capitalize()} (scaled)')
+        plt.xlabel(f'{k.replace("_", " ").capitalize()} (scaled)')
         plt.colorbar(label='Cluster Label')
         plt.grid(True)
         plt.show()

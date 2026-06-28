@@ -334,7 +334,8 @@ class PoseEstimation:
                 plot_label_vs_prediction_data(df=df_for_plot, plot_title=f'static_pose_{plot_title}', plot_size=(10,8))
 
         if self.save_data:
-            np.savetxt(os.path.join(output_results, f'{plot_title.split('.')[0]}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
+            plot_title_stem = plot_title.split('.')[0]
+            np.savetxt(os.path.join(output_results, f'{plot_title_stem}_results.csv'), np.array(output_data), fmt='%s', delimiter=',',
                    header='file_name,label,prediction,smooth_prediction,state_transition_prediction,state_sequence,fall,fall_watch,fall_watch_prediction,aspect_ratio_prediction,is_transition,aoi_from_memory,bbox_aspect_ratio_of_pose,aspect_ratio_movement,bbox_aspect_ratio,max_value,is_motion,' + ','.join(['v_lshoulder','v_rshoulder','v_lhip','v_rhip']) +','+ ','.join(features_attr), comments='')
 
 

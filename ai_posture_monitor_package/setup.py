@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ai_posture_monitor',
-    version='0.0.16',
+    version='0.0.17',
     packages=find_packages(),
     description='A package designed to predict static pose and detect falls with 2D RGB Camera in well lit indoor environments.',
     long_description="""# AI Posture Monitor
@@ -24,9 +24,9 @@ This project introduces an innovative, cost-effective solution for real-time act
     author_email='pat2echo@gmail.com',
     keywords=['Fall Detection', 'Human Motion Classification', 'Pose Estimation', 'Elderly Care', 'Computer Vision', 'Machine Learning', 'Real-time Monitoring', 'Occlusion Handling', 'Finite State Machine', 'Activity Recognition', 'Elderly Care Technology', 'Pose Estimation Models', 'Real-Time Motion Tracking', 'Occlusion Handling', 'Static Pose Classification', 'Fuzzy Logic Systems', 'Temporal Pose Analysis', 'Human Pose Detection', 'Motion Detection Algorithms', 'Inactivity Monitoring', 'Rehabilitation Monitoring', 'Bounding Box Analysis', 'Multi-Camera Systems', 'Pose Transition Detection', 'Computational Intelligence Applications', 'Human-Centric AI', 'Assistive Technologies', 'Vision-Based Health Monitoring', 'Sensorless Activity Recognition', 'Human-Computer Interaction (HCI)', 'Machine Learning in Elderly Care', 'AI for Healthcare Monitoring', 'Zero False Alarm Systems', 'Dim Light Pose Recognition', 'Occlusion Robustness', 'Home Monitoring Systems'],
     install_requires=[
-        'numpy',  # Add your dependencies here
+        'numpy',
         'opencv-python',
-        'mediapipe',
+        'mediapipe==0.10.14',
         'pandas',
         'scikit-learn',
         'matplotlib'
