@@ -60,6 +60,16 @@ import argparse
 import os
 import sys
 
+if sys.version_info >= (3, 13):
+    sys.exit(f'Python {sys.version_info.major}.{sys.version_info.minor} detected - '
+             'this demo needs Python 3.9 - 3.12.\n'
+             'mediapipe (the pose-estimation dependency) has no wheels for 3.13+ in the\n'
+             'supported version range, so on 3.13 pip silently falls back to an old,\n'
+             'broken ai-posture-monitor release.\n\n'
+             'Create a virtual environment with an older interpreter, e.g.:\n'
+             '    python3.12 -m venv .venv && source .venv/bin/activate   # Linux/WSL\n'
+             '    py -3.12 -m venv .venv && .venv\\Scripts\\activate       # Windows')
+
 try:
     import matplotlib
     matplotlib.use('Agg')  # headless-safe; we only save figures, never show them

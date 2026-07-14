@@ -1,10 +1,11 @@
 Metadata-Version: 2.1
 Name: ai-posture-monitor
-Version: 0.0.19
+Version: 0.0.20
 Summary: A package designed to predict static pose and detect falls with 2D RGB Camera in well lit indoor environments.
 Author: Patrick Ogbuitepu
 Author-email: pat2echo@gmail.com
 Keywords: Fall Detection,Human Motion Classification,Pose Estimation,Elderly Care,Computer Vision,Machine Learning,Real-time Monitoring,Occlusion Handling,Finite State Machine,Activity Recognition,Elderly Care Technology,Pose Estimation Models,Real-Time Motion Tracking,Occlusion Handling,Static Pose Classification,Fuzzy Logic Systems,Temporal Pose Analysis,Human Pose Detection,Motion Detection Algorithms,Inactivity Monitoring,Rehabilitation Monitoring,Bounding Box Analysis,Multi-Camera Systems,Pose Transition Detection,Computational Intelligence Applications,Human-Centric AI,Assistive Technologies,Vision-Based Health Monitoring,Sensorless Activity Recognition,Human-Computer Interaction (HCI),Machine Learning in Elderly Care,AI for Healthcare Monitoring,Zero False Alarm Systems,Dim Light Pose Recognition,Occlusion Robustness,Home Monitoring Systems
+Requires-Python: >=3.9,<3.13
 Description-Content-Type: text/markdown
 License-File: LICENSE
 

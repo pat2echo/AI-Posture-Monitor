@@ -83,8 +83,17 @@ def get_mediapipe_solutions():
         import mediapipe.python.solutions.pose as mp_pose
         import mediapipe.python.solutions.drawing_utils as mp_drawing
     except ImportError:
-        mp_pose = mp.solutions.pose
-        mp_drawing = mp.solutions.drawing_utils
+        try:
+            mp_pose = mp.solutions.pose
+            mp_drawing = mp.solutions.drawing_utils
+        except AttributeError:
+            raise RuntimeError(
+                f'The installed mediapipe ({mp.__version__}) has no legacy solutions '
+                'API - it was removed in mediapipe 0.10.30+. This package needs '
+                'mediapipe>=0.10.14,<0.10.22. Fix with: '
+                'pip install "mediapipe==0.10.14" '
+                '(requires Python 3.9-3.12; mediapipe ships no 3.13+ wheels in that range).'
+            ) from None
     return mp_pose, mp_drawing
 
 def initialize_mediapipe ():

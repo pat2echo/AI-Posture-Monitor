@@ -2,7 +2,10 @@ from setuptools import setup, find_packages
 
 setup(
     name='ai_posture_monitor',
-    version='0.0.19',
+    version='0.0.20',
+    # mediapipe ships no wheels for Python 3.13+ in the supported range; without
+    # this bound, pip on 3.13 backtracks to ancient broken releases of this package
+    python_requires='>=3.9,<3.13',
     packages=find_packages(),
     description='A package designed to predict static pose and detect falls with 2D RGB Camera in well lit indoor environments.',
     long_description="""# AI Posture Monitor
