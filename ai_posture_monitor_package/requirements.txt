@@ -1,6 +1,6 @@
 numpy
 opencv-python
-mediapipe==0.10.14
+mediapipe>=0.10.14,<0.10.22
 pandas
 scikit-learn
 matplotlib

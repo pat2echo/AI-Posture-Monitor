@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ai_posture_monitor',
-    version='0.0.17',
+    version='0.0.18',
     packages=find_packages(),
     description='A package designed to predict static pose and detect falls with 2D RGB Camera in well lit indoor environments.',
     long_description="""# AI Posture Monitor
@@ -26,7 +26,9 @@ This project introduces an innovative, cost-effective solution for real-time act
     install_requires=[
         'numpy',
         'opencv-python',
-        'mediapipe==0.10.14',
+        # >=0.10.14: last release without a numpy<2 pin; <0.10.22: the legacy
+        # mp.solutions API this package is built on was removed in 0.10.30+
+        'mediapipe>=0.10.14,<0.10.22',
         'pandas',
         'scikit-learn',
         'matplotlib'
