@@ -13,7 +13,7 @@ Requirements:
 
 Setup (recommended - use a virtual environment):
     # Linux / macOS / WSL:
-    python3 -m venv .venv            # use python3.12/python3.11/python3.10
+    python3.12 -m venv .venv         # use python3.12/python3.11/python3.10
     source .venv/bin/activate        # if the default python3 is 3.13+
     pip install ai-posture-monitor kagglehub
 

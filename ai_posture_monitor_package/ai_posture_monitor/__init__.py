@@ -5,7 +5,7 @@ from .plot_dependencies import plot_fall, plot_transitions, plot_label_vs_predic
 from .pose_est_dependencies import PoseEstimation
 from .predict_dependencies import predict_pose, get_attr_of_features, get_groundtruth_from_image_name
 
-__version__ = '0.0.20'
+__version__ = '0.0.21'
 __author__ = 'Patrick Ogbuitepu'
 __all__ = [
     'Evaluate',
