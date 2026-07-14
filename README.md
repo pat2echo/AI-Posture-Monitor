@@ -4,10 +4,11 @@ This project, `ai_posture_monitor`, is designed to be an innovative and cost-eff
 
 ## Contents
 - Key Functionalities
+- Try the Demo (Kaggle or CLI)
 - How it Works
+- Using Source Codes in Repo
 - Other Utility Scripts
 - Color Codes
-- Evaluation
 - Dataset
 - Self-Consent Form for Dataset Usage
 
@@ -22,36 +23,60 @@ This project, `ai_posture_monitor`, is designed to be an innovative and cost-eff
 * **Environmental Adaptability:** Functions effectively in well-lit indoor settings, suitable for typical home environments.
 * **Scalable and Cost-Effective:** Represents an affordable solution with potential for diverse applications in elderly care.
 
-## Quickstart (CLI demo)
-Requires Python 3.9 - 3.12 (mediapipe has no 3.13+ wheels in the supported range).
-Set up a virtual environment, install, and run:
+## Try the Demo (Kaggle or CLI)
+
+**Supported environments:** Kaggle notebooks and local CLI/Jupyter with Python **3.9 - 3.12**
+(mediapipe has no 3.13+ wheels in the supported range). Google Colab is not officially
+supported — its runtime preloads libraries that conflict with mediapipe's pinned dependencies.
+
+### Option 1 — Kaggle, zero setup (easiest)
+Open the published demo notebook and click **Copy & Edit**, then **Run All**:
+
+&nbsp;&nbsp;&nbsp;&nbsp;**https://www.kaggle.com/code/patrickogbuitepu/fall-detection-posture-classification-starter**
+
+It runs the package on sample images from the
+[dataset](https://www.kaggle.com/datasets/patrickogbuitepu/posture-monitor-and-fall-detection),
+explores the activity/fall labels, and visualizes the classifier's precomputed per-frame output.
+The same notebook lives in this repo at
+[notebooks/fall_detection_posture_classification_demo.ipynb](notebooks/fall_detection_posture_classification_demo.ipynb).
+
+### Option 2 — CLI on your machine
+Clone the repo, set up a virtual environment, install, and run:
 ```bash
-# Linux / macOS / WSL (use python3.12/3.11/3.10 if your default python3 is 3.13+):
-cd AI-Posture-Monitor            # run from the repository folder
-python3 -m venv .venv
+# Linux / macOS / WSL (use python3.12/3.11/3.10 - not 3.13+):
+git clone https://github.com/pat2echo/AI-Posture-Monitor.git
+cd AI-Posture-Monitor
+python3.12 -m venv .venv
 source .venv/bin/activate
 pip install ai-posture-monitor kagglehub
 python examples/cli_demo.py
 ```
 ```powershell
 # Windows (PowerShell or cmd):
-cd AI-Posture-Monitor            # run from the repository folder
+git clone https://github.com/pat2echo/AI-Posture-Monitor.git
+cd AI-Posture-Monitor
 py -3.12 -m venv .venv
 .venv\Scripts\activate
 pip install ai-posture-monitor kagglehub
 python examples\cli_demo.py
 ```
-This fetches 3 sample images (stand/sit/lie) from the published
-[Kaggle dataset](https://www.kaggle.com/datasets/patrickogbuitepu/posture-monitor-and-fall-detection),
-runs pose estimation + the rule-based posture classifier, prints the verdicts, and saves
-annotated images to `./output`. Pass `--images your1.jpg your2.jpg` to run on your own photos.
+This fetches 3 sample images (stand/sit/lie) from the published dataset (public - no Kaggle
+account needed), runs pose estimation + the rule-based posture classifier, prints a verdict
+table, and saves landmark-annotated images to `./output`. Expected output:
+```
+image                        stand                    sit                      lie
+--------------------------------------------------------------------------------------------------
+stand.jpg                    standing/standing        non_sitting/non_sitting  non_lying/non_lying
+sit.jpg                      non_standing/non_standing sitting/sitting          non_lying/non_lying
+lie.jpg                      no pose landmarks detected
 
-There is also a demo notebook: [notebooks/fall_detection_posture_classification_demo.ipynb](notebooks/fall_detection_posture_classification_demo.ipynb),
-also published (and validated) as a [Kaggle notebook](https://www.kaggle.com/code/patrickogbuitepu/fall-detection-posture-classification-starter).
+Annotated images saved to .../output
+```
+(`lie.jpg` reporting no landmarks is expected - MediaPipe struggles with some lying poses,
+which is why the full system also uses bounding-box features as a fallback.)
 
-**Supported environments:** local CLI/Jupyter and Kaggle notebooks. Google Colab is not
-officially supported — its runtime preloads libraries that conflict with mediapipe's
-pinned dependencies.
+Run on your own photos with `python examples/cli_demo.py --images your1.jpg your2.jpg`,
+and see `python examples/cli_demo.py --help` for all options.
 
 ## How it Works
 1. Install the package  
@@ -82,11 +107,13 @@ Install the dependencies:
 ```aiignore
 pip install numpy
 pip install opencv-python
-pip install mediapipe
+pip install "mediapipe>=0.10.14,<0.10.22"
 pip install pandas
 pip install scikit-learn
 pip install matplotlib
 ```
+**Note:** mediapipe must stay below 0.10.22 — the legacy `mp.solutions` API this
+project is built on was removed in mediapipe 0.10.30+.
 Pre-requisite: this prototype is built to be executed from the command line only
 
 ### Definition of Fall
@@ -206,11 +233,21 @@ python proof-of-concept/pose-estimation-on-video/transition_plot.py ./output/out
 
 
 ## Dataset: Video Files used in this Experiment
-Dataset in University of Essex Onedrive: https://essexuniversity-my.sharepoint.com/:f:/g/personal/po23102_essex_ac_uk/End63nA718NNjDdOPOjRaMABtli7MI-JnkAZwXesGFe2KA?e=Bmxtjf
+The full dataset (10 videos, 113 static pose images, labels, and derived feature CSVs) is
+published on Kaggle under CC BY 4.0:
+**https://www.kaggle.com/datasets/patrickogbuitepu/posture-monitor-and-fall-detection**
+
+Original archival copy (University of Essex OneDrive, may require institutional access):
+https://essexuniversity-my.sharepoint.com/:f:/g/personal/po23102_essex_ac_uk/End63nA718NNjDdOPOjRaMABtli7MI-JnkAZwXesGFe2KA?e=Bmxtjf
 
 ---
 
 # Self-Consent Form for Dataset Usage
+
+> **Note:** this form is reproduced as signed in August 2024, when the dataset was
+> restricted to University of Essex storage. Explicit approval for public release was
+> subsequently obtained, and the dataset is now published on Kaggle under CC BY 4.0
+> (see the Dataset section above).
 
 **Project Title:** AI-Driven Posture Analysis Fall Detection System for the Elderly
 
