@@ -2,32 +2,68 @@
 """CLI demo for the ai-posture-monitor package.
 
 Runs MediaPipe pose estimation + the package's rule-based static-posture
-classifier on images, prints the verdicts, and saves annotated copies with
-the pose landmarks drawn on.
+classifier on images, prints the per-image stand/sit/lie verdicts as a table,
+and saves annotated copies with the pose landmarks drawn on.
+
+Requirements:
+    - Python 3.9 - 3.12 (mediapipe, the pose-estimation dependency, does not
+      ship wheels for 3.13+ in the version range this package supports)
+    - pip install ai-posture-monitor
+    - pip install kagglehub   (only needed for the no-arguments sample mode)
 
 Usage:
-    # On your own images:
+    # 1. On your own images (JPEG/PNG, one person, reasonably well lit):
     python examples/cli_demo.py --images path/to/img1.jpg path/to/img2.jpg
 
-    # Or let it fetch 3 sample images (stand/sit/lie) from the published
-    # Kaggle dataset (requires: pip install kagglehub):
+    # 2. No arguments: fetches 3 sample images (stand/sit/lie) from the
+    #    published Kaggle dataset. The dataset is public, so no Kaggle
+    #    account or API token is needed; downloads are cached under
+    #    ~/.cache/kagglehub, so repeat runs are instant.
     python examples/cli_demo.py
 
-Outputs are written to ./output (override with --output-dir).
+    # 3. Choose where annotated images are written (default: ./output):
+    python examples/cli_demo.py --output-dir my_results
+
+Output:
+    - A table on stdout: one row per image with the classifier's left/right-leg
+      standing, sitting, and lying verdicts.
+    - annotated_<image>.jpg in the output directory: the input image with
+      MediaPipe's 33 pose landmarks and skeleton connections drawn on.
+    - Images where MediaPipe finds no pose landmarks are reported as such and
+      skipped. (Expected for some lying-down poses - self-occlusion from a
+      fixed camera angle is a known MediaPipe limitation, and is exactly why
+      the full system also uses bounding-box-based features as a fallback.)
 
 Supported environments: local CLI / Jupyter and Kaggle notebooks.
 (Google Colab is not officially supported: its runtime preloads libraries
 that conflict with mediapipe's pinned dependencies.)
+
+Dataset: https://www.kaggle.com/datasets/patrickogbuitepu/posture-monitor-and-fall-detection
+Source:  https://github.com/pat2echo/AI-Posture-Monitor
 """
 import argparse
 import os
 import sys
 
-import matplotlib
-matplotlib.use('Agg')  # headless-safe; we only save figures, never show them
-import matplotlib.pyplot as plt
-
-import ai_posture_monitor as pm
+try:
+    import matplotlib
+    matplotlib.use('Agg')  # headless-safe; we only save figures, never show them
+    import matplotlib.pyplot as plt
+    import ai_posture_monitor as pm
+except ImportError as e:
+    sys.exit(f'Missing dependency: {e.name}\n\n'
+             'Install the package first (this pulls in all dependencies):\n'
+             '    pip install ai-posture-monitor\n'
+             'and, for the no-arguments sample mode:\n'
+             '    pip install kagglehub\n\n'
+             'Note: requires Python 3.9 - 3.12 (mediapipe has no 3.13+ wheels\n'
+             'in the version range this package supports).')
+except SyntaxError:
+    # ai-posture-monitor <=0.0.16 had a PEP 701 f-string that only parses on
+    # Python 3.12+; fixed in 0.0.17
+    sys.exit('Your installed ai-posture-monitor is outdated and fails to parse\n'
+             'on this Python version. Upgrade it:\n'
+             '    pip install -U ai-posture-monitor')
 
 DATASET = 'patrickogbuitepu/posture-monitor-and-fall-detection'
 SAMPLE_IMAGES = ['stand.jpg', 'sit.jpg', 'lie.jpg']
