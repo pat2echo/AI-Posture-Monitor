@@ -1,7 +1,7 @@
 # ai_posture_monitor: Real-Time AI-Powered Posture Monitoring
 
 [![PyPI](https://img.shields.io/pypi/v/ai-posture-monitor)](https://pypi.org/project/ai-posture-monitor/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21359209.svg)](https://doi.org/10.5281/zenodo.21359209)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21359208.svg)](https://doi.org/10.5281/zenodo.21359208)
 [![Dataset on Kaggle](https://img.shields.io/badge/Kaggle-dataset-20BEFF)](https://www.kaggle.com/datasets/patrickogbuitepu/posture-monitor-and-fall-detection)
 [![Dataset on HF](https://img.shields.io/badge/%F0%9F%A4%97-dataset-yellow)](https://huggingface.co/datasets/pat2echo/fall-detection-posture-classification)
 
@@ -241,12 +241,12 @@ python proof-of-concept/pose-estimation-on-video/transition_plot.py ./output/out
 The full dataset (10 videos, 113 static pose images, labels, and derived feature CSVs) is
 published under CC BY 4.0:
 
-- **Zenodo (citable DOI):** https://doi.org/10.5281/zenodo.21359209
+- **Zenodo (citable DOI):** https://doi.org/10.5281/zenodo.21359208
 - **Kaggle:** https://www.kaggle.com/datasets/patrickogbuitepu/posture-monitor-and-fall-detection
 - **Hugging Face (browsable viewer):** https://huggingface.co/datasets/pat2echo/fall-detection-posture-classification
 
 **Cite the dataset:** Ogbuitepu, P. O. (2026). Fall Detection and Posture Classification
-Dataset (1.0.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.21359209
+Dataset (1.0.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.21359208
 
 Original archival copy (University of Essex OneDrive, may require institutional access):
 https://essexuniversity-my.sharepoint.com/:f:/g/personal/po23102_essex_ac_uk/End63nA718NNjDdOPOjRaMABtli7MI-JnkAZwXesGFe2KA?e=Bmxtjf
