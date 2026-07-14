@@ -23,7 +23,19 @@ This project, `ai_posture_monitor`, is designed to be an innovative and cost-eff
 * **Scalable and Cost-Effective:** Represents an affordable solution with potential for diverse applications in elderly care.
 
 ## Quickstart (CLI demo)
+Requires Python 3.9 - 3.12 (mediapipe has no 3.13+ wheels in the supported range).
+Set up a virtual environment, install, and run:
+```bash
+# Linux / macOS / WSL (use python3.12/3.11/3.10 if your default python3 is 3.13+):
+python3 -m venv .venv
+source .venv/bin/activate
+pip install ai-posture-monitor kagglehub
+python examples/cli_demo.py
 ```
+```powershell
+# Windows (PowerShell or cmd):
+py -3.12 -m venv .venv
+.venv\Scripts\activate
 pip install ai-posture-monitor kagglehub
 python examples/cli_demo.py
 ```

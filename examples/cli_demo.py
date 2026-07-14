@@ -11,6 +11,20 @@ Requirements:
     - pip install ai-posture-monitor
     - pip install kagglehub   (only needed for the no-arguments sample mode)
 
+Setup (recommended - use a virtual environment):
+    # Linux / macOS / WSL:
+    python3 -m venv .venv            # use python3.12/python3.11/python3.10
+    source .venv/bin/activate        # if the default python3 is 3.13+
+    pip install ai-posture-monitor kagglehub
+
+    # Windows (PowerShell or cmd):
+    py -3.12 -m venv .venv
+    .venv\\Scripts\\activate
+    pip install ai-posture-monitor kagglehub
+
+    # When you're done:
+    deactivate
+
 Usage:
     # 1. On your own images (JPEG/PNG, one person, reasonably well lit):
     python examples/cli_demo.py --images path/to/img1.jpg path/to/img2.jpg
