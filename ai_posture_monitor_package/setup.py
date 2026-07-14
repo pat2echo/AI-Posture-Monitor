@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ai_posture_monitor',
-    version='0.0.21',
+    version='0.0.22',
     # mediapipe ships no wheels for Python 3.13+ in the supported range; without
     # this bound, pip on 3.13 backtracks to ancient broken releases of this package
     python_requires='>=3.9,<3.13',
@@ -11,9 +11,9 @@ setup(
     long_description="""# AI Posture Monitor
 This project introduces an innovative, cost-effective solution for real-time activity monitoring of elderly individuals. By leveraging the MediaPipe pose estimation model, fuzzy logic, and finite state machines, the system can reliably track individuals, recognize static postures (standing, sitting, lying), and detect transitions, particularly focusing on falls.
 
-**Source code:** https://github.com/pat2echo/AI-Posture-Monitor
-**Dataset (CC BY 4.0):** https://www.kaggle.com/datasets/patrickogbuitepu/posture-monitor-and-fall-detection
-**Demo notebook on Kaggle:** https://www.kaggle.com/code/patrickogbuitepu/fall-detection-posture-classification-starter
+**Source code:** https://github.com/pat2echo/AI-Posture-Monitor  
+**Dataset (CC BY 4.0):** https://www.kaggle.com/datasets/patrickogbuitepu/posture-monitor-and-fall-detection  
+**Demo notebook on Kaggle:** https://www.kaggle.com/code/patrickogbuitepu/fall-detection-posture-classification-starter  
 
 ## Requirements
 Python **3.9 - 3.12** (mediapipe, the pose-estimation dependency, ships no wheels for 3.13+

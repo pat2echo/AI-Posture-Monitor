@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ai-posture-monitor
-Version: 0.0.21
+Version: 0.0.22
 Summary: A package designed to predict static pose and detect falls with 2D RGB Camera in well lit indoor environments.
 Author: Patrick Ogbuitepu
 Author-email: pat2echo@gmail.com
@@ -12,9 +12,9 @@ License-File: LICENSE
 # AI Posture Monitor
 This project introduces an innovative, cost-effective solution for real-time activity monitoring of elderly individuals. By leveraging the MediaPipe pose estimation model, fuzzy logic, and finite state machines, the system can reliably track individuals, recognize static postures (standing, sitting, lying), and detect transitions, particularly focusing on falls.
 
-**Source code:** https://github.com/pat2echo/AI-Posture-Monitor
-**Dataset (CC BY 4.0):** https://www.kaggle.com/datasets/patrickogbuitepu/posture-monitor-and-fall-detection
-**Demo notebook on Kaggle:** https://www.kaggle.com/code/patrickogbuitepu/fall-detection-posture-classification-starter
+**Source code:** https://github.com/pat2echo/AI-Posture-Monitor  
+**Dataset (CC BY 4.0):** https://www.kaggle.com/datasets/patrickogbuitepu/posture-monitor-and-fall-detection  
+**Demo notebook on Kaggle:** https://www.kaggle.com/code/patrickogbuitepu/fall-detection-posture-classification-starter  
 
 ## Requirements
 Python **3.9 - 3.12** (mediapipe, the pose-estimation dependency, ships no wheels for 3.13+
