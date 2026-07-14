@@ -22,6 +22,23 @@ This project, `ai_posture_monitor`, is designed to be an innovative and cost-eff
 * **Environmental Adaptability:** Functions effectively in well-lit indoor settings, suitable for typical home environments.
 * **Scalable and Cost-Effective:** Represents an affordable solution with potential for diverse applications in elderly care.
 
+## Quickstart (CLI demo)
+```
+pip install ai-posture-monitor kagglehub
+python examples/cli_demo.py
+```
+This fetches 3 sample images (stand/sit/lie) from the published
+[Kaggle dataset](https://www.kaggle.com/datasets/patrickogbuitepu/posture-monitor-and-fall-detection),
+runs pose estimation + the rule-based posture classifier, prints the verdicts, and saves
+annotated images to `./output`. Pass `--images your1.jpg your2.jpg` to run on your own photos.
+
+There is also a demo notebook: [notebooks/fall_detection_posture_classification_demo.ipynb](notebooks/fall_detection_posture_classification_demo.ipynb),
+also published (and validated) as a [Kaggle notebook](https://www.kaggle.com/code/patrickogbuitepu/fall-detection-posture-classification-starter).
+
+**Supported environments:** local CLI/Jupyter and Kaggle notebooks. Google Colab is not
+officially supported — its runtime preloads libraries that conflict with mediapipe's
+pinned dependencies.
+
 ## How it Works
 1. Install the package  
    `pip install ai-posture-monitor`  
