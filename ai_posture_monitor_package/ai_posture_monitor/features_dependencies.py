@@ -75,13 +75,22 @@ def display_pose_landmarks(image_path):
         cv2.waitKey(0)  # Adjust the wait time for smoother video playback
         cv2.destroyAllWindows()
 
+def get_mediapipe_solutions():
+    # Import the solution modules directly rather than through the mp.solutions
+    # top-level alias: in some environments (observed on Google Colab) mediapipe's
+    # own __init__ can fail to bind that alias even though the modules exist.
+    try:
+        import mediapipe.python.solutions.pose as mp_pose
+        import mediapipe.python.solutions.drawing_utils as mp_drawing
+    except ImportError:
+        mp_pose = mp.solutions.pose
+        mp_drawing = mp.solutions.drawing_utils
+    return mp_pose, mp_drawing
+
 def initialize_mediapipe ():
     # 2. Load MediaPipe Pose landmark estimation solution
-    mp_pose = mp.solutions.pose
+    mp_pose, mp_drawing = get_mediapipe_solutions()
     pose = mp_pose.Pose(static_image_mode=True, model_complexity=1, min_detection_confidence=0.5)
-
-    # 3. Load MediaPipe Drawing Utilities
-    mp_drawing = mp.solutions.drawing_utils
 
     return pose, mp_drawing, mp_pose
 

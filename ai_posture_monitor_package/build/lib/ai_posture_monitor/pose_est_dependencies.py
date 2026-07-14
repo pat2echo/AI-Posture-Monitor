@@ -5,7 +5,7 @@ import pandas as df
 import os
 
 from .frame_diff_dependencies import FrameDiff
-from .features_dependencies import  get_features
+from .features_dependencies import  get_features, get_mediapipe_solutions
 from .predict_dependencies import  predict_pose, get_attr_of_features
 from .plot_dependencies import plot_fall_data, plot_label_vs_prediction_data, DynamicPlot
 
@@ -18,8 +18,7 @@ class PoseEstimation:
         self.debug_mode = debug_mode
 
         # Initialize MediaPipe Pose
-        self.mp_pose = mp.solutions.pose
-        self.mp_drawing = mp.solutions.drawing_utils
+        self.mp_pose, self.mp_drawing = get_mediapipe_solutions()
         #self.pose = self.mp_pose.Pose(static_image_mode=False, min_detection_confidence=0.5, min_tracking_confidence=0.5)
         #self.pose = self.mp_pose.Pose(static_image_mode=False, model_complexity=1, min_detection_confidence=0.7, min_tracking_confidence=0.7)
         #self.pose = self.mp_pose.Pose(static_image_mode=False, model_complexity=2, min_detection_confidence=0.7, min_tracking_confidence=0.7)
