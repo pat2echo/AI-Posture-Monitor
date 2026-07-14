@@ -25,7 +25,8 @@ Setup (recommended - use a virtual environment):
     # When you're done:
     deactivate
 
-Usage:
+Usage (commands below assume your shell is inside the repository folder -
+`cd AI-Posture-Monitor` first, or use the full path to this script):
     # 1. On your own images (JPEG/PNG, one person, reasonably well lit):
     python examples/cli_demo.py --images path/to/img1.jpg path/to/img2.jpg
 

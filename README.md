@@ -27,6 +27,7 @@ Requires Python 3.9 - 3.12 (mediapipe has no 3.13+ wheels in the supported range
 Set up a virtual environment, install, and run:
 ```bash
 # Linux / macOS / WSL (use python3.12/3.11/3.10 if your default python3 is 3.13+):
+cd AI-Posture-Monitor            # run from the repository folder
 python3 -m venv .venv
 source .venv/bin/activate
 pip install ai-posture-monitor kagglehub
@@ -34,10 +35,11 @@ python examples/cli_demo.py
 ```
 ```powershell
 # Windows (PowerShell or cmd):
+cd AI-Posture-Monitor            # run from the repository folder
 py -3.12 -m venv .venv
 .venv\Scripts\activate
 pip install ai-posture-monitor kagglehub
-python examples/cli_demo.py
+python examples\cli_demo.py
 ```
 This fetches 3 sample images (stand/sit/lie) from the published
 [Kaggle dataset](https://www.kaggle.com/datasets/patrickogbuitepu/posture-monitor-and-fall-detection),
